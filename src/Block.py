@@ -6,10 +6,10 @@ class Block:
 
     def __init__(self, index, data, previous_hash, date):
         self.previous_hash = previous_hash
-        self.hash = self.calculate_hash()
         self.index = index
         self.data = data
         self.date = date
+        self.hash = self.calculate_hash()
 
     def calculate_hash(self):
         return sha256(self).hexdigest()
