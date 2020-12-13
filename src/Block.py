@@ -1,5 +1,7 @@
-from datetime import datetime
 from hashlib import sha256
+
+from datetime import datetime
+from bddBlockChain import *
 
 
 class Block:
@@ -22,10 +24,14 @@ class Block:
         return True
 
 
+def init_DB():
+    return DataBaseManager("blockchain.db")
+
+
 class BlockChain:
 
     def __init__(self):
-        self.blocks = self.init_DB()
+        self.blocks = init_DB()
         self.create_first_block()  # The first block doesn't have previous hash
 
     def create_first_block(self):
@@ -35,21 +41,19 @@ class BlockChain:
 
     def verify_blockchain(self):
         curr_index = self.get_last_block().index
-        curr_block = get_block_at_index(curr_index)
+        curr_block = self.get_block_at_index(curr_index)
         for i in range(curr_index - 1, -1, -1):
-            prev_block = get_block_at_index(i)
+            prev_block = self.get_block_at_index(i)
             if not prev_block.is_previous(curr_block):
                 return False
             curr_block = prev_block
         return True
 
     def add_block(self, block):
-
-    def init_DB(self):
-        return
+        self.blocks.add_block(block)
 
     def get_last_block(self):
-        return
+        return self.blocks.getLastBlock()
 
     def get_block_at_index(self, index):
-        return
+        return self.blocks.getBlockAtIndex(index)
