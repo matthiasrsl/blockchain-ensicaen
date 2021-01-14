@@ -5,21 +5,17 @@ SERVER_HOST = "localhost"
 SERVER_PORT = 1500
 CLIENT_PORT = 1501
 RECV_SIZE = 1024
-LISTEN_TIME = 0.05
+LISTEN_TIME = 5
 
 
 class Node:
     def __init__(self, ip_address):
         self.ip_address = ip_address
-        self.socket = socket.socket(
-            socket.AF_INET, socket.SOCK_STREAM
-        )  # This is the client socket used to send information to the node.
 
 
 class NetworkHandler:
-    def __init__(self, hostname):
-        self.hostname = hostname
-        self.other_nodes = []
+    def __init__(self):
+        self.other_nodes = {}
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connected_clients = []
 
@@ -30,13 +26,36 @@ class NetworkHandler:
         self.server.bind((SERVER_HOST, SERVER_PORT))
         self.server.listen(5)
 
-    def send_message(self, message):
+    def send_message(self, ip, message):
         connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        connection.connect((self.hostname, SERVER_PORT))
+        connection.connect((ip, SERVER_PORT))
         print("Client Connected")
         message = message.encode()
         connection.send(message)
         connection.close()
+
+    def add_node(self, ip):
+        node = Node(ip)
+        self.other_nodes[ip] = node
+
+    def remove_node(self, ip):
+        del self.other_nodes[ip]
+
+    def process_message(self, message):
+        print(f"Received: {message}")
+
+        if message[:4] != "****":
+            print("Error: bad request")
+        elif message[4] == "1":
+            print("===== Add node")
+            self.add_node(message[6:-4])
+        elif message[4] == "2":
+            print("===== Remove node")
+            self.remove_node(message[6:-4])
+        else:
+            print("Error: bad request")
+
+        print(f"Other nodes: {self.other_nodes}")
 
     def run_server(self):
         while self.keep_running_server:
@@ -59,11 +78,10 @@ class NetworkHandler:
                 for client in clients_to_be_read:
                     message = client.recv(RECV_SIZE)
                     message = message.decode()
-                    print(f"Received: {message}")
+                    self.process_message(message)
                     self.connected_clients.remove(client)
                     client.close()
-                    if message == "stop":
-                        self.keep_running_server = False
+                    
 
         for client in self.connected_clients:
             client.close
