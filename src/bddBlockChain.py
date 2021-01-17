@@ -1,4 +1,4 @@
-from Block import *
+from src.Block import *
 import sqlite3
 
 

@@ -1,7 +1,7 @@
 from hashlib import sha256
 
 from datetime import datetime
-from bddBlockChain import *
+from src.bddBlockChain import *
 
 
 class Block:
@@ -14,12 +14,12 @@ class Block:
         self.hash = self.calculate_hash()
 
     def calculate_hash(self):
-        return sha256(self).hexdigest()
+        return sha256(f'{self.index}{self.date}{self.data}{self.previous_hash}'.encode('utf-8')).hexdigest()
 
     def is_previous(self, other):  # declare type block ?
-        if not other.previous_hash == self.previous_hash:
+        if other.previous_hash == self.previous_hash:
             return False
-        if not other.date < self.date:
+        if not other.date > self.date:
             return False
         return True
 
