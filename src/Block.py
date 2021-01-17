@@ -31,7 +31,7 @@ def init_DB():
 class BlockChain:
 
     def __init__(self):
-        self.blocks = init_DB()
+        self.blocks = DataBaseManager("BlockChain")
         self.create_first_block()  # The first block doesn't have previous hash
 
     def create_first_block(self):

@@ -14,7 +14,9 @@ class TestBlock(TestCase):
 
 class TestBlockChain(TestCase):
     def test_create_first_block(self):
-        self.fail()
+        self.blockChain = BlockChain()
+
+        self.assertEqual(self.blockChain.get_block_at_index(0), Block(0, "First Block", None, datetime.now()))
 
     def test_verify_blockchain(self):
         self.fail()
