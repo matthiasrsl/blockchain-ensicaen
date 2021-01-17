@@ -1,7 +1,7 @@
 from hashlib import sha256
 
 from datetime import datetime
-from bddBlockChain import *
+from src.bddBlockChain import *
 
 
 class Block:

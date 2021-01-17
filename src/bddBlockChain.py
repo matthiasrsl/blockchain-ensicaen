@@ -1,4 +1,4 @@
-from Block import *
+from src.Block import *
 import sqlite3
 
 
@@ -8,7 +8,7 @@ class DataBaseManager:
         self.name_data_base = name_data_base
         conn = sqlite3.connect(name_data_base)
         c = conn.cursor()
-        c.execute('''CREATE TABLE block(index int,data text, hash text, precedent_hash text, d date)''')
+        c.execute('''CREATE TABLE IF NOT EXISTS block(id INTEGER ,data TEXT , hash TEXT , precedent_hash TEXT , d DATE )''')
         conn.commit()
         conn.close()
 
