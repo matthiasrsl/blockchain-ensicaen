@@ -18,4 +18,5 @@ class Block:
             return False
         return True
 
-
+    def __eq__(self, other):
+        return self.hash == other.hash
