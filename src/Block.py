@@ -14,9 +14,7 @@ class Block:
         return sha256(f'{self.index}{self.date}{self.data}{self.previous_hash}'.encode('utf-8')).hexdigest()
 
     def is_previous(self, other):  # declare type block ?
-        if not other.previous_hash == self.previous_hash:
-            return False
-        if not other.date < self.date:
+        if not other.previous_hash == self.hash:
             return False
         return True
 
