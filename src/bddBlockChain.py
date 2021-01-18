@@ -1,5 +1,6 @@
 from src.Block import *
 import sqlite3
+import os
 
 
 class DataBaseManager:
@@ -41,3 +42,7 @@ class DataBaseManager:
         conn.commit()
         conn.close()
         return block
+
+    def clearDB(self):
+        os.remove(self.name_data_base)
+        self.__init__(self.name_data_base)

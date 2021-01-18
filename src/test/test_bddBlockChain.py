@@ -1,7 +1,6 @@
 from datetime import datetime
 from unittest import TestCase
 from src.bddBlockChain import *
-import os
 
 
 class Test(TestCase):
@@ -19,5 +18,4 @@ class Test(TestCase):
         self.assertTrue(block2 == blockTest)
         self.assertTrue(block2 == dbmanager.getBlockAtIndex(2))
 
-        path = "../../testDB"
-        os.remove(path)
+        dbmanager.clearDB()
