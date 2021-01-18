@@ -18,3 +18,6 @@ class Test(TestCase):
 
         self.assertTrue(block2 == blockTest)
         self.assertTrue(block2 == dbmanager.getBlockAtIndex(2))
+
+        path = "../../testDB"
+        os.remove(path)
