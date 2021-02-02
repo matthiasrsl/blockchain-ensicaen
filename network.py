@@ -1,9 +1,9 @@
 import socket
 import select
 
-SERVER_HOST = "localhost"
-SERVER_PORT = 1500
-CLIENT_PORT = 1501
+SERVER_HOST = "192.168.0.50"  # à rendre dynamique
+SERVER_PORT = 1501
+CLIENT_PORT = 1500
 RECV_SIZE = 1024
 LISTEN_TIME = 5
 
@@ -39,19 +39,22 @@ class NetworkHandler:
         self.other_nodes[ip] = node
 
     def remove_node(self, ip):
-        del self.other_nodes[ip]
+        try:
+            del self.other_nodes[ip]
+        except KeyError:
+            print(f"{ip} tried to be removed but not in list")
 
-    def process_message(self, message):
+    def process_message(self, message, ip):
         print(f"Received: {message}")
 
         if message[:4] != "****":
             print("Error: bad request")
         elif message[4] == "1":
             print("===== Add node")
-            self.add_node(message[6:-4])
+            self.add_node(ip)
         elif message[4] == "2":
             print("===== Remove node")
-            self.remove_node(message[6:-4])
+            self.remove_node(ip)
         else:
             print("Error: bad request")
 
@@ -77,11 +80,11 @@ class NetworkHandler:
             else:
                 for client in clients_to_be_read:
                     message = client.recv(RECV_SIZE)
+                    ip, port = client.getpeername()
                     message = message.decode()
-                    self.process_message(message)
+                    self.process_message(message, ip)
                     self.connected_clients.remove(client)
                     client.close()
-                    
 
         for client in self.connected_clients:
-            client.close
+            client.close()
