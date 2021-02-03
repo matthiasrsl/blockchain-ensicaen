@@ -1,7 +1,11 @@
 import socket
 import select
 
-SERVER_HOST = "192.168.0.50"  # à rendre dynamique
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.connect(("8.8.8.8", 80))
+SERVER_HOST = s.getsockname()[0]
+s.close()
+
 SERVER_PORT = 1501
 CLIENT_PORT = 1500
 RECV_SIZE = 1024
@@ -19,11 +23,16 @@ class NetworkHandler:
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connected_clients = []
 
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        self.server_host = s.getsockname()[0]
+        s.close()
+
         # self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.keep_running_server = True
 
     def start_server(self):
-        self.server.bind((SERVER_HOST, SERVER_PORT))
+        self.server.bind((self.server_host, SERVER_PORT))
         self.server.listen(5)
 
     def send_message(self, ip, message):
