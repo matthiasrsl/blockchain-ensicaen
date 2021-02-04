@@ -1,6 +1,7 @@
 import socket
 import select
-
+from src.BlockChain import BlockChain
+from src.BlockChain import Block
 
 SERVER_PORT = 1501
 CLIENT_PORT = 1500
@@ -18,6 +19,7 @@ class NetworkHandler:
         self.other_nodes = {}
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connected_clients = []
+        self.blockchain = BlockChain()
 
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
@@ -54,12 +56,54 @@ class NetworkHandler:
 
         if message[:4] != "****":
             print("Error: bad request")
-        elif message[4] == "1":
+        elif message[4:7] == "join":
             print("===== Add node")
             self.add_node(ip)
-        elif message[4] == "2":
+            mess = "****join_resp|"
+            for ip_node in self.other_nodes:
+                mess += ip_node + ","
+            mess = mess[:-1]
+            self.send_message(ip, mess)
+
+            mess2 = "****blockchain|";
+            for i in 10:  # faire une fonction qui renvoie le nombre de block dans BlockChain.py
+                block = str(self.blockchain.get_block_at_index(i).index) + "$" + self.blockchain.get_block_at_index(
+                    i).data + "$" + self.blockchain.get_block_at_index(i).previous_hash + "$" + str(
+                    self.blockchain.get_block_at_index(i).date) + "$" + self.blockchain.get_block_at_index(i).hash + ","
+                mess2 += block
+            mess2 = mess2[:-1]
+            self.send_message(ip, mess2)
+
+        elif message[4:] == "leave":
             print("===== Remove node")
             self.remove_node(ip)
+        elif message[4:12] == "join_resp":
+            ip_list = message[14:].split(",")
+            for ip_node in ip_list:
+                self.add_node(ip_node)
+        elif message[4:] == "joined":
+            print("===== Nice to meet you")
+        elif message[4:] == "ack":
+            print("===== Welcome")
+        elif message[4:14] == "mined_block":
+            block_info = message[16:].split("|")
+            if (block_info[2] == self.blockchain.get_last_block().hash):
+                self.blockchain.add_block(Block(block_info[0], block_info[1], block_info[2], block_info[3]))
+                for ip_node in self.other_nodes:
+                    self.send_message("****accept", ip_node)
+            else:
+                for ip_node in self.other_nodes:
+                    self.send_message("****refuse", ip_node)
+        elif message[4:] == "accept":
+            print("===== Node accepted")
+        elif message[4:] == "refuse":
+            print("===== Node refused")
+        elif message[4:13] == "blockchain":
+            blockchain = message[15:].split(",")
+            for block in blockchain:
+                block_list = block.split("$")
+                self.blockchain.add_block(Block(block_list[0], block_list[1], block_list[2], block_list[3]))
+
         else:
             print("Error: bad request")
 
