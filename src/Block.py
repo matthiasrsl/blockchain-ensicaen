@@ -34,4 +34,4 @@ class Block:
         return self.hash == other.hash
 
     def __str__(self):
-        return f'{self.index}|{self.nonce}|{self.date}|{self.data}|{self.previous_hash}|{self.hash}'
+        return f'{self.index}${self.nonce}${self.date}${self.data}${self.previous_hash}${self.hash}'
