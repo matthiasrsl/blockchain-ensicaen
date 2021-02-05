@@ -1,8 +1,8 @@
-import socket
 import select
+import socket
 
+from src.block import Block
 from src.blockchain import Blockchain
-from src.blockchain import Block
 
 SERVER_PORT = 16385
 RECV_SIZE = 1024

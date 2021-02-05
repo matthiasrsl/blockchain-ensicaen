@@ -1,5 +1,5 @@
-import sqlite3
 import os
+import sqlite3
 
 from src.block import *
 
@@ -57,5 +57,8 @@ class DataBaseManager:
         return block
 
     def clearDB(self):
-        os.remove(self.name_data_base)
-        self.__init__(self.name_data_base)
+        try:
+            os.remove(self.name_data_base)
+            self.__init__(self.name_data_base)
+        except FileNotFoundError:
+            self.__init__(self.name_data_base)
