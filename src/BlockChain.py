@@ -39,4 +39,4 @@ class BlockChain:
         return self.blocks.getBlockAtIndex(index)
 
     def get_height(self):
-        return self.get_last_block().index + 1
+        return self.get_last_block().index
