@@ -25,6 +25,14 @@ class Block:
         mining_duration = "{:4.3f}".format(time_end - time_begin)
         print(f"Block {self.index} mined in {mining_duration}s, nounce is {self.nonce}")
 
+    def is_valid(self):
+        if self.hash != self.calculate_hash:
+            return False
+        if self.hash[:5] != "00000":
+            return False
+        return True
+            
+
     def is_previous(self, other):  # declare type block ?
         if not other.previous_hash == self.hash:
             return False
