@@ -1,7 +1,6 @@
 from unittest import TestCase
 
 from src.blockchain import *
-from src.block import *
 
 
 class Test(TestCase):
