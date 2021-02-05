@@ -7,22 +7,22 @@ class Block:
     def __init__(self, index, data, previous_hash, date):
         self.previous_hash = previous_hash
         self.index = index
-        self.nounce = 0
+        self.nonce = 0
         self.data = data
         self.date = date
         self.hash = self.calculate_hash()
 
     def calculate_hash(self):
-        return sha256(f'{self.index}${self.nounce}${self.date}${self.data}${self.previous_hash}'.encode('utf-8')).hexdigest()
+        return sha256(f'{self.index}${self.nonce}${self.date}${self.data}${self.previous_hash}'.encode('utf-8')).hexdigest()
 
     def mine(self):
         time_begin = time()
         while self.hash[:5] != "00000":
-            self.nounce += 1
+            self.nonce += 1
             self.hash = self.calculate_hash()
         time_end = time()
         mining_duration = "{:4.3f}".format(time_end-time_begin)
-        print(f"Block {self.index} mined in {mining_duration}s, nounce is {self.nounce}")
+        print(f"Block {self.index} mined in {mining_duration}s, nounce is {self.nonce}")
             
 
     def is_previous(self, other):  # declare type block ?
