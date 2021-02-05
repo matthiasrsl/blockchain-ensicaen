@@ -5,7 +5,9 @@ from src.bddBlockChain import *
 
 class Test(TestCase):
     def test_data_base_manager(self):
-        dbmanager = DataBaseManager("testDB")
+        dbmanager = DataBaseManager("testDB.db")
+
+        dbmanager.clearDB()
 
         block1 = Block(1, "firstBlock", 0, datetime.now())
         block2 = Block(2, "secondBlock", 0, datetime.now())
