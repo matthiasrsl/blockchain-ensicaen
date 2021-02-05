@@ -1,17 +1,12 @@
 from datetime import datetime
 
-from src.Block import Block
-from src.bddBlockChain import DataBaseManager
+from src.block import Block
+from src.db_blockchain import DataBaseManager
 
 
-def init_DB():
-    return DataBaseManager("blockchain.db")
-
-
-class BlockChain:
-
-    def __init__(self):
-        self.blocks = init_DB()
+class Blockchain:
+    def __init__(self, db_name="blockchain.db", clear=False):
+        self.blocks = DataBaseManager(db_name, clear)
         self.create_first_block()  # The first block doesn't have previous hash
 
     def create_first_block(self):
