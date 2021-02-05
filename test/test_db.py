@@ -1,6 +1,7 @@
 from datetime import datetime
 from unittest import TestCase
-from src.bddBlockChain import *
+
+from src.db_blockchain import *
 
 
 class Test(TestCase):
