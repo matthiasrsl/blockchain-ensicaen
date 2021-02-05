@@ -1,17 +1,12 @@
 from datetime import datetime
 
-from src.Block import Block
-from src.bddBlockChain import DataBaseManager
+from src.block import Block
+from src.db_blockchain import DataBaseManager
 
 
-def init_DB():
-    return DataBaseManager("blockchain.db")
-
-
-class BlockChain:
-
-    def __init__(self):
-        self.blocks = init_DB()
+class Blockchain:
+    def __init__(self, db_name="blockchain.db", clear=False):
+        self.blocks = DataBaseManager(db_name, clear)
         self.create_first_block()  # The first block doesn't have previous hash
 
     def create_first_block(self):
@@ -24,6 +19,8 @@ class BlockChain:
         curr_block = self.get_block_at_index(curr_index)
         for i in range(curr_index - 1, -1, -1):
             prev_block = self.get_block_at_index(i)
+            if not curr_block.is_valid():
+                return False
             if not prev_block.is_previous(curr_block):
                 return False
             curr_block = prev_block

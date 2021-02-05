@@ -1,5 +1,6 @@
-from network import NetworkHandler
 import sys
+
+from src.network import NetworkHandler
 
 if __name__ == "__main__":
     args = sys.argv

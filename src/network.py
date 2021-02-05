@@ -1,10 +1,10 @@
-import socket
 import select
-from src.BlockChain import BlockChain
-from src.BlockChain import Block
+import socket
+
+from src.block import Block
+from src.blockchain import Blockchain
 
 SERVER_PORT = 16385
-CLIENT_PORT = 1500
 RECV_SIZE = 1024
 LISTEN_TIME = 5
 
@@ -19,7 +19,7 @@ class NetworkHandler:
         self.other_nodes = {}
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connected_clients = []
-        self.blockchain = BlockChain()
+        self.blockchain = Blockchain()
 
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
@@ -70,9 +70,18 @@ class NetworkHandler:
 
             last_height = message[9:]
             for i in range(int(last_height), self.blockchain.get_height() + 1):
-                block = str(self.blockchain.get_block_at_index(i).index) + "$" + self.blockchain.get_block_at_index(
-                    i).data + "$" + self.blockchain.get_block_at_index(i).previous_hash + "$" + str(
-                    self.blockchain.get_block_at_index(i).date) + "$" + str(self.blockchain.get_block_at_index(i).hash) + ","
+                block = (
+                    str(self.blockchain.get_block_at_index(i).index)
+                    + "$"
+                    + self.blockchain.get_block_at_index(i).data
+                    + "$"
+                    + self.blockchain.get_block_at_index(i).previous_hash
+                    + "$"
+                    + str(self.blockchain.get_block_at_index(i).date)
+                    + "$"
+                    + str(self.blockchain.get_block_at_index(i).hash)
+                    + ","
+                )
                 mess2 += block
             mess2 = mess2[:-1]
 
@@ -93,7 +102,14 @@ class NetworkHandler:
         elif message[4:15] == "mined_block":
             block_info = message[16:].split("|")
             if block_info[2] == self.blockchain.get_last_block().hash:
-                self.blockchain.add_block(Block(block_info[0], block_info[1], block_info[2], block_info[3]))
+                self.blockchain.add_block(
+                    Block(
+                        block_info[0],
+                        block_info[1],
+                        block_info[2],
+                        block_info[3],
+                    )
+                )
                 for ip_node in self.other_nodes:
                     self.send_message("****accept", ip_node)
             else:
@@ -107,7 +123,14 @@ class NetworkHandler:
             blockchain = message[15:].split(",")
             for block in blockchain:
                 block_list = block.split("$")
-                self.blockchain.add_block(Block(block_list[0], block_list[1], block_list[2], block_list[3]))
+                self.blockchain.add_block(
+                    Block(
+                        block_list[0],
+                        block_list[1],
+                        block_list[2],
+                        block_list[3],
+                    )
+                )
 
         else:
             print("Error: bad request")
