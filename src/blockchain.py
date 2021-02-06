@@ -37,3 +37,6 @@ class Blockchain:
 
     def get_height(self):
         return self.get_last_block().index
+
+    def __del__(self):
+        del self.blocks

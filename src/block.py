@@ -25,9 +25,7 @@ class Block:
             self.hash = self.calculate_hash()
         time_end = time()
         mining_duration = "{:4.3f}".format(time_end - time_begin)
-        print(
-            f"Block {self.index} mined in {mining_duration}s, nounce is {self.nonce}"
-        )
+        print(f"Block {self.index} mined in {mining_duration}s, nounce is {self.nonce}")
 
     def is_valid(self):
         if self.hash != self.calculate_hash():
