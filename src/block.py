@@ -18,19 +18,19 @@ class Block:
             )
         ).hexdigest()
 
-    def mine(self):
+    def mine(self, number_0=2):
         time_begin = time()
-        while self.hash[:2] != "00":
+        while self.hash[:number_0] != number_0 * '0':
             self.nonce += 1
             self.hash = self.calculate_hash()
         time_end = time()
         mining_duration = "{:4.3f}".format(time_end - time_begin)
         print(f"Block {self.index} mined in {mining_duration}s, nounce is {self.nonce}")
 
-    def is_valid(self):
+    def is_valid(self, number_0=2):
         if self.hash != self.calculate_hash():
             return False
-        if self.hash[:2] != "00":
+        if self.hash[:number_0] != number_0*"0":
             return False
         return True
 
