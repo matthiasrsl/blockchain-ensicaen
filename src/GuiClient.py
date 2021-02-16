@@ -18,10 +18,11 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.lineMessage = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineMessage.setGeometry(QtCore.QRect(30, 100, 351, 25))
+        self.lineMessage.setGeometry(QtCore.QRect(10, 60, 351, 25))
+        self.lineMessage.setClearButtonEnabled(True)
         self.lineMessage.setObjectName("lineMessage")
         self.sendButton = QtWidgets.QPushButton(self.centralwidget)
-        self.sendButton.setGeometry(QtCore.QRect(130, 230, 80, 25))
+        self.sendButton.setGeometry(QtCore.QRect(390, 60, 80, 25))
         self.sendButton.setObjectName("sendButton")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -38,12 +39,12 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuFIle.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.sendButton.clicked.connect(self.actionSendMessage.trigger)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setProperty("enter", _translate("MainWindow", "Return"))
         self.sendButton.setText(_translate("MainWindow", "Send"))
         self.menuFIle.setTitle(_translate("MainWindow", "FIle"))
         self.actionSendMessage.setText(_translate("MainWindow", "SendMessage"))
