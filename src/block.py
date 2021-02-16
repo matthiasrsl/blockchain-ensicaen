@@ -1,9 +1,10 @@
 from hashlib import sha256
+from json import *
 from time import time
 
 
 class Block:
-    def __init__(self, index, data, previous_hash, date, nonce=0):
+    def __init__(self, index, data, previous_hash, date, nonce=0, **kwargs):
         self.previous_hash = previous_hash
         self.index = index
         self.nonce = nonce
@@ -46,3 +47,8 @@ class Block:
 
     def __str__(self):
         return f"{self.index}${self.nonce}${self.date}${self.data}${self.previous_hash}${self.hash}"
+
+    def to_json(self):
+        return dumps(self, default=lambda o: o.__dict__)
+
+
