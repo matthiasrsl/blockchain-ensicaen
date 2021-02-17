@@ -1,5 +1,5 @@
 from hashlib import sha256
-from json import *
+import json
 from time import time
 
 
@@ -21,17 +21,19 @@ class Block:
 
     def mine(self, number_0=2):
         time_begin = time()
-        while self.hash[:number_0] != number_0 * '0':
+        while self.hash[:number_0] != number_0 * "0":
             self.nonce += 1
             self.hash = self.calculate_hash()
         time_end = time()
         mining_duration = "{:4.3f}".format(time_end - time_begin)
-        print(f"Block {self.index} mined in {mining_duration}s, nounce is {self.nonce}")
+        print(
+            f"Block {self.index} mined in {mining_duration}s, nounce is {self.nonce}"
+        )
 
     def is_valid(self, number_0=2):
         if self.hash != self.calculate_hash():
             return False
-        if self.hash[:number_0] != number_0*"0":
+        if self.hash[:number_0] != number_0 * "0":
             return False
         return True
 
@@ -46,15 +48,17 @@ class Block:
     def __str__(self):
         return f"{self.index}${self.nonce}${self.date}${self.data}${self.previous_hash}${self.hash}"
 
-    def to_json(self):
-        block_dict = {
-            "previous_hash": self.previous_hash,
-            "index": self.index,
-            "nonce": self.nonce,
-            "data": self.data,
-            "date": self.date,
-            "hash": self.hash
-        }
-        return dumps(block_dict, default=lambda o: str(o))
 
 
+class BlockEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Block):
+            return {
+                "previous_hash": obj.previous_hash,
+                "index": obj.index,
+                "nonce": obj.nonce,
+                "data": obj.data,
+                "date": obj.date,
+                "hash": obj.hash,
+            }
+        return json.JSONEncoder.default(self, obj)
