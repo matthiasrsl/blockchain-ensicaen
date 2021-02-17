@@ -58,7 +58,7 @@ class NetworkHandler:
 
         if message[:4] != "****":
             print("Error: bad request")
-        elif message[4:8] == "join|":
+        elif message[4:9] == "join|":
             print("===== Add node")
             self.add_node(ip)
             mess = "****join_resp|"
@@ -77,7 +77,7 @@ class NetworkHandler:
                 block_json = self.blockchain.get_block_at_index(i).to_json()
                 list_block.append(block_json)
 
-            mess2 += json.dump(list_block)
+            mess2 += json.dumps(list_block)
 
             if mess2 != "":
                 self.send_message(ip, mess2)
@@ -86,6 +86,7 @@ class NetworkHandler:
             print("===== Remove node")
             self.remove_node(ip)
         elif message[4:13] == "join_resp":
+            self.add_node(ip)
             ip_list = message[14:].split(",")
             for ip_node in ip_list:
                 self.add_node(ip_node)
