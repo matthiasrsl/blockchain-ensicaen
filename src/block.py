@@ -49,6 +49,14 @@ class Block:
         return f"{self.index}${self.nonce}${self.date}${self.data}${self.previous_hash}${self.hash}"
 
     def to_json(self):
-        return dumps(self, default=lambda o: o.__dict__)
+        block_dict = {
+            "previous_hash": self.previous_hash,
+            "index": self.index,
+            "nonce": self.nonce,
+            "data": self.data,
+            "date": self.date,
+            "hash": self.hash
+        }
+        return dumps(block_dict, default=lambda o: str(o))
 
 
