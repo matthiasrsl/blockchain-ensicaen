@@ -17,19 +17,6 @@
    <string>Return</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLineEdit" name="lineMessage">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>60</y>
-      <width>351</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="clearButtonEnabled">
-     <bool>true</bool>
-    </property>
-   </widget>
    <widget class="QPushButton" name="sendButton">
     <property name="geometry">
      <rect>
@@ -41,6 +28,16 @@
     </property>
     <property name="text">
      <string>Send</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="lineMessage">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>351</width>
+      <height>121</height>
+     </rect>
     </property>
    </widget>
   </widget>
