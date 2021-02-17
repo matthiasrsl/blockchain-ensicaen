@@ -20,7 +20,7 @@ class Blockchain:
         curr_block = self.get_block_at_index(curr_index)
         for i in range(curr_index - 1, -1, -1):
             prev_block = self.get_block_at_index(i)
-            if not curr_block.is_valid():
+            if not curr_block.is_valid(number_0=self.number_0):
                 return False
             if not prev_block.is_previous(curr_block):
                 return False
