@@ -1,10 +1,9 @@
+import json
 import select
 import socket
-import json
 
 from src.block import Block
 from src.blockchain import Blockchain
-
 
 SERVER_PORT = 16385
 RECV_SIZE = 1024
@@ -77,7 +76,7 @@ class NetworkHandler:
                 block_json = self.blockchain.get_block_at_index(i).to_json()
                 list_block.append(block_json)
 
-            mess2 += json.dumps(list_block)
+            mess2 += json.dumps(list_block, default=lambda o: o.to_json())
 
             if mess2 != "":
                 self.send_message(ip, mess2)

@@ -8,13 +8,14 @@ class Client(QtWidgets.QMainWindow, src.GuiClient.Ui_MainWindow):
     def __init__(self, ip, parent=None):
         super(Client, self).__init__(parent)
         self.ip = ip
+        self.handler = NetworkHandler()
+
         self.setupUi(self)
         self.sendButton.clicked.connect(self.send_message)
         self.show()
 
     def send_message(self):
-        net = NetworkHandler()
         message = "****"
         message += self.lineMessage.toPlainText()
         print(message)
-        net.send_message(self.ip, message)
+        self.handler.send_message(self.ip, message)
