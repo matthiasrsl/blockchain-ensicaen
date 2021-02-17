@@ -1,8 +1,10 @@
 import select
 import socket
+import json
 
 from src.block import Block
 from src.blockchain import Blockchain
+
 
 SERVER_PORT = 16385
 RECV_SIZE = 1024
@@ -69,21 +71,13 @@ class NetworkHandler:
             mess2 = "****blockchain|"
 
             last_height = message[9:]
+
+            list_block = []
             for i in range(int(last_height), self.blockchain.get_height() + 1):
-                block = (
-                    str(self.blockchain.get_block_at_index(i).index)
-                    + "$"
-                    + self.blockchain.get_block_at_index(i).data
-                    + "$"
-                    + self.blockchain.get_block_at_index(i).previous_hash
-                    + "$"
-                    + str(self.blockchain.get_block_at_index(i).date)
-                    + "$"
-                    + str(self.blockchain.get_block_at_index(i).hash)
-                    + ","
-                )
-                mess2 += block
-            mess2 = mess2[:-1]
+                block_json = self.blockchain.get_block_at_index(i).to_json()
+                list_block.append(block_json)
+
+            mess2 += json.dump(list_block)
 
             if mess2 != "":
                 self.send_message(ip, mess2)
@@ -119,18 +113,13 @@ class NetworkHandler:
             print("===== Node accepted")
         elif message[4:] == "refuse":
             print("===== Node refused")
+
         elif message[4:14] == "blockchain":
-            blockchain = message[15:].split(",")
+
+            blockchain = json.loads(message[15:])
+
             for block in blockchain:
-                block_list = block.split("$")
-                self.blockchain.add_block(
-                    Block(
-                        block_list[0],
-                        block_list[1],
-                        block_list[2],
-                        block_list[3],
-                    )
-                )
+                self.blockchain.add_block(Block(**block))
 
         else:
             print("Error: bad request")
