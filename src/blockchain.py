@@ -5,8 +5,9 @@ from src.db_blockchain import DataBaseManager
 
 
 class Blockchain:
-    def __init__(self, db_name="blockchain.db", clear=False):
+    def __init__(self, db_name="blockchain.db",  number_0=2, clear=False):
         self.blocks = DataBaseManager(db_name, clear)
+        self.number_0 = number_0
         self.create_first_block()  # The first block doesn't have previous hash
 
     def create_first_block(self):
@@ -19,7 +20,7 @@ class Blockchain:
         curr_block = self.get_block_at_index(curr_index)
         for i in range(curr_index - 1, -1, -1):
             prev_block = self.get_block_at_index(i)
-            if not curr_block.is_valid():
+            if not curr_block.is_valid(number_0=self.number_0):
                 return False
             if not prev_block.is_previous(curr_block):
                 return False
@@ -37,3 +38,6 @@ class Blockchain:
 
     def get_height(self):
         return self.get_last_block().index
+
+    def __del__(self):
+        del self.blocks

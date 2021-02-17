@@ -47,9 +47,7 @@ class DataBaseManager:
     def getLastBlock(self):
         conn = sqlite3.connect(self.name_data_base)
         c = conn.cursor()
-        c.execute(
-            "SELECT MAX(id),data,hash,precedent_hash,d,nonce FROM blocks"
-        )
+        c.execute("SELECT MAX(id),data,hash,precedent_hash,d,nonce FROM blocks")
         result = c.fetchone()
         block = Block(result[0], result[1], result[3], result[4], result[5])
         conn.commit()
@@ -62,3 +60,6 @@ class DataBaseManager:
             self.__init__(self.name_data_base)
         except FileNotFoundError:
             self.__init__(self.name_data_base)
+
+    def __del__(self):
+        os.remove(self.name_data_base)
