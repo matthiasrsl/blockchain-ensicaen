@@ -71,12 +71,12 @@ class NetworkHandler:
 
             last_height = message[9:]
 
-            list_block = []
+            list_blocks = []
             for i in range(int(last_height), self.blockchain.get_height() + 1):
-                block_json = self.blockchain.get_block_at_index(i).to_json()
-                list_block.append(block_json)
+                block = self.blockchain.get_block_at_index(i)
+                list_blocks.append(block)
 
-            mess2 += json.dumps(list_block, default=lambda o: o.to_json())
+            mess2 += json.dumps(list_blocks, default=lambda o: o.to_json())
 
             if mess2 != "":
                 self.send_message(ip, mess2)
