@@ -58,7 +58,7 @@ class BlockEncoder(json.JSONEncoder):
                 "index": obj.index,
                 "nonce": obj.nonce,
                 "data": obj.data,
-                "date": obj.date,
+                "date": str(obj.date),
                 "hash": obj.hash,
             }
         return json.JSONEncoder.default(self, obj)
