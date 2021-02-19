@@ -88,7 +88,8 @@ class NetworkHandler:
             self.add_node(ip)
             ip_list = message[14:].split(",")
             for ip_node in ip_list:
-                self.add_node(ip_node)
+                if ip_node:
+                    self.add_node(ip_node)
         elif message[4:] == "joined":
             print("===== Nice to meet you")
         elif message[4:] == "ack":
