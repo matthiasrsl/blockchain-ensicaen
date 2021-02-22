@@ -1,10 +1,10 @@
 from PyQt5 import QtWidgets
 
-import src.GuiClient
+import src.gui_client
 from src.network import NetworkHandler
 
 
-class Client(QtWidgets.QMainWindow, src.GuiClient.Ui_MainWindow):
+class Client(QtWidgets.QMainWindow, src.gui_client.Ui_MainWindow):
     def __init__(self, ip, parent=None):
         super(Client, self).__init__(parent)
         self.ip = ip
