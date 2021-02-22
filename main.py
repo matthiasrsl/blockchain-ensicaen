@@ -12,7 +12,7 @@ if __name__ == "__main__":
     app = QApplication.instance()
     if not app:
         app = QApplication(sys.argv)
-    gui = Client()
+    gui = Client(handler.server_host)
     app.exec_()
     if args[1] == "server":
         handler.start_server()
@@ -21,5 +21,5 @@ if __name__ == "__main__":
         app = QApplication.instance()
         if not app:
             app = QApplication(sys.argv)
-        gui = Client()
+        gui = Client(handler.server_host)
         app.exec_()

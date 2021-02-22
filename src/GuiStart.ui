@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="goButton">
     <property name="geometry">
      <rect>
       <x>70</x>
@@ -27,7 +27,7 @@
      <string>Go</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="ipLine">
     <property name="geometry">
      <rect>
       <x>50</x>
