@@ -1,5 +1,6 @@
 import select
 import socket
+import threading
 
 from src.block import Block
 from src.blockchain import Blockchain
@@ -14,17 +15,24 @@ class Node:
         self.ip_address = ip_address
 
 
-class NetworkHandler:
+def get_local_ip:
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    server_host = s.getsockname()[0]
+    s.close()
+    return server_host
+
+
+class NetworkHandler(threading.Thread):
     def __init__(self):
+        super().__init__()
         self.other_nodes = {}
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connected_clients = []
         self.blockchain = Blockchain()
 
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("8.8.8.8", 80))
-        self.server_host = s.getsockname()[0]
-        s.close()
+        self.server_host = get_local_ip()
+
 
         # self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.keep_running_server = True
@@ -71,16 +79,16 @@ class NetworkHandler:
             last_height = message[9:]
             for i in range(int(last_height), self.blockchain.get_height() + 1):
                 block = (
-                    str(self.blockchain.get_block_at_index(i).index)
-                    + "$"
-                    + self.blockchain.get_block_at_index(i).data
-                    + "$"
-                    + self.blockchain.get_block_at_index(i).previous_hash
-                    + "$"
-                    + str(self.blockchain.get_block_at_index(i).date)
-                    + "$"
-                    + str(self.blockchain.get_block_at_index(i).hash)
-                    + ","
+                        str(self.blockchain.get_block_at_index(i).index)
+                        + "$"
+                        + self.blockchain.get_block_at_index(i).data
+                        + "$"
+                        + self.blockchain.get_block_at_index(i).previous_hash
+                        + "$"
+                        + str(self.blockchain.get_block_at_index(i).date)
+                        + "$"
+                        + str(self.blockchain.get_block_at_index(i).hash)
+                        + ","
                 )
                 mess2 += block
             mess2 = mess2[:-1]
