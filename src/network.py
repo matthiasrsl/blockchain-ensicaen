@@ -85,6 +85,9 @@ class NetworkHandler:
         elif message.split("|")[0][4:] == "blockchain":
             self.blockchain_protocol(message)
 
+        elif message.split("|")[0][4:] == "ackdefault":
+            print("==== This node may be defective")
+
         else:
             print("Error: bad request")
 
@@ -96,18 +99,17 @@ class NetworkHandler:
             self.blockchain.add_block(Block(**block))
 
     def mined_block_protocol(self, message):
-        block_info = message.split("|")[1].split("|")
-        if block_info[2] == self.blockchain.get_last_block().hash:
-            self.blockchain.add_block(
-                Block(
-                    block_info[0],
-                    block_info[1],
-                    block_info[2],
-                    block_info[3],
-                )
-            )
+        block_info = message.split("|")
+        block_to_add = Block(block_info[0], block_info[1], block_info[2], block_info[3])
+        if block_to_add.is_valid() and block_to_add.is_previous(
+            self.blockchain.get_last_block()
+        ):
+            self.blockchain.add_block(block_to_add)
+
             for ip_node in self.other_nodes:
-                self.send_message("****accept", ip_node)
+                self.send_message(
+                    "****accept", ip_node
+                )  # dans ****accepte rajouter le hash ou l'index pour identifier le block
         else:
             for ip_node in self.other_nodes:
                 self.send_message("****refuse", ip_node)

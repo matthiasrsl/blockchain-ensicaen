@@ -37,7 +37,7 @@ class Block:
             return False
         return True
 
-    def is_previous(self, other):  # declare type block ?
+    def is_previous(self, other):  # declare type block ? (faire passer en argument seulement le hash au lieu du block pour reduire le temps d'éxécution)
         if not other.previous_hash == self.hash:
             return False
         return True
