@@ -57,7 +57,7 @@ class NetworkHandler:
 
         if message[:4] != "****":
             print("Error: bad request")
-        elif message[4:9] == "join|":
+        elif message.split("|")[0][4:] == "join|":
             print("===== Add node")
             self.add_node(ip)
             mess = "****join_resp|"
@@ -69,7 +69,7 @@ class NetworkHandler:
 
             mess2 = "****blockchain|"
 
-            last_height = message[9:]
+            last_height = message.split("|")[1]
 
             list_blocks = []
             for i in range(int(last_height), self.blockchain.get_height() + 1):
@@ -84,9 +84,9 @@ class NetworkHandler:
         elif message[4:] == "leave":
             print("===== Remove node")
             self.remove_node(ip)
-        elif message[4:13] == "join_resp":
+        elif message.split("|")[0][4:] == "join_resp":
             self.add_node(ip)
-            ip_list = message[14:].split(",")
+            ip_list = message.split("|")[1].split(",")
             for ip_node in ip_list:
                 if ip_node:
                     self.add_node(ip_node)
@@ -94,8 +94,8 @@ class NetworkHandler:
             print("===== Nice to meet you")
         elif message[4:] == "ack":
             print("===== Welcome")
-        elif message[4:15] == "mined_block":
-            block_info = message[16:].split("|")
+        elif message.split("|")[0][4:] == "mined_block":
+            block_info = message.split("|")[1].split("|")
             if block_info[2] == self.blockchain.get_last_block().hash:
                 self.blockchain.add_block(
                     Block(
@@ -115,9 +115,9 @@ class NetworkHandler:
         elif message[4:] == "refuse":
             print("===== Node refused")
 
-        elif message[4:14] == "blockchain":
+        elif message.split("|")[0][4:] == "blockchain":
 
-            blockchain = json.loads(message[15:])
+            blockchain = json.loads(message.split("|")[1])
 
             for block in blockchain:
                 self.blockchain.add_block(Block(**block))
