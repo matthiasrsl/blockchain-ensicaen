@@ -108,7 +108,7 @@ class NetworkHandler:
         block_info = message.split("|")
         block_to_add = Block(block_info[0], block_info[1], block_info[2], block_info[3])
         if block_to_add.is_valid() and block_to_add.is_previous(
-            self.blockchain.get_last_block()
+                self.blockchain.get_last_block()
         ):
             self.blockchain.add_block(block_to_add)
 
@@ -122,10 +122,13 @@ class NetworkHandler:
 
     def join_resp_protocol(self, ip, message):
         self.add_node(ip)
-        ip_list = message.split("|")[1].split(",")
-        for ip_node in ip_list:
-            if ip_node:
-                self.add_node(ip_node)
+        try:
+            ip_list = message.split("|")[1].split(",")
+            for ip_node in ip_list:
+                if ip_node:
+                    self.add_node(ip_node)
+        except IndexError:
+            pass
 
     def join_protocol(self, ip, message):
         print("===== Add node")
