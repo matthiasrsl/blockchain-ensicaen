@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 
 from src.block import Block
 from src.db_blockchain import DataBaseManager
@@ -41,3 +42,4 @@ class Blockchain:
 
     def __del__(self):
         del self.blocks
+
