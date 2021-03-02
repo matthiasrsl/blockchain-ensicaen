@@ -1,6 +1,5 @@
 import select
 import socket
-import threading
 
 from src.block import Block
 from src.blockchain import Blockchain
@@ -15,7 +14,7 @@ class Node:
         self.ip_address = ip_address
 
 
-def get_local_ip:
+def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
     server_host = s.getsockname()[0]
@@ -23,7 +22,7 @@ def get_local_ip:
     return server_host
 
 
-class NetworkHandler(threading.Thread):
+class NetworkHandler:
     def __init__(self):
         super().__init__()
         self.other_nodes = {}
@@ -32,7 +31,6 @@ class NetworkHandler(threading.Thread):
         self.blockchain = Blockchain()
 
         self.server_host = get_local_ip()
-
 
         # self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.keep_running_server = True

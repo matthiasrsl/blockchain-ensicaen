@@ -1,16 +1,15 @@
 from PyQt5 import QtWidgets
 
 import src.gui_client
-from src.network import NetworkHandler
+from src.network import NetworkHandler, get_local_ip
 
 
 class Client(QtWidgets.QMainWindow, src.gui_client.Ui_MainWindow):
-    def __init__(self, ip, parent=None):
+    def __init__(self, parent=None):
         super(Client, self).__init__(parent)
-        self.ip = ip
         self.setupUi(self)
         self.sendButton.clicked.connect(self.send_message)
-        self.show()
+        self.ip = get_local_ip()
 
     def send_message(self):
         net = NetworkHandler()
