@@ -6,63 +6,62 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>558</width>
-    <height>307</height>
+    <width>393</width>
+    <height>238</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <property name="enter" stdset="0">
-   <string>Return</string>
-  </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="sendButton">
+   <widget class="QPushButton" name="goButton">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>60</y>
-      <width>80</width>
+      <x>70</x>
+      <y>150</y>
+      <width>89</width>
       <height>25</height>
      </rect>
     </property>
     <property name="text">
-     <string>Send</string>
+     <string>Go</string>
     </property>
    </widget>
-   <widget class="QTextEdit" name="lineMessage">
+   <widget class="QLineEdit" name="ipLine">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>351</width>
-      <height>121</height>
+      <x>50</x>
+      <y>100</y>
+      <width>141</width>
+      <height>25</height>
      </rect>
     </property>
    </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>30</y>
+      <width>281</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Your public IP</string>
+    </property>
+   </widget>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>558</width>
+     <width>393</width>
      <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFIle">
-    <property name="title">
-     <string>FIle</string>
-    </property>
-   </widget>
-   <addaction name="menuFIle"/>
   </widget>
-  <action name="actionSendMessage">
-   <property name="text">
-    <string>SendMessage</string>
-   </property>
-  </action>
+  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

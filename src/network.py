@@ -15,6 +15,23 @@ class Node:
         self.ip_address = ip_address
 
 
+def get_local_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    server_host = s.getsockname()[0]
+    s.close()
+    return server_host
+
+
+def send_message(ip, message):
+    connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    connection.connect((ip, SERVER_PORT))
+    print("Client Connected")
+    message = message.encode()
+    connection.send(message)
+    connection.close()
+
+
 class NetworkHandler:
     def __init__(self):
         self.other_nodes = {}
@@ -22,10 +39,7 @@ class NetworkHandler:
         self.connected_clients = []
         self.blockchain = Blockchain()
 
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("8.8.8.8", 80))
-        self.server_host = s.getsockname()[0]
-        s.close()
+        self.server_host = get_local_ip()
 
         # self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.keep_running_server = True
@@ -33,14 +47,6 @@ class NetworkHandler:
     def start_server(self):
         self.server.bind((self.server_host, SERVER_PORT))
         self.server.listen(5)
-
-    def send_message(self, ip, message):
-        connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        connection.connect((ip, SERVER_PORT))
-        print("Client Connected")
-        message = message.encode()
-        connection.send(message)
-        connection.close()
 
     def add_node(self, ip):
         node = Node(ip)
@@ -57,7 +63,7 @@ class NetworkHandler:
 
         if message[:4] != "****":
             print("Error: bad request")
-        elif message.split("|")[0][4:] == "join|":
+        elif message.split("|")[0][4:] == "join":
             self.join_protocol(ip, message)
 
         elif message[4:] == "leave":
@@ -102,24 +108,27 @@ class NetworkHandler:
         block_info = message.split("|")
         block_to_add = Block(block_info[0], block_info[1], block_info[2], block_info[3])
         if block_to_add.is_valid() and block_to_add.is_previous(
-            self.blockchain.get_last_block()
+                self.blockchain.get_last_block()
         ):
             self.blockchain.add_block(block_to_add)
 
             for ip_node in self.other_nodes:
-                self.send_message(
+                send_message(
                     "****accept", ip_node
                 )  # dans ****accepte rajouter le hash ou l'index pour identifier le block
         else:
             for ip_node in self.other_nodes:
-                self.send_message("****refuse", ip_node)
+                send_message("****refuse", ip_node)
 
     def join_resp_protocol(self, ip, message):
         self.add_node(ip)
-        ip_list = message.split("|")[1].split(",")
-        for ip_node in ip_list:
-            if ip_node:
-                self.add_node(ip_node)
+        try:
+            ip_list = message.split("|")[1].split(",")
+            for ip_node in ip_list:
+                if ip_node:
+                    self.add_node(ip_node)
+        except IndexError:
+            pass
 
     def join_protocol(self, ip, message):
         print("===== Add node")
@@ -129,7 +138,7 @@ class NetworkHandler:
             if ip_node != ip:
                 mess += ip_node + ","
         mess = mess[:-1]
-        self.send_message(ip, mess)
+        send_message(ip, mess)
         mess2 = "****blockchain|"
         last_height = message.split("|")[1]
         list_blocks = []
@@ -138,7 +147,7 @@ class NetworkHandler:
             list_blocks.append(block)
         mess2 += json.dumps(list_blocks, cls=BlockEncoder)
         if mess2 != "":
-            self.send_message(ip, mess2)
+            send_message(ip, mess2)
 
     def run_server(self):
         while self.keep_running_server:
