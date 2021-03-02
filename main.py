@@ -15,11 +15,11 @@ def server():
 
 if __name__ == "__main__":
     thread_server = threading.Thread(target=server)
+    thread_server.start()
     app = QApplication.instance()
     if not app:
         app = QApplication(sys.argv)
 
     gui = Start()
     app.exec_()
-    thread_server.start()
     thread_server.join()
