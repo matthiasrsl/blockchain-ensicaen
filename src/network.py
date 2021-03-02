@@ -23,6 +23,15 @@ def get_local_ip():
     return server_host
 
 
+def send_message(ip, message):
+    connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    connection.connect((ip, SERVER_PORT))
+    print("Client Connected")
+    message = message.encode()
+    connection.send(message)
+    connection.close()
+
+
 class NetworkHandler:
     def __init__(self):
         self.other_nodes = {}
@@ -39,14 +48,6 @@ class NetworkHandler:
         self.server.bind((self.server_host, SERVER_PORT))
         self.server.listen(5)
 
-    def send_message(self, ip, message):
-        connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        connection.connect((ip, SERVER_PORT))
-        print("Client Connected")
-        message = message.encode()
-        connection.send(message)
-        connection.close()
-
     def add_node(self, ip):
         node = Node(ip)
         self.other_nodes[ip] = node
@@ -62,7 +63,7 @@ class NetworkHandler:
 
         if message[:4] != "****":
             print("Error: bad request")
-        elif message.split("|")[0][4:] == "join|":
+        elif message.split("|")[0][4:] == "join":
             self.join_protocol(ip, message)
 
         elif message[4:] == "leave":
@@ -112,12 +113,12 @@ class NetworkHandler:
             self.blockchain.add_block(block_to_add)
 
             for ip_node in self.other_nodes:
-                self.send_message(
+                send_message(
                     "****accept", ip_node
                 )  # dans ****accepte rajouter le hash ou l'index pour identifier le block
         else:
             for ip_node in self.other_nodes:
-                self.send_message("****refuse", ip_node)
+                send_message("****refuse", ip_node)
 
     def join_resp_protocol(self, ip, message):
         self.add_node(ip)
@@ -134,7 +135,7 @@ class NetworkHandler:
             if ip_node != ip:
                 mess += ip_node + ","
         mess = mess[:-1]
-        self.send_message(ip, mess)
+        send_message(ip, mess)
         mess2 = "****blockchain|"
         last_height = message.split("|")[1]
         list_blocks = []
@@ -143,7 +144,7 @@ class NetworkHandler:
             list_blocks.append(block)
         mess2 += json.dumps(list_blocks, cls=BlockEncoder)
         if mess2 != "":
-            self.send_message(ip, mess2)
+            send_message(ip, mess2)
 
     def run_server(self):
         while self.keep_running_server:
