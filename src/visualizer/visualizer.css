@@ -1,0 +1,108 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+body > div, body > section {
+    xwidth: 48%;
+}
+
+section {
+    padding: 20px;
+}
+
+#right_panel {
+    width: 40%;
+}
+
+/* Blockchain section */
+
+#blockchain {
+    width: 55%;
+    min-width: 600px;
+    min-height: 700px;
+    background-color: #fff;
+}
+
+#block_list {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.block {
+    background: #274f59;
+    padding: 0 15px;
+    margin-bottom: 5px;
+    height: 330px;
+    border-radius: 5px;
+    color: #fffee1;
+    xtransform: scaleY(1);
+    transition: height 1000ms ease, margin-bottom 1000ms ease;/*, transform 1000ms linear;*/
+    overflow: hidden;
+}
+
+.block.appearing {
+    xbackground: red;
+    xtransform: scaleY(0);
+    height: 0;
+    margin-bottom: 0;
+}
+
+.block h2 {
+    margin: 20px 0;
+}
+
+
+.block_info {
+    font-size: 0.9em;
+    display: flex;
+    justify-content: space-between;
+    line-height: 60%;
+}
+
+.hash, .hash_previous, .hash_highlight {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.7rem;
+}
+
+.hash_highlight {
+    color: #fe5849;
+    font-weight: bold;
+}
+
+.hash .hash_highlight {
+    font-size: 1.1rem;
+}
+
+
+
+.data_container {
+    height: 120px;
+    overflow-y: scroll;
+    background: #3d707c;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+pre.block_data {
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+
+/* Nodes section */
+
+#nodes {
+    background: #ffd8d6;
+    width: 100%;
+}
