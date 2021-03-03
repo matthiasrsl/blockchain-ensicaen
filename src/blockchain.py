@@ -1,5 +1,4 @@
 from datetime import datetime
-import json
 
 from src.block import Block
 from src.db_blockchain import DataBaseManager
@@ -9,7 +8,8 @@ class Blockchain:
     def __init__(self, db_name="blockchain.db",  number_0=2, clear=False):
         self.blocks = DataBaseManager(db_name, clear)
         self.number_0 = number_0
-        self.create_first_block()  # The first block doesn't have previous hash
+        if clear is not False:
+            self.create_first_block()  # The first block doesn't have previous hash
 
     def create_first_block(self):
         first_block = Block(0, "First Block", None, datetime.now())

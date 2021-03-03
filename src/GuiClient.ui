@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1042</width>
-    <height>894</height>
+    <width>1211</width>
+    <height>892</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -45,9 +45,45 @@
      <rect>
       <x>40</x>
       <y>180</y>
-      <width>961</width>
+      <width>601</width>
       <height>651</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPlainTextEdit" name="dataText">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>150</y>
+      <width>421</width>
+      <height>121</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="createButton">
+    <property name="geometry">
+     <rect>
+      <x>890</x>
+      <y>300</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Create Block</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="dataLabel">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>110</y>
+      <width>401</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Data to insert in block</string>
     </property>
    </widget>
   </widget>
@@ -57,7 +93,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1042</width>
+     <width>1211</width>
      <height>22</height>
     </rect>
    </property>

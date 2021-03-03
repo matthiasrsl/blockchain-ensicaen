@@ -1,6 +1,11 @@
+import json
+from datetime import datetime
+
 from PyQt5 import QtWidgets, QtCore
 
 import src.gui_client
+from src.block import Block, BlockEncoder
+from src.blockchain import Blockchain
 from src.network import get_local_ip, send_message
 
 
@@ -12,6 +17,8 @@ class Client(QtWidgets.QMainWindow, src.gui_client.Ui_MainWindow):
         self.ip = get_local_ip()
         self.widget.load(
             QtCore.QUrl("http://localhost:8000/T%C3%A9l%C3%A9chargements/blockchain-visualizer/visualizer.html"))
+        self.createButton.clicked.connect(self.create_block)
+        self.blockchain = Blockchain()
 
     def send_message(self, message=None):
         if message:
@@ -22,3 +29,13 @@ class Client(QtWidgets.QMainWindow, src.gui_client.Ui_MainWindow):
             message += self.lineMessage.toPlainText()
             print(message)
             send_message(self.ip, message)
+
+    def create_block(self):
+        data = self.dataText.toPlainText()
+        last_block = self.blockchain.get_last_block()
+        block = Block(last_block.index + 1, data, last_block.hash, datetime.now())
+        block.mine()
+        message = "****"
+        message += "mined_block|"
+        message += json.dumps(block, cls=BlockEncoder)
+        send_message(self.ip, message)
