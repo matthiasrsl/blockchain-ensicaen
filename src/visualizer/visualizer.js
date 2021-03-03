@@ -109,10 +109,10 @@ function main() {
     var intervalId = setInterval(function () {
         console.log("Update !");
         finishBlockTransition();
-        loadJSON("blockchain.json", (data) => updateBlockchain(data));
-        loadJSON("nodes.json", (data) => updateNodes(data));
+        loadJSON("http://localhost:8000/etc/visudata/blockchain.json", (data) => updateBlockchain(data));
+        loadJSON("http://localhost:8000/etc/visudata/nodes.json", (data) => updateNodes(data));
         //loadJSON("messages.json", (data) => updateMessages(data));
-    }, 5000);
+    }, 200);
 }
 
 main();
