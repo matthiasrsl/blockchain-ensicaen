@@ -20,3 +20,4 @@ class Start(QtWidgets.QMainWindow, src.gui_start.Ui_MainWindow):
         self.hide()
         self.client.show()
         self.client.send_message("****join|0")
+        self.client.ip = self.ipLine.text()

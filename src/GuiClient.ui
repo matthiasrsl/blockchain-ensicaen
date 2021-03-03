@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>558</width>
-    <height>307</height>
+    <width>983</width>
+    <height>570</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -40,6 +40,21 @@
      </rect>
     </property>
    </widget>
+   <widget class="QWebView" name="webView">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>190</y>
+      <width>701</width>
+      <height>321</height>
+     </rect>
+    </property>
+    <property name="url">
+     <url>
+      <string>file:///home/simon/Téléchargements/blockchain-visualizer/visualizer.html</string>
+     </url>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
@@ -47,7 +62,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>558</width>
+     <width>983</width>
      <height>22</height>
     </rect>
    </property>
@@ -64,6 +79,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QWebView</class>
+   <extends>QWidget</extends>
+   <header>QtWebKitWidgets/QWebView</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
