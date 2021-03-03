@@ -114,11 +114,11 @@ class NetworkHandler:
 
             for ip_node in self.other_nodes:
                 send_message(
-                    "****accept", ip_node
+                    ip_node, "****accept"
                 )  # dans ****accepte rajouter le hash ou l'index pour identifier le block
         else:
             for ip_node in self.other_nodes:
-                send_message("****refuse", ip_node)
+                send_message(ip_node, "****refuse")
 
     def join_resp_protocol(self, ip, message):
         self.add_node(ip)

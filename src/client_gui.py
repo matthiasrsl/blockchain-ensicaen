@@ -12,7 +12,8 @@ class Client(QtWidgets.QMainWindow, src.gui_client.Ui_MainWindow):
         self.ip = get_local_ip()
 
     def send_message(self, message=None):
-        if message is not None:
+        if message:
+            print(message)
             send_message(self.ip, message)
         else:
             message = "****"
