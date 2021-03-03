@@ -105,10 +105,10 @@ class NetworkHandler:
             self.blockchain.add_block(Block(**block))
 
     def mined_block_protocol(self, message):
-        block_info = message.split("|")
-        block_to_add = Block(block_info[0], block_info[1], block_info[2], block_info[3])
-        if block_to_add.is_valid() and block_to_add.is_previous(
-                self.blockchain.get_last_block()
+        block_info_json = json.loads(message.split("|")[1])
+        block_to_add = Block(**block_info_json)
+        if block_to_add.is_valid() and self.blockchain.get_last_block().is_previous(
+                block_to_add
         ):
             self.blockchain.add_block(block_to_add)
 
