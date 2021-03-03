@@ -19,4 +19,6 @@ class Start(QtWidgets.QMainWindow, src.gui_start.Ui_MainWindow):
     def go_button(self):
         self.hide()
         self.client.show()
+        self.client.ip = self.ipLine.text()
         self.client.send_message("****join|0")
+

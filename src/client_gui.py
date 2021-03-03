@@ -14,7 +14,8 @@ class Client(QtWidgets.QMainWindow, src.gui_client.Ui_MainWindow):
             QtCore.QUrl("http://localhost:8000/T%C3%A9l%C3%A9chargements/blockchain-visualizer/visualizer.html"))
 
     def send_message(self, message=None):
-        if message is not None:
+        if message:
+            print(message)
             send_message(self.ip, message)
         else:
             message = "****"
