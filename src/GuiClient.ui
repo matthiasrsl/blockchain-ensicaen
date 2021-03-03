@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>558</width>
-    <height>307</height>
+    <width>1042</width>
+    <height>894</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -40,6 +40,16 @@
      </rect>
     </property>
    </widget>
+   <widget class="QWebEngineView" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>180</y>
+      <width>961</width>
+      <height>651</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
@@ -47,7 +57,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>558</width>
+     <width>1042</width>
      <height>22</height>
     </rect>
    </property>
@@ -64,6 +74,15 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QWebEngineView</class>
+   <extends>QWidget</extends>
+   <header>PyQt5.QtWebEngineWidgets
+</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
