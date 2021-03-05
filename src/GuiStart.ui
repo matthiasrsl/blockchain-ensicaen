@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>393</width>
-    <height>238</height>
+    <width>326</width>
+    <height>251</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <widget class="QPushButton" name="goButton">
     <property name="geometry">
      <rect>
-      <x>70</x>
+      <x>50</x>
       <y>150</y>
       <width>89</width>
       <height>25</height>
@@ -50,13 +50,26 @@
      <string>Your public IP</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="firstButton">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>150</y>
+      <width>89</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>I'm First</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>393</width>
+     <width>326</width>
      <height>22</height>
     </rect>
    </property>

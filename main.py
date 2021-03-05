@@ -6,9 +6,10 @@ from PyQt5.QtWidgets import QApplication
 from src.network import NetworkHandler
 from src.start_gui import Start
 
+handler = NetworkHandler()
+
 
 def server():
-    handler = NetworkHandler()
     handler.start_server()
     handler.run_server()
 
@@ -20,6 +21,6 @@ if __name__ == "__main__":
     if not app:
         app = QApplication(sys.argv)
 
-    gui = Start()
+    gui = Start(handler)
     app.exec_()
     thread_server.join()
