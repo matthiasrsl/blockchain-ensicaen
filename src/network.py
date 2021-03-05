@@ -74,7 +74,7 @@ class NetworkHandler:
             self.join_resp_protocol(ip, message)
 
         elif message[4:] == "joined":
-            self.add_node(message.split("|")[1])
+            self.add_node(ip)
             print("===== Nice to meet you")
 
         elif message[4:] == "ack":
@@ -132,8 +132,7 @@ class NetworkHandler:
             pass
         for ip_node in self.other_nodes:
             if ip_node != ip:
-                mess = "****joined|" + get_local_ip()
-                send_message(ip_node, mess)
+                send_message(ip_node, "****joined")
 
     def join_protocol(self, ip, message):
         print("===== Add node")
