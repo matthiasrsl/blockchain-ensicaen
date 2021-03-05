@@ -61,5 +61,6 @@ class DataBaseManager:
         except FileNotFoundError:
             self.__init__(self.name_data_base)
 
-    def __del__(self):
-        os.remove(self.name_data_base)
+    #Might cause bug
+    #def __del__(self):
+        #os.remove(self.name_data_base)

@@ -37,7 +37,7 @@ class NetworkHandler:
         self.other_nodes = {}
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connected_clients = []
-        self.blockchain = Blockchain()
+        self.blockchain = Blockchain(clear=True)
 
         self.server_host = get_local_ip()
 
@@ -74,6 +74,7 @@ class NetworkHandler:
             self.join_resp_protocol(ip, message)
 
         elif message[4:] == "joined":
+            self.add_node(ip)
             print("===== Nice to meet you")
 
         elif message[4:] == "ack":
@@ -105,10 +106,10 @@ class NetworkHandler:
             self.blockchain.add_block(Block(**block))
 
     def mined_block_protocol(self, message):
-        block_info = message.split("|")
-        block_to_add = Block(block_info[0], block_info[1], block_info[2], block_info[3])
-        if block_to_add.is_valid() and block_to_add.is_previous(
-                self.blockchain.get_last_block()
+        block_info_json = json.loads(message.split("|")[1])
+        block_to_add = Block(**block_info_json)
+        if block_to_add.is_valid() and self.blockchain.get_last_block().is_previous(
+                block_to_add
         ):
             self.blockchain.add_block(block_to_add)
 
@@ -129,6 +130,9 @@ class NetworkHandler:
                     self.add_node(ip_node)
         except IndexError:
             pass
+        for ip_node in self.other_nodes:
+            if ip_node != ip:
+                send_message(ip_node, "****joined")
 
     def join_protocol(self, ip, message):
         print("===== Add node")
@@ -148,6 +152,15 @@ class NetworkHandler:
         mess2 += json.dumps(list_blocks, cls=BlockEncoder)
         if mess2 != "":
             send_message(ip, mess2)
+
+    def send_message_to_all(self, message):
+        connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        for ip in self.other_nodes.keys():
+            connection.connect((ip, SERVER_PORT))
+            print("Client Connected")
+            message = message.encode()
+            connection.send(message)
+            connection.close()
 
     def run_server(self):
         while self.keep_running_server:

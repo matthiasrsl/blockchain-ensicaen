@@ -44,7 +44,7 @@ if __name__ == "__main__":
     if not app:
         app = QApplication(sys.argv)
 
-    gui = Start()
+    gui = Start(handler)
     app.exec_()
 
 

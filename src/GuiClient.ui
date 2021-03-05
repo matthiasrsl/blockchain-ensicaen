@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>983</width>
-    <height>570</height>
+    <width>938</width>
+    <height>572</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,8 +20,8 @@
    <widget class="QPushButton" name="sendButton">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>60</y>
+      <x>150</x>
+      <y>230</y>
       <width>80</width>
       <height>25</height>
      </rect>
@@ -33,26 +33,84 @@
    <widget class="QTextEdit" name="lineMessage">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>20</y>
+      <x>20</x>
+      <y>80</y>
       <width>351</width>
       <height>121</height>
      </rect>
     </property>
    </widget>
-   <widget class="QWebView" name="webView">
+   <widget class="QPlainTextEdit" name="dataText">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>80</y>
+      <width>421</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>421</width>
+      <height>121</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>121</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="createButton">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>230</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Create Block</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="dataLabel">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>40</y>
+      <width>401</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>401</width>
+      <height>17</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>17</height>
+     </size>
+    </property>
+    <property name="text">
+     <string>Data to insert in block</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>190</y>
-      <width>701</width>
-      <height>321</height>
+      <y>40</y>
+      <width>301</width>
+      <height>17</height>
      </rect>
     </property>
-    <property name="url">
-     <url>
-      <string>file:///home/simon/Téléchargements/blockchain-visualizer/visualizer.html</string>
-     </url>
+    <property name="text">
+     <string>Message to send</string>
     </property>
    </widget>
   </widget>
@@ -62,16 +120,10 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>983</width>
+     <width>938</width>
      <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFIle">
-    <property name="title">
-     <string>FIle</string>
-    </property>
-   </widget>
-   <addaction name="menuFIle"/>
   </widget>
   <action name="actionSendMessage">
    <property name="text">
@@ -79,13 +131,6 @@
    </property>
   </action>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QWebView</class>
-   <extends>QWidget</extends>
-   <header>QtWebKitWidgets/QWebView</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>
