@@ -15,12 +15,14 @@ class Start(QtWidgets.QMainWindow, src.gui_start.Ui_MainWindow):
         self.goButton.clicked.connect(self.go_button)
         self.client = Client(handler)
         self.show()
+        self.handler = handler
 
     def go_button(self):
         self.hide()
         self.client.show()
         self.client.ip = self.ipLine.text()
         self.client.send_message("****join|0")
+        self.handler.blockchain.blocks.clearDB()
 
     def first_button(self):
         self.hide()
