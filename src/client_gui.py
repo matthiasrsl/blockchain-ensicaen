@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets
 
 import src.gui_client
 from src.block import Block, BlockEncoder
@@ -15,8 +15,6 @@ class Client(QtWidgets.QMainWindow, src.gui_client.Ui_MainWindow):
         self.setupUi(self)
         self.sendButton.clicked.connect(self.send_message)
         self.ip = get_local_ip()
-        self.widget.load(
-            QtCore.QUrl("http://localhost:8000/T%C3%A9l%C3%A9chargements/blockchain-visualizer/visualizer.html"))
         self.createButton.clicked.connect(self.create_block)
         self.blockchain = Blockchain()
 
