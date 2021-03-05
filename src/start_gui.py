@@ -10,7 +10,7 @@ class Start(QtWidgets.QMainWindow, src.gui_start.Ui_MainWindow):
     def __init__(self, parent=None):
         super(Start, self).__init__(parent)
         self.setupUi(self)
-        self.label.setText("You local ip is "+get_local_ip()+"\nChoose an ip to connect to")
+        self.label.setText("You local ip is " + get_local_ip() + "\nChoose an ip to connect to")
         self.ipLine.setText(get_local_ip())
         self.goButton.clicked.connect(self.go_button)
         self.client = Client()
@@ -22,3 +22,6 @@ class Start(QtWidgets.QMainWindow, src.gui_start.Ui_MainWindow):
         self.client.ip = self.ipLine.text()
         self.client.send_message("****join|0")
 
+    def first_button(self):
+        self.hide()
+        self.client.show()

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>906</width>
-    <height>336</height>
+    <width>938</width>
+    <height>572</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -49,6 +49,18 @@
       <height>121</height>
      </rect>
     </property>
+    <property name="minimumSize">
+     <size>
+      <width>421</width>
+      <height>121</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>121</height>
+     </size>
+    </property>
    </widget>
    <widget class="QPushButton" name="createButton">
     <property name="geometry">
@@ -71,6 +83,18 @@
       <width>401</width>
       <height>17</height>
      </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>401</width>
+      <height>17</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>17</height>
+     </size>
     </property>
     <property name="text">
      <string>Data to insert in block</string>
@@ -96,7 +120,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>906</width>
+     <width>938</width>
      <height>22</height>
     </rect>
    </property>

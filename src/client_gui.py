@@ -6,7 +6,7 @@ from PyQt5 import QtWidgets
 import src.gui_client
 from src.block import Block, BlockEncoder
 from src.blockchain import Blockchain
-from src.network import get_local_ip, send_message
+from src.network import send_message
 
 
 class Client(QtWidgets.QMainWindow, src.gui_client.Ui_MainWindow):
@@ -14,7 +14,6 @@ class Client(QtWidgets.QMainWindow, src.gui_client.Ui_MainWindow):
         super(Client, self).__init__(parent)
         self.setupUi(self)
         self.sendButton.clicked.connect(self.send_message)
-        self.ip = get_local_ip()
         self.createButton.clicked.connect(self.create_block)
         self.blockchain = Blockchain()
 
