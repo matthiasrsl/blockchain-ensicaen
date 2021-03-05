@@ -17,9 +17,15 @@ def launch_server():
     handler.run_server()
 
 def launch_visualizer_server():
+    old_stderr = sys.stderr
+    sys.stderr = open("etc/logs/visualizer.log", "a")
+    sys.stderr.write("=========== NEW SESSION ============\n")
+
     visualizer_handler = http.server.SimpleHTTPRequestHandler
     with socketserver.TCPServer(("", VISUALIZER_PORT), visualizer_handler) as httpd:
         httpd.serve_forever()
+
+    sys.stderr = old_stderr
 
 def launch_visualizer_client():
     os.system("firefox localhost:8000/src/visualizer/visualizer.html")

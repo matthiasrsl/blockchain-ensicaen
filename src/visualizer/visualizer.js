@@ -44,7 +44,7 @@ function updateBlockchain(data) {
             block_div.innerHTML = `
                 <h2>Block #${block.index}</h2>
                 <p class="block_info">
-                    <strong>Hash</strong> <span class="hash">${formatHash(block.hash)}</span> 
+                    <strong class="hash_label">Hash</strong> <span class="hash">${formatHash(block.hash)}</span> 
                 </p>
 
                 <p class="block_info">
