@@ -36,4 +36,4 @@ class Client(QtWidgets.QMainWindow, src.gui_client.Ui_MainWindow):
         message += "mined_block|"
         message += json.dumps(block, cls=BlockEncoder)
         self.blockchain.add_block(block)
-        send_message(self.ip, message)
+        self.handler.send_message_to_all(message)

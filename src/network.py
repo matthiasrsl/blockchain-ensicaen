@@ -37,7 +37,7 @@ class NetworkHandler:
         self.other_nodes = {}
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connected_clients = []
-        self.blockchain = Blockchain()
+        self.blockchain = Blockchain(clear=True)
 
         self.server_host = get_local_ip()
 
@@ -151,8 +151,8 @@ class NetworkHandler:
 
     def send_message_to_all(self, message):
         connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        for nodes in self.other_nodes:
-            connection.connect((nodes.ip_adresse, SERVER_PORT))
+        for ip in self.other_nodes.keys():
+            connection.connect((ip, SERVER_PORT))
             print("Client Connected")
             message = message.encode()
             connection.send(message)

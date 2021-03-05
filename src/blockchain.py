@@ -6,7 +6,7 @@ from src.db_blockchain import DataBaseManager
 
 class Blockchain:
     def __init__(self, db_name="blockchain.db",  number_0=2, clear=False):
-        self.blocks = DataBaseManager(db_name, clear)
+        self.blocks = DataBaseManager(db_name, clear=clear)
         self.number_0 = number_0
         if clear is not False:
             self.create_first_block()  # The first block doesn't have previous hash
