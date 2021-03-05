@@ -1,12 +1,12 @@
 from PyQt5 import QtWidgets
 
-import src.gui_start
-import src.gui_start
+import src.gui_ressources.gui_start
+import src.gui_ressources.gui_start
 from src.client_gui import Client
 from src.network import get_local_ip
 
 
-class Start(QtWidgets.QMainWindow, src.gui_start.Ui_MainWindow):
+class Start(QtWidgets.QMainWindow, src.gui_ressources.gui_start.Ui_MainWindow):
     def __init__(self, handler, parent=None):
         super(Start, self).__init__(parent)
         self.setupUi(self)

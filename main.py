@@ -1,8 +1,8 @@
+import http.server
+import os
+import socketserver
 import sys
 import threading
-import http.server
-import socketserver
-import os
 
 from PyQt5.QtWidgets import QApplication
 
@@ -11,8 +11,9 @@ from src.start_gui import Start
 
 VISUALIZER_PORT = 8000
 
+handler = NetworkHandler()
+
 def launch_server():
-    handler = NetworkHandler()
     handler.start_server()
     handler.run_server()
 

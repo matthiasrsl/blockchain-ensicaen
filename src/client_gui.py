@@ -3,12 +3,12 @@ from datetime import datetime
 
 from PyQt5 import QtWidgets
 
-import src.gui_client
+import src.gui_ressources.gui_client
 from src.block import Block, BlockEncoder
 from src.network import send_message
 
 
-class Client(QtWidgets.QMainWindow, src.gui_client.Ui_MainWindow):
+class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow):
     def __init__(self, handler, parent=None):
         super(Client, self).__init__(parent)
         self.setupUi(self)
