@@ -149,6 +149,15 @@ class NetworkHandler:
         if mess2 != "":
             send_message(ip, mess2)
 
+    def send_message_to_all(self, message):
+        connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        for nodes in self.other_nodes:
+            connection.connect((nodes.ip_adresse, SERVER_PORT))
+            print("Client Connected")
+            message = message.encode()
+            connection.send(message)
+            connection.close()
+
     def run_server(self):
         while self.keep_running_server:
             incoming_connections, wlist, xlist = select.select(
