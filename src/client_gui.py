@@ -24,8 +24,7 @@ class Client(QtWidgets.QMainWindow, src.gui_client.Ui_MainWindow):
         else:
             message = "****"
             message += self.lineMessage.toPlainText()
-            print(message)
-            send_message(self.ip, message)
+            self.handler.send_message_to_all(message)
 
     def create_block(self):
         data = self.dataText.toPlainText()
