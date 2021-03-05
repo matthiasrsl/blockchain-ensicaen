@@ -74,6 +74,7 @@ class NetworkHandler:
             self.join_resp_protocol(ip, message)
 
         elif message[4:] == "joined":
+            self.add_node(ip)
             print("===== Nice to meet you")
 
         elif message[4:] == "ack":
@@ -108,7 +109,7 @@ class NetworkHandler:
         block_info = message.split("|")
         block_to_add = Block(block_info[0], block_info[1], block_info[2], block_info[3])
         if block_to_add.is_valid() and block_to_add.is_previous(
-                self.blockchain.get_last_block()
+            self.blockchain.get_last_block()
         ):
             self.blockchain.add_block(block_to_add)
 
@@ -129,6 +130,9 @@ class NetworkHandler:
                     self.add_node(ip_node)
         except IndexError:
             pass
+        for ip_node in self.other_nodes:
+            if ip_node != ip:
+                send_message(ip_node, "****joined")
 
     def join_protocol(self, ip, message):
         print("===== Add node")
