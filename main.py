@@ -10,6 +10,7 @@ from src.network import NetworkHandler
 from src.start_gui import Start
 
 VISUALIZER_PORT = 8000
+REDIRECT_VISUALIZER_SERVER_LOG = True
 
 
 def launch_server(handler):
@@ -17,16 +18,19 @@ def launch_server(handler):
     handler.run_server()
 
 def launch_visualizer_server():
-    old_stderr = sys.stderr
-    sys.stderr = open("etc/logs/visualizer.log", "a")
-    sys.stderr.write("=========== NEW SESSION ============\n")
+
+    if REDIRECT_VISUALIZER_SERVER_LOG:
+        old_stderr = sys.stderr
+        sys.stderr = open("etc/logs/visualizer.log", "a")
+        sys.stderr.write("=========== NEW SESSION ============\n")
 
 
     visualizer_handler = http.server.SimpleHTTPRequestHandler
     with socketserver.TCPServer(("", VISUALIZER_PORT), visualizer_handler) as httpd:
         httpd.serve_forever()
 
-    sys.stderr = old_stderr
+    if REDIRECT_VISUALIZER_SERVER_LOG:
+        sys.stderr = old_stderr
 
 def init_visulizer_data():
     with open("etc/visudata/blockchain.json", "w") as file:

@@ -67,7 +67,15 @@ class DataBaseManager:
         return blocks
 
     def updateVisualizer(self):
-        blocks = self.get_all_blocks()
+        blocks_raw = self.get_all_blocks()
+        blocks = []
+        for block in blocks_raw:
+            try:
+                block.data = json.loads(block.data)
+            except json.decoder.JSONDecodeError:
+                block.data = block.data
+            blocks.append(block)
+            
         blockchain = {"blockchain": blocks}
         blockchain_json = json.dumps(blockchain, cls=BlockEncoder)
         with open("etc/visudata/blockchain.json", "w") as file:
