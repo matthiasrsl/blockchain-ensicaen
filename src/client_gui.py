@@ -14,12 +14,15 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
         self.setupUi(self)
         self.handler = handler
         self.blockchain = handler.blockchain
+        handler.client = self
+        self.hiddenRefreshButton.setVisible(False)
 
         self.sendButton.clicked.connect(self.send_message)
         self.createButton.clicked.connect(self.create_block)
         self.manuelBox.stateChanged.connect(self.check_receive)
         self.acceptBox.accepted.connect(self.handler.accept_mined_block)
         self.acceptBox.rejected.connect(self.handler.refuse_mined_block)
+        self.hiddenRefreshButton.clicked.connect(self.set_displayer_text)
 
     def send_message(self, message=None):
         if message:
@@ -43,3 +46,7 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
 
     def check_receive(self):
         self.acceptBox.setEnabled(self.manuelBox.isChecked())
+        self.handler.manual_validation = self.manuelBox.isChecked()
+
+    def set_displayer_text(self):
+        self.blockDisplayer.setText(str(self.handler.block_to_add))
