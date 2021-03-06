@@ -13,7 +13,12 @@ class DataBaseManager:
         c = conn.cursor()
         c.execute(
             """CREATE TABLE IF NOT EXISTS blocks(id INTEGER , nonce INTEGER,
-             data TEXT , hash TEXT , precedent_hash TEXT , d DATE )"""
+             data TEXT , hash TEXT PRIMARY KEY, precedent_hash TEXT , d DATE )"""
+        )
+        print("couc")
+        c.execute(
+            """CREATE TABLE IF NOT EXISTS forks(hash_feuille TEXT,id_feuille INTEGER , FOREIGN KEY (hash_feuille) 
+            REFERENCES blocks(hash)) """
         )
         conn.commit()
         conn.close()
