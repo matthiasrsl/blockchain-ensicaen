@@ -1,5 +1,6 @@
 import os
 import sqlite3
+import json
 
 from src.block import *
 
@@ -32,6 +33,7 @@ class DataBaseManager:
         c.execute("INSERT INTO blocks VALUES (?,?,?,?,?,?)", row)
         conn.commit()
         conn.close()
+        self.updateVisualizer()
 
     def getBlockAtIndex(self, i):
         conn = sqlite3.connect(self.name_data_base)
@@ -53,6 +55,23 @@ class DataBaseManager:
         conn.commit()
         conn.close()
         return block
+
+    def get_all_blocks(self):
+        conn = sqlite3.connect(self.name_data_base)
+        c = conn.cursor()
+        c.execute("SELECT * FROM blocks")
+        blocks_raw = c.fetchall()
+        blocks = [Block(result[0], result[2], result[4], result[5], result[1]) for result in blocks_raw]
+        conn.commit()
+        conn.close()
+        return blocks
+
+    def updateVisualizer(self):
+        blocks = self.get_all_blocks()
+        blockchain = {"blockchain": blocks}
+        blockchain_json = json.dumps(blockchain, cls=BlockEncoder)
+        with open("etc/visudata/blockchain.json", "w") as file:
+            file.write(blockchain_json)
 
     def clearDB(self):
         try:

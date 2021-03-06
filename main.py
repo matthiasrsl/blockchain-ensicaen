@@ -22,16 +22,23 @@ def launch_visualizer_server():
     sys.stderr = open("etc/logs/visualizer.log", "a")
     sys.stderr.write("=========== NEW SESSION ============\n")
 
+
     visualizer_handler = http.server.SimpleHTTPRequestHandler
     with socketserver.TCPServer(("", VISUALIZER_PORT), visualizer_handler) as httpd:
         httpd.serve_forever()
 
     sys.stderr = old_stderr
 
+def init_visulizer_data():
+    with open("etc/visudata/blockchain.json", "w") as file:
+        file.write('''{"blockchain": []}''')
+
 def launch_visualizer_client():
     os.system("firefox localhost:8000/src/visualizer/visualizer.html")
 
 if __name__ == "__main__":
+    init_visulizer_data()
+
     thread_server = threading.Thread(target=launch_server)
     thread_server.start()
 
