@@ -5,11 +5,11 @@ from PyQt5 import QtWidgets
 
 import src.gui_ressources.gui_client
 from src.block import Block, BlockEncoder
-from src.network import send_message
+from src.network import send_message, NetworkHandler
 
 
 class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow):
-    def __init__(self, handler, parent=None):
+    def __init__(self, handler: NetworkHandler, parent=None):
         super(Client, self).__init__(parent)
         self.setupUi(self)
         self.handler = handler
@@ -18,6 +18,8 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
         self.sendButton.clicked.connect(self.send_message)
         self.createButton.clicked.connect(self.create_block)
         self.manuelBox.stateChanged.connect(self.check_receive)
+        self.acceptBox.accepted.connect(self.handler.accept_mined_block)
+        self.acceptBox.rejected.connect(self.handler.refuse_mined_block)
 
     def send_message(self, message=None):
         if message:
@@ -41,4 +43,3 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
 
     def check_receive(self):
         self.acceptBox.setEnabled(self.manuelBox.isChecked())
-

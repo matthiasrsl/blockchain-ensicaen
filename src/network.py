@@ -184,7 +184,6 @@ class NetworkHandler:
 
         self.wait = False
 
-
     def run_server(self):
         while self.keep_running_server:
             incoming_connections, wlist, xlist = select.select(
