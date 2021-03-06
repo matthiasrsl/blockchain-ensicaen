@@ -12,10 +12,12 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
     def __init__(self, handler, parent=None):
         super(Client, self).__init__(parent)
         self.setupUi(self)
-        self.sendButton.clicked.connect(self.send_message)
-        self.createButton.clicked.connect(self.create_block)
         self.handler = handler
         self.blockchain = handler.blockchain
+
+        self.sendButton.clicked.connect(self.send_message)
+        self.createButton.clicked.connect(self.create_block)
+        self.manuelBox.stateChanged.connect(self.check_receive)
 
     def send_message(self, message=None):
         if message:
@@ -36,3 +38,7 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
         message += json.dumps(block, cls=BlockEncoder)
         self.blockchain.add_block(block)
         self.handler.send_message_to_all(message)
+
+    def check_receive(self):
+        self.acceptBox.setEnabled(self.manuelBox.isChecked())
+

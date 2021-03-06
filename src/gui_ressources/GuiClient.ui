@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Client</string>
   </property>
   <property name="enter" stdset="0">
    <string>Return</string>
@@ -111,6 +111,58 @@
     </property>
     <property name="text">
      <string>Message to send</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="manuelBox">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>330</y>
+      <width>92</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Manual</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>300</y>
+      <width>141</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Block recieved</string>
+    </property>
+   </widget>
+   <widget class="QTextBrowser" name="textBrowser">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>330</y>
+      <width>341</width>
+      <height>181</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QDialogButtonBox" name="acceptBox">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>370</y>
+      <width>169</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="standardButtons">
+     <set>QDialogButtonBox::No|QDialogButtonBox::Yes</set>
     </property>
    </widget>
   </widget>
