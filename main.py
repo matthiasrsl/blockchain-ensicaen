@@ -13,9 +13,11 @@ VISUALIZER_PORT = 8000
 
 handler = NetworkHandler()
 
+
 def launch_server():
     handler.start_server()
     handler.run_server()
+
 
 def launch_visualizer_server():
     old_stderr = sys.stderr
@@ -28,11 +30,13 @@ def launch_visualizer_server():
 
     sys.stderr = old_stderr
 
+
 def launch_visualizer_client():
     os.system("firefox localhost:8000/src/visualizer/visualizer.html")
 
+
 if __name__ == "__main__":
-    thread_server = threading.Thread(target=launch_server)
+    thread_server = threading.Thread(target=launch_server, daemon=True)
     thread_server.start()
 
     thread_visualiser_server = threading.Thread(target=launch_visualizer_server, daemon=True)
@@ -48,5 +52,3 @@ if __name__ == "__main__":
     gui = Start(handler)
     app.exec_()
 
-
-    thread_server.join()
