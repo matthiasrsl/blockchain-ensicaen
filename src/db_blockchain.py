@@ -23,6 +23,24 @@ class DataBaseManager:
         conn.commit()
         conn.close()
 
+    def add_fork(self, hash, id):
+        conn = sqlite3.connect(self.name_data_base)
+        c = conn.cursor()
+        row = [
+            hash,
+            id,
+        ]
+        c.execute("INSERT INTO forks VALUES (?,?)", row)
+        conn.commit()
+        conn.close()
+
+    def drop_fork(self, hash):
+        conn = sqlite3.connect(self.name_data_base)
+        c = conn.cursor()
+        c.execute("DELETE FROM forks WHERE hash_feuille=?", (hash,))
+        conn.commit()
+        conn.close()
+
     def add_block(self, block):
         conn = sqlite3.connect(self.name_data_base)
         c = conn.cursor()
@@ -66,6 +84,6 @@ class DataBaseManager:
         except FileNotFoundError:
             self.__init__(self.name_data_base)
 
-    #Might cause bug
-    #def __del__(self):
-        #os.remove(self.name_data_base)
+    # Might cause bug
+    # def __del__(self):
+    # os.remove(self.name_data_base)
