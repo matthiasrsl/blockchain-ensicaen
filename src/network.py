@@ -44,6 +44,11 @@ class NetworkHandler:
         # self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.keep_running_server = True
 
+        self.manual_validation = False
+        self.current_block_to_add = None
+        self.block_to_add = None
+        self.wait = False
+
     def start_server(self):
         self.server.bind((self.server_host, SERVER_PORT))
         self.server.listen(5)
@@ -107,19 +112,20 @@ class NetworkHandler:
 
     def mined_block_protocol(self, message):
         block_info_json = json.loads(message.split("|")[1])
-        block_to_add = Block(**block_info_json)
-        if block_to_add.is_valid() and self.blockchain.get_last_block().is_previous(
-                block_to_add
-        ):
-            self.blockchain.add_block(block_to_add)
+        self.block_to_add = Block(**block_info_json)
 
-            for ip_node in self.other_nodes:
-                send_message(
-                    ip_node, "****accept"
-                )  # dans ****accepte rajouter le hash ou l'index pour identifier le block
+        if self.manual_validation:
+            self.wait = True
+            while self.wait:
+                pass
+
         else:
-            for ip_node in self.other_nodes:
-                send_message(ip_node, "****refuse")
+            if self.block_to_add.is_valid() and self.blockchain.get_last_block().is_previous(
+                    self.block_to_add
+            ):
+                self.accept_mined_block()
+            else:
+                self.refuse_mined_block()
 
     def join_resp_protocol(self, ip, message):
         self.add_node(ip)
@@ -161,6 +167,23 @@ class NetworkHandler:
             message = message.encode()
             connection.send(message)
             connection.close()
+
+    def accept_mined_block(self):
+        self.blockchain.add_block(self.block_to_add)
+
+        for ip_node in self.other_nodes:
+            send_message(
+                ip_node, "****accept"
+            )  # dans ****accepte rajouter le hash ou l'index pour identifier le block
+
+        self.wait = False
+
+    def refuse_mined_block(self):
+        for ip_node in self.other_nodes:
+            send_message(ip_node, "****refuse")
+
+        self.wait = False
+
 
     def run_server(self):
         while self.keep_running_server:
