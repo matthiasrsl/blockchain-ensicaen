@@ -11,9 +11,8 @@ from src.start_gui import Start
 
 VISUALIZER_PORT = 8000
 
-handler = NetworkHandler()
 
-def launch_server():
+def launch_server(handler):
     handler.start_server()
     handler.run_server()
 
@@ -39,7 +38,9 @@ def launch_visualizer_client():
 if __name__ == "__main__":
     init_visulizer_data()
 
-    thread_server = threading.Thread(target=launch_server)
+    handler = NetworkHandler()
+
+    thread_server = threading.Thread(target=launch_server, args=(handler,))
     thread_server.start()
 
     thread_visualiser_server = threading.Thread(target=launch_visualizer_server, daemon=True)
