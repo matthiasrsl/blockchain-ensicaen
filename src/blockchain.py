@@ -40,6 +40,12 @@ class Blockchain:
     def get_height(self):
         return self.get_last_block().index
 
+    def add_fork(self, hash_block, id):
+        self.blocks.add_fork(hash_block,id)
+
+    def drop_fork(self,hash_block):
+        self.blocks.drop_fork(hash_block)
+
     def __del__(self):
         del self.blocks
 

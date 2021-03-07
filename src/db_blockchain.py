@@ -23,21 +23,21 @@ class DataBaseManager:
         conn.commit()
         conn.close()
 
-    def add_fork(self, hash, id):
+    def add_fork(self, hash_block, id):
         conn = sqlite3.connect(self.name_data_base)
         c = conn.cursor()
         row = [
-            hash,
+            hash_block,
             id,
         ]
         c.execute("INSERT INTO forks VALUES (?,?)", row)
         conn.commit()
         conn.close()
 
-    def drop_fork(self, hash):
+    def drop_fork(self, hash_block):
         conn = sqlite3.connect(self.name_data_base)
         c = conn.cursor()
-        c.execute("DELETE FROM forks WHERE hash_feuille=?", (hash,))
+        c.execute("DELETE FROM forks WHERE hash_feuille=?", (hash_block,))
         conn.commit()
         conn.close()
 
@@ -67,15 +67,20 @@ class DataBaseManager:
         conn.close()
         return block
 
-    def getLastBlock(self):
+    def getLastBlocks(self):
         conn = sqlite3.connect(self.name_data_base)
         c = conn.cursor()
-        c.execute("SELECT MAX(id),data,hash,precedent_hash,d,nonce FROM blocks")
-        result = c.fetchone()
-        block = Block(result[0], result[1], result[3], result[4], result[5])
+        c.execute("SELECT MAX(id_feuille),hash_feuille FROM forks")
+        result = c.fetchall()
+        blocks = []
+        for row in result:
+            hash_last = row[1]
+            c.execute("SELECT * FROM blocks WHERE hash=?",hash_last)
+            result = c.fetchone()
+            blocks.append(Block(result[0], result[1], result[3], result[4], result[5]))
         conn.commit()
         conn.close()
-        return block
+        return blocks
 
     def clearDB(self):
         try:
