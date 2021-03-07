@@ -108,15 +108,28 @@ class NetworkHandler:
     def mined_block_protocol(self, message):
         block_info_json = json.loads(message.split("|")[1])
         block_to_add = Block(**block_info_json)
-        if block_to_add.is_valid() and self.blockchain.get_last_block().is_previous(
-            block_to_add
-        ):
-            self.blockchain.add_block(block_to_add)
-
-            for ip_node in self.other_nodes:
-                send_message(
-                    ip_node, "****accept"
-                )  # dans ****accepte rajouter le hash ou l'index pour identifier le block
+        last_blocks = self.blockchain.get_last_block()
+        if (
+            len(last_blocks) == 1 and block_to_add.index == last_blocks[0].index
+        ):  # création d'un fork, il faut rajouter un temps maximal ce temps va dependre du nombre de noeuds et du temps d'execution de la preuve de travail (nombre de 0)
+            if block_to_add.is_valid() and self.blockchain.get_previous_block(
+                last_blocks[0].hash
+            ).is_previous(block_to_add):
+                self.blockchain.add_fork(block_to_add.hash, block_to_add.index)
+                self.blockchain.add_block(block_to_add)
+        elif block_to_add.is_valid() and block_to_add.index == last_blocks[0].index + 1:
+            for block in last_blocks:
+                if block.is_previous(block_to_add):
+                    self.blockchain.drop_fork(block.hash)
+                    self.blockchain.add_block(block_to_add)
+                    self.blockchain.add_fork(block_to_add.hash, block_to_add.index)
+                    for ip_node in self.other_nodes:
+                        send_message(
+                            ip_node, "****accept"
+                        )  # dans ****accepte rajouter le hash ou l'index pour identifier le block
+                else:
+                    for ip_node in self.other_nodes:
+                        send_message(ip_node, "****refuse")
         else:
             for ip_node in self.other_nodes:
                 send_message(ip_node, "****refuse")

@@ -32,13 +32,16 @@ class Blockchain:
         self.blocks.add_block(block)
 
     def get_last_block(self):
-        return self.blocks.getLastBlock()
+        return self.blocks.getLastBlocks()
 
     def get_block_at_index(self, index):
         return self.blocks.getBlockAtIndex(index)
 
     def get_height(self):
         return self.get_last_block().index
+
+    def get_previous_block(self,hash_block):
+        return self.get_previous_block(hash_block)
 
     def add_fork(self, hash_block, id):
         self.blocks.add_fork(hash_block,id)
