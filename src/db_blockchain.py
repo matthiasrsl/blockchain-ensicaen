@@ -58,7 +58,7 @@ class DataBaseManager:
     def getBlockAtIndex(self, index):
         conn = sqlite3.connect(self.name_data_base)
         c = conn.cursor()
-        c.execute("SELECT * FROM blocks WHERE id=?", (index, ))
+        c.execute("SELECT * FROM blocks WHERE id=?", (index,))
         result = c.fetchone()
         block = Block(result[0], result[2], result[4], result[5], result[1])
         conn.commit()
@@ -68,30 +68,32 @@ class DataBaseManager:
     def getLastBlocks(self):
         conn = sqlite3.connect(self.name_data_base)
         c = conn.cursor()
-        c.execute("SELECT MAX(id_feuille),hash_feuille FROM forks") #pour être a l'abris des collisions ont peut également verifier les indexs
+        c.execute("SELECT MAX(id_feuille),hash_feuille FROM forks")  # pour être a l'abris des collisions ont peut
+        # également verifier les indexs
         result = c.fetchall()
         blocks = []
         for row in result:
             hash_last = row[1]
-            c.execute("SELECT * FROM blocks WHERE hash=?", (hash_last, ))
+            c.execute("SELECT * FROM blocks WHERE hash=?", (hash_last,))
             result = c.fetchone()
             blocks.append(Block(result[0], result[1], result[3], result[4], result[5]))
         conn.commit()
         conn.close()
         return blocks
 
-    def get_previous_block(self,hash_block):
+    def get_previous_block(self, hash_block): # au final pas très utile une fonction qui retourn un block en fontcion de son hash suffit
         conn = sqlite3.connect(self.name_data_base)
         c = conn.cursor()
-        c.execute("SELECT precedent_hash FROM blocks WHERE hash=?", (hash_block, )) #pour être a l'abris des collisions ont peut également verifier les indexs
+        c.execute("SELECT precedent_hash FROM blocks WHERE hash=?",
+                  (hash_block,))  # pour être a l'abris des collisions ont peut également verifier les indexs
         result = c.fetchone()
-        c.execute("SELECT * FROM blocks WHERE hash=?",result) #pour être a l'abris des collisions ont peut également verifier les indexs
+        c.execute("SELECT * FROM blocks WHERE hash=?",
+                  result)  # pour être a l'abris des collisions ont peut également verifier les indexs
         result = c.fetchone()
         block = (Block(result[0], result[1], result[3], result[4], result[5]))
         conn.commit()
         conn.close()
         return block
-
 
     def clearDB(self):
         try:

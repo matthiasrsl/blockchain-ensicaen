@@ -110,13 +110,17 @@ class NetworkHandler:
         block_to_add = Block(**block_info_json)
         last_blocks = self.blockchain.get_last_block()
         if (
-            len(last_blocks) == 1 and block_to_add.index == last_blocks[0].index
-        ):  # création d'un fork, il faut rajouter un temps maximal ce temps va dependre du nombre de noeuds et du temps d'execution de la preuve de travail (nombre de 0)
-            if block_to_add.is_valid() and self.blockchain.get_previous_block(
-                last_blocks[0].hash
-            ).is_previous(block_to_add):
-                self.blockchain.add_fork(block_to_add.hash, block_to_add.index)
-                self.blockchain.add_block(block_to_add)
+            block_to_add.index == last_blocks[0].index
+            and block_to_add.is_valid()
+            and self.blockchain.get_previous_block(last_blocks[0].hash).is_previous(
+                block_to_add
+            )
+            # and block_to_add.date - ledernierblockarrivé.date < 2 * t avec t le temps d'envoie d'un bloc a tous les noeuds
+        ):  # création d'un fork,il faut rajouter un temps maximal ce temps : il faut juste que la difference entre le temps du bloc 8A et 8B soit inférieur a t ou t>au temps de transmission d'un block a tous les noeuds!
+            self.blockchain.add_fork(block_to_add.hash, block_to_add.index)
+            self.blockchain.add_block(block_to_add)
+            for ip_node in self.other_nodes:
+                send_message(ip_node, "****refuse")
         elif block_to_add.is_valid() and block_to_add.index == last_blocks[0].index + 1:
             for block in last_blocks:
                 if block.is_previous(block_to_add):
@@ -124,9 +128,7 @@ class NetworkHandler:
                     self.blockchain.add_block(block_to_add)
                     self.blockchain.add_fork(block_to_add.hash, block_to_add.index)
                     for ip_node in self.other_nodes:
-                        send_message(
-                            ip_node, "****accept"
-                        )  # dans ****accepte rajouter le hash ou l'index pour identifier le block
+                        send_message(ip_node, "****accept")
                 else:
                     for ip_node in self.other_nodes:
                         send_message(ip_node, "****refuse")
@@ -159,9 +161,31 @@ class NetworkHandler:
         mess2 = "****blockchain|"
         last_height = message.split("|")[1]
         list_blocks = []
-        for i in range(int(last_height), self.blockchain.get_height() + 1):
-            block = self.blockchain.get_block_at_index(i)
-            list_blocks.append(block)
+        last_blocks = self.blockchain.get_last_block()
+        if (
+            len(last_blocks) > 1
+        ):  # rajouter un code dans le protocol pour envoyer les deux branches (qui sont au même niveau)
+            for block in last_blocks:
+                list_blocks.append(block)
+                current_block = block
+                for i in range(int(last_height), last_blocks[0].index + 1):
+                    if current_block not in list_blocks:
+                        list_blocks.append(current_block)
+                    if current_block.index != 0:
+                        current_block = self.blockchain.get_previous_block(
+                            current_block.hash
+                        )
+        else:
+            current_block = last_blocks[0]
+            for i in range(int(last_height), last_blocks[0].index + 1):
+                if current_block not in list_blocks:
+                    list_blocks.append(current_block)
+                if current_block.index != 0:
+                    current_block = self.blockchain.get_previous_block(
+                        current_block.hash
+                    )
+
+        # sorted(list_blocks,key=) trier en fonction de l'id mais est ce vraiment utile?
         mess2 += json.dumps(list_blocks, cls=BlockEncoder)
         if mess2 != "":
             send_message(ip, mess2)
