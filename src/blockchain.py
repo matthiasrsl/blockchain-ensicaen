@@ -15,6 +15,7 @@ class Blockchain:
         first_block = Block(0, "First Block", None, datetime.now())
         # We can reduce the format if we want to take less space
         self.add_block(first_block)
+        self.add_fork(first_block.hash,0)
 
     def verify_blockchain(self):
         curr_index = self.get_last_block().index

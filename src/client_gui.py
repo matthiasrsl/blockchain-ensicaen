@@ -28,11 +28,12 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
 
     def create_block(self):
         data = self.dataText.toPlainText()
-        last_block = self.blockchain.get_last_block()
-        block = Block(last_block.index + 1, data, last_block.hash, datetime.now())
+        last_block = self.blockchain.get_last_blocks()
+        block = Block(last_block[0].index + 1, data, last_block[0].hash, datetime.now())
         block.mine()
         message = "****"
         message += "mined_block|"
         message += json.dumps(block, cls=BlockEncoder)
         self.blockchain.add_block(block) #problème!
+        self.blockchain.add_fork(block.hash,block.index)
         self.handler.send_message_to_all(message)
