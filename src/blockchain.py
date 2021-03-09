@@ -43,6 +43,9 @@ class Blockchain:
     def get_previous_block(self,hash_block):
         return self.get_previous_block(hash_block)
 
+    def get_block(self,hash_block):
+        return self.get_block(hash_block)
+
     def add_fork(self, hash_block, id):
         self.blocks.add_fork(hash_block,id)
 

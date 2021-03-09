@@ -88,12 +88,24 @@ class DataBaseManager:
                   (hash_block,))  # pour être a l'abris des collisions ont peut également verifier les indexs
         result = c.fetchone()
         c.execute("SELECT * FROM blocks WHERE hash=?",
-                  result)  # pour être a l'abris des collisions ont peut également verifier les indexs
+                  (result,))  # pour être a l'abris des collisions ont peut également verifier les indexs
         result = c.fetchone()
         block = (Block(result[0], result[1], result[3], result[4], result[5]))
         conn.commit()
         conn.close()
         return block
+
+    def get_block(self,hash_block):
+        conn = sqlite3.connect(self.name_data_base)
+        c = conn.cursor()
+        c.execute("SELECT * FROM blocks WHERE hash=?",
+                  (hash_block,))
+        result = c.fetchone()
+        block = (Block(result[0], result[1], result[3], result[4], result[5]))
+        conn.commit()
+        conn.close()
+        return block
+
 
     def clearDB(self):
         try:
