@@ -112,7 +112,7 @@ class NetworkHandler:
         if (
             block_to_add.index == last_blocks[0].index
             and block_to_add.is_valid()
-            and self.blockchain.get_previous_block(last_blocks[0].hash).is_previous(
+            and self.blockchain.get_block(last_blocks[0].previous_hash).is_previous(
                 block_to_add
             )
             # and block_to_add.date - ledernierblockarrivé.date < 2 * t avec t le temps d'envoie d'un bloc a tous les noeuds
@@ -168,8 +168,8 @@ class NetworkHandler:
                 if current_block not in list_blocks:
                     list_blocks.append(current_block)
                 if current_block.index != 0:
-                    current_block = self.blockchain.get_previous_block(
-                        current_block.hash
+                    current_block = self.blockchain.get_block(
+                        current_block.previous_hash
                     )
 
         # sorted(list_blocks,key=) trier en fonction de l'id mais est ce vraiment utile?
