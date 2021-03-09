@@ -108,12 +108,16 @@ class NetworkHandler:
     def mined_block_protocol(self, message):
         block_info_json = json.loads(message.split("|")[1])
         block_to_add = Block(**block_info_json)
-        last_blocks = self.blockchain.get_last_block()
+        last_blocks = self.blockchain.get_last_blocks()
         if (
             block_to_add.index == last_blocks[0].index
             and block_to_add.is_valid()
             and self.blockchain.get_block(last_blocks[0].previous_hash).is_previous(
                 block_to_add
+                and (
+                    block_to_add.date - self.blockchain.get_real_last_block().date
+                ).seconds
+                < 2
             )
             # and block_to_add.date - ledernierblockarrivé.date < 2 * t avec t le temps d'envoie d'un bloc a tous les noeuds
         ):  # création d'un fork,il faut rajouter un temps maximal ce temps : il faut juste que la difference entre le temps du bloc 8A et 8B soit inférieur a t ou t>au temps de transmission d'un block a tous les noeuds!
@@ -161,7 +165,7 @@ class NetworkHandler:
         mess2 = "****blockchain|"
         last_height = message.split("|")[1]
         list_blocks = []
-        last_blocks = self.blockchain.get_last_block()
+        last_blocks = self.blockchain.get_last_blocks()
         for block in last_blocks:
             current_block = block
             for i in range(int(last_height), last_blocks[0].index + 1):

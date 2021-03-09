@@ -31,8 +31,18 @@ class Blockchain:
     def add_block(self, block):
         self.blocks.add_block(block)
 
-    def get_last_block(self):
+    def get_last_blocks(self):
         return self.blocks.getLastBlocks()
+
+    def get_real_last_block(self):
+        list_block = self.get_last_blocks()
+        last_block = list_block[0]
+
+        for block in list_block:
+            if last_block.date < block.date:
+                last_block = block
+
+        return last_block
 
     def get_block_at_index(self, index):
         return self.blocks.getBlockAtIndex(index)
