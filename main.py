@@ -3,6 +3,7 @@ import os
 import socketserver
 import sys
 import threading
+import pathlib
 
 from PyQt5.QtWidgets import QApplication
 
@@ -33,6 +34,7 @@ def launch_visualizer_server():
         sys.stderr = old_stderr
 
 def init_visulizer_data():
+    pathlib.Path("./etc/visudata").mkdir(parents=True, exist_ok=True)
     with open("etc/visudata/blockchain.json", "w") as file:
         file.write('''{"blockchain": []}''')
 
