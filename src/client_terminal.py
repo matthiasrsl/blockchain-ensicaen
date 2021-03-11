@@ -15,14 +15,19 @@ class Client_terminal:
                 data = input("data:")
                 self.create_block(data)
 
+            if command == "m":
+                data = input("data")
+                self.send_message(data)
+
+            if command == "m_ip":
+                ip = input("ip")
+                data = input("data")
+                self.send_message_to_ip(data, ip)
+
     def send_message(self, message=None):
-        if message:
-            print(message)
-            send_message(self.ip, message)
-        else:
-            message = "****"
-            message += self.lineMessage.toPlainText()
-            self.handler.send_message_to_all(message)
+        message = "****"
+        message += message
+        self.handler.send_message_to_all(message)
 
     def create_block(self, data):
         last_block = self.blockchain.get_last_block()
@@ -33,3 +38,8 @@ class Client_terminal:
         message += json.dumps(block, cls=BlockEncoder)
         self.blockchain.add_block(block)
         self.handler.send_message_to_all(message)
+
+    def send_message_to_ip(self, mes, ip):
+        message = "****"
+        message += mes
+        send_message(ip, message)
