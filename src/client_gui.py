@@ -26,7 +26,7 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
             message += self.lineMessage.toPlainText()
             self.handler.send_message_to_all(message)
 
-    def create_block(self):
+    def create_block(self): # A modifier il faut qu'il puisse choisir sa branche et que les conditions dans la methode mined_block_protocol soient respecté avant de l'ajouter (add_block et add_fork)
         data = self.dataText.toPlainText()
         last_block = self.blockchain.get_last_blocks()
         block = Block(last_block[0].index + 1, data, last_block[0].hash, datetime.now())

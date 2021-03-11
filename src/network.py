@@ -112,119 +112,120 @@ class NetworkHandler:
     def mined_block_protocol(self, message):
         block_info_json = json.loads(message.split("|")[1])
         block_to_add = Block(**block_info_json)
-        last_blocks = self.blockchain.get_last_blocks()
-        if (
-            block_to_add.index == last_blocks[0].index
-            and block_to_add.is_valid()
-            and self.blockchain.get_block(last_blocks[0].previous_hash).is_previous(
-                block_to_add
-                and (
-                    block_to_add.date - self.blockchain.get_real_last_block().date
-                ).seconds
-                < 2
-            )
-            # and block_to_add.date - ledernierblockarrivé.date < 2 * t avec t le temps d'envoie d'un bloc a tous les noeuds
-        ):  # création d'un fork,il faut rajouter un temps maximal ce temps : il faut juste que la difference entre le temps du bloc 8A et 8B soit inférieur a t ou t>au temps de transmission d'un block a tous les noeuds!
-            self.blockchain.add_fork(block_to_add.hash, block_to_add.index)
-            self.blockchain.add_block(block_to_add)
-            for ip_node in self.other_nodes:
-                send_message(ip_node, "****refuse")
-        elif block_to_add.is_valid() and block_to_add.index == last_blocks[0].index + 1:
-            for block in last_blocks:
-                if block.is_previous(block_to_add):
-                    self.blockchain.drop_fork(block.hash)
-                    self.blockchain.add_block(block_to_add)
-                    self.blockchain.add_fork(block_to_add.hash, block_to_add.index)
-                    for ip_node in self.other_nodes:
-                        send_message(ip_node, "****accept")
-                else:
-                    for ip_node in self.other_nodes:
-                        send_message(ip_node, "****refuse")
-        else:
-            for ip_node in self.other_nodes:
-                send_message(ip_node, "****refuse")
+        leaves = self.blockchain.get_leaves()
 
-    def join_resp_protocol(self, ip, message):
-        self.add_node(ip)
-        try:
-            ip_list = message.split("|")[1].split(",")
-            for ip_node in ip_list:
-                if ip_node:
-                    self.add_node(ip_node)
-        except IndexError:
-            pass
-        for ip_node in self.other_nodes:
-            if ip_node != ip:
-                send_message(ip_node, "****joined")
-
-    def join_protocol(self, ip, message):
-        print("===== Add node")
-        self.add_node(ip)
-        mess = "****join_resp|"
-        for ip_node in self.other_nodes:
-            if ip_node != ip:
-                mess += ip_node + ","
-        mess = mess[:-1]
-        send_message(ip, mess)
-        mess2 = "****blockchain|"
-        last_height = message.split("|")[1]
-        list_blocks = []
-        last_blocks = self.blockchain.get_last_blocks()
-        for block in last_blocks:
-            current_block = block
-            for i in range(int(last_height), last_blocks[0].index + 1):
-                if current_block not in list_blocks:
-                    list_blocks.append(current_block)
-                if current_block.index != 0:
-                    current_block = self.blockchain.get_block(
-                        current_block.previous_hash
-                    )
-
-        # sorted(list_blocks,key=) trier en fonction de l'id mais est ce vraiment utile?
-        mess2 += json.dumps(list_blocks, cls=BlockEncoder)
-        mess2 += "|"
-
-        leaves = self.blockchain.get_leafs()
-        print(leaves)
-        mess2 += json.dumps(leaves)
-
-        if mess2 != "":
-            send_message(ip, mess2)
-
-    def send_message_to_all(self, message):
-        connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        for ip in self.other_nodes.keys():
-            connection.connect((ip, SERVER_PORT))
-            print("Client Connected")
-            message = message.encode()
-            connection.send(message)
-            connection.close()
-
-    def run_server(self):
-        while self.keep_running_server:
-            incoming_connections, wlist, xlist = select.select(
-                [self.server], [], [], LISTEN_TIME
-            )
-
-            for connection in incoming_connections:
-                client_connection, client_connection_info = connection.accept()
-                self.connected_clients.append(client_connection)
-
-            clients_to_be_read = []
-            try:
-                clients_to_be_read, wlist, xlist = select.select(
-                    self.connected_clients, [], [], LISTEN_TIME
+        for leaf in leaves:
+            leaf_block = self.blockchain.get_block(leaf["hash"])
+            if (  # fork case
+                block_to_add.index == leaf_block.index
+                and block_to_add.is_valid()
+                and self.blockchain.get_block(leaf_block.previous_hash).is_previous(
+                    block_to_add
                 )
-            except select.error:
-                print("error")
-            else:
-                for client in clients_to_be_read:
-                    message = client.recv(RECV_SIZE)
-                    ip, port = client.getpeername()
-                    message = message.decode()
-                    self.process_message(message, ip)
-                    self.connected_clients.remove(client)
-                    client.close()
+            ):
+                self.blockchain.add_fork(block_to_add.hash, block_to_add.index)
+                self.blockchain.add_block(block_to_add)
+                for ip_node in self.other_nodes:
+                    send_message(ip_node, "****accept")
 
-        for client in self.connected_clients:
-            client.close()
+            elif (  # normal case
+                block_to_add.is_valid()
+                and block_to_add.index == leaf_block.index + 1
+                and leaf_block.is_previous(block_to_add)
+            ):
+                self.blockchain.drop_fork(leaf_block.hash)
+                self.blockchain.add_block(block_to_add)
+                self.blockchain.add_fork(block_to_add.hash, block_to_add.index)
+
+            else:
+                for ip_node in self.other_nodes:
+                    send_message(ip_node, "****refuse")
+
+
+def join_resp_protocol(self, ip, message):
+    self.add_node(ip)
+    try:
+        ip_list = message.split("|")[1].split(",")
+        for ip_node in ip_list:
+            if ip_node:
+                self.add_node(ip_node)
+    except IndexError:
+        pass
+    for ip_node in self.other_nodes:
+        if ip_node != ip:
+            send_message(ip_node, "****joined")
+
+
+def join_protocol(self, ip, message):
+    print("===== Add node")
+    self.add_node(ip)
+    mess = "****join_resp|"
+    for ip_node in self.other_nodes:
+        if ip_node != ip:
+            mess += ip_node + ","
+    mess = mess[:-1]
+    send_message(ip, mess)
+    mess2 = "****blockchain|"
+    last_height = message.split("|")[1]
+    list_blocks = []
+
+    leaves = self.blockchain.get_leaves()
+
+    for leaf in leaves:
+        leaf_block = self.blockchain.get_leaves(leaf["hash"])
+        current_block = leaf_block
+        for i in range(int(last_height), leaf_block.index + 1):
+            if current_block not in list_blocks:
+                list_blocks.append(current_block)
+            if current_block.index != 0:
+                current_block = self.blockchain.get_block(current_block.previous_hash)
+
+    # sorted(list_blocks,key=) trier en fonction de l'id mais est ce vraiment utile?
+    mess2 += json.dumps(list_blocks, cls=BlockEncoder)
+    mess2 += "|"
+
+    leaves = self.blockchain.get_leaves()
+    mess2 += json.dumps(leaves)
+
+    if mess2 != "":
+        send_message(ip, mess2)
+
+
+def send_message_to_all(self, message):
+    connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    for ip in self.other_nodes.keys():
+        connection.connect((ip, SERVER_PORT))
+        print("Client Connected")
+        message = message.encode()
+        connection.send(message)
+        connection.close()
+
+
+def run_server(self):
+    while self.keep_running_server:
+        incoming_connections, wlist, xlist = select.select(
+            [self.server], [], [], LISTEN_TIME
+        )
+
+        for connection in incoming_connections:
+            client_connection, client_connection_info = connection.accept()
+            self.connected_clients.append(client_connection)
+
+        clients_to_be_read = []
+        try:
+            clients_to_be_read, wlist, xlist = select.select(
+                self.connected_clients, [], [], LISTEN_TIME
+            )
+        except select.error:
+            print("error")
+        else:
+            for client in clients_to_be_read:
+                message = client.recv(RECV_SIZE)
+                ip, port = client.getpeername()
+                message = message.decode()
+                self.process_message(message, ip)
+                self.connected_clients.remove(client)
+                client.close()
+
+    for client in self.connected_clients:
+        client.close()

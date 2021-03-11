@@ -106,7 +106,7 @@ class DataBaseManager:
         conn.close()
         return block
 
-    def get_leafs(self):
+    def get_leaves(self):
         conn = sqlite3.connect(self.name_data_base)
         c = conn.cursor()
         c.execute("SELECT * FROM forks")
