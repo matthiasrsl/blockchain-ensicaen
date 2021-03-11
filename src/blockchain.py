@@ -45,6 +45,9 @@ class Blockchain:
 
         return last_block
 
+    def get_leafs():
+        self.blocks.get_leafs
+        
     def get_block_at_index(self, index):
         return self.blocks.getBlockAtIndex(index)
 

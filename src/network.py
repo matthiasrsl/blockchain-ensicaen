@@ -104,6 +104,8 @@ class NetworkHandler:
         blockchain = json.loads(message.split("|")[1])
         for block in blockchain:
             self.blockchain.add_block(Block(**block))
+        
+            
 
     def mined_block_protocol(self, message):
         block_info_json = json.loads(message.split("|")[1])
@@ -175,9 +177,11 @@ class NetworkHandler:
                     current_block = self.blockchain.get_block(
                         current_block.previous_hash
                     )
+        
 
         # sorted(list_blocks,key=) trier en fonction de l'id mais est ce vraiment utile?
         mess2 += json.dumps(list_blocks, cls=BlockEncoder)
+
         if mess2 != "":
             send_message(ip, mess2)
 

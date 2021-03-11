@@ -106,6 +106,18 @@ class DataBaseManager:
         conn.close()
         return block
 
+    def get_leafs():
+        conn = sqlite3.connect(self.name_data_base)
+        c = conn.cursor()
+        c.execute("SELECT * FROM forks")
+        result = c.fetchall()
+        blocks = []
+        for row in result:
+            blocks.append(Block(row[0], row[1], row[3], row[4], row[5]))
+        conn.commit()
+        conn.close()
+        return blocks
+
 
     def clearDB(self):
         try:
