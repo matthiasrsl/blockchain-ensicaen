@@ -102,8 +102,12 @@ class NetworkHandler:
 
     def blockchain_protocol(self, message):
         blockchain = json.loads(message.split("|")[1])
+        leaves = json.loads(message.split("|")[2])
         for block in blockchain:
             self.blockchain.add_block(Block(**block))
+
+        for leaf in leaves:
+            self.blockchain.add_fork(leaf["hash"], leaf["id"])
         
             
 
@@ -181,6 +185,10 @@ class NetworkHandler:
 
         # sorted(list_blocks,key=) trier en fonction de l'id mais est ce vraiment utile?
         mess2 += json.dumps(list_blocks, cls=BlockEncoder)
+        mess2+="|"
+
+        leaves = self.blockchain.get_leafs()
+        mess2 += json.dumps(leaves)
 
         if mess2 != "":
             send_message(ip, mess2)

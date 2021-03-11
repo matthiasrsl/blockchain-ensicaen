@@ -111,12 +111,12 @@ class DataBaseManager:
         c = conn.cursor()
         c.execute("SELECT * FROM forks")
         result = c.fetchall()
-        blocks = []
+        leaves = []
         for row in result:
-            blocks.append(Block(row[0], row[1], row[3], row[4], row[5]))
+            leaves.append({"hash": row[0], "id": row[1]})
         conn.commit()
         conn.close()
-        return blocks
+        return leaves
 
 
     def clearDB(self):
