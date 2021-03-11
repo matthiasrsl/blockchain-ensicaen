@@ -108,8 +108,6 @@ class NetworkHandler:
 
         for leaf in leaves:
             self.blockchain.add_fork(leaf["hash"], leaf["id"])
-        
-            
 
     def mined_block_protocol(self, message):
         block_info_json = json.loads(message.split("|")[1])
@@ -181,11 +179,10 @@ class NetworkHandler:
                     current_block = self.blockchain.get_block(
                         current_block.previous_hash
                     )
-        
 
         # sorted(list_blocks,key=) trier en fonction de l'id mais est ce vraiment utile?
         mess2 += json.dumps(list_blocks, cls=BlockEncoder)
-        mess2+="|"
+        mess2 += "|"
 
         leaves = self.blockchain.get_leafs()
         print(leaves)

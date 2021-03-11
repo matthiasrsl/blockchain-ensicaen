@@ -74,9 +74,9 @@ class DataBaseManager:
         blocks = []
         for row in result:
             hash_last = row[1]
-            c.execute("SELECT * FROM blocks WHERE hash=?", (hash_last,))
+            c.execute("SELECT id ,data  , precedent_hash , d,nonce FROM blocks WHERE hash=?", (hash_last,))
             result = c.fetchone()
-            blocks.append(Block(result[0], result[1], result[3], result[4], result[5]))
+            blocks.append(Block(result[0], result[1], result[2], result[3], result[4]))
         conn.commit()
         conn.close()
         return blocks
@@ -87,10 +87,10 @@ class DataBaseManager:
         c.execute("SELECT precedent_hash FROM blocks WHERE hash=?",
                   (hash_block,))  # pour être a l'abris des collisions ont peut également verifier les indexs
         result = c.fetchone()
-        c.execute("SELECT * FROM blocks WHERE hash=?",
+        c.execute("SELECT id ,data , precedent_hash , d,nonce FROM blocks WHERE hash=?",
                   (result,))  # pour être a l'abris des collisions ont peut également verifier les indexs
         result = c.fetchone()
-        block = (Block(result[0], result[1], result[3], result[4], result[5]))
+        block = (Block(result[0], result[1], result[2], result[3], result[4]))
         conn.commit()
         conn.close()
         return block
@@ -98,10 +98,10 @@ class DataBaseManager:
     def get_block(self,hash_block):
         conn = sqlite3.connect(self.name_data_base)
         c = conn.cursor()
-        c.execute("SELECT * FROM blocks WHERE hash=?",
+        c.execute("SELECT id , data ,precedent_hash , d, nonce  FROM blocks WHERE hash=?",
                   (hash_block,))
         result = c.fetchone()
-        block = (Block(result[0], result[1], result[3], result[4], result[5]))
+        block = (Block(result[0], result[1], result[2], result[3], result[4]))
         conn.commit()
         conn.close()
         return block
