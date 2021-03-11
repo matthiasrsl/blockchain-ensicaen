@@ -4,10 +4,8 @@ import socketserver
 import sys
 import threading
 
-from PyQt5.QtWidgets import QApplication
-
+from src.client_terminal import Client_terminal
 from src.network import NetworkHandler
-from src.start_gui import Start
 
 VISUALIZER_PORT = 8000
 
@@ -41,12 +39,7 @@ if __name__ == "__main__":
     thread_visualiser_client = threading.Thread(target=launch_visualizer_client, daemon=True)
     thread_visualiser_client.start()
 
-    app = QApplication.instance()
-    if not app:
-        app = QApplication(sys.argv)
-
-    gui = Start(handler)
-    app.exec_()
+    client = Client_terminal(handler)
 
 
     thread_server.join()
