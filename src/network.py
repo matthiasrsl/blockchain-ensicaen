@@ -26,7 +26,7 @@ def get_local_ip():
 def send_message(ip, message):
     connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     connection.connect((ip, SERVER_PORT))
-    print("Client Connected")
+    print("    SENT: " + message)
     message = message.encode()
     connection.send(message)
     connection.close()
@@ -59,7 +59,7 @@ class NetworkHandler:
             print(f"{ip} tried to be removed but not in list")
 
     def process_message(self, message, ip):
-        print(f"Received: {message}")
+        print(f"RECEIVED: {message}")
 
         if message[:4] != "****":
             print("Error: bad request")
