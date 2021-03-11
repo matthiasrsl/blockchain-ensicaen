@@ -188,6 +188,7 @@ class NetworkHandler:
         mess2+="|"
 
         leaves = self.blockchain.get_leafs()
+        print(leaves)
         mess2 += json.dumps(leaves)
 
         if mess2 != "":

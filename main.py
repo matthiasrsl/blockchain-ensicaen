@@ -10,6 +10,7 @@ from src.network import NetworkHandler
 from src.start_gui import Start
 
 VISUALIZER_PORT = 8000
+LAUNCH_VISUALIZER = False
 
 handler = NetworkHandler()
 
@@ -35,11 +36,12 @@ if __name__ == "__main__":
     thread_server = threading.Thread(target=launch_server)
     thread_server.start()
 
-    thread_visualiser_server = threading.Thread(target=launch_visualizer_server, daemon=True)
-    thread_visualiser_server.start()
+    if LAUNCH_VISUALIZER:
+        thread_visualiser_server = threading.Thread(target=launch_visualizer_server, daemon=True)
+        thread_visualiser_server.start()
 
-    thread_visualiser_client = threading.Thread(target=launch_visualizer_client, daemon=True)
-    thread_visualiser_client.start()
+        thread_visualiser_client = threading.Thread(target=launch_visualizer_client, daemon=True)
+        thread_visualiser_client.start()
 
     app = QApplication.instance()
     if not app:
