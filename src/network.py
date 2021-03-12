@@ -141,91 +141,89 @@ class NetworkHandler:
                 for ip_node in self.other_nodes:
                     send_message(ip_node, "****refuse")
 
-
-def join_resp_protocol(self, ip, message):
-    self.add_node(ip)
-    try:
-        ip_list = message.split("|")[1].split(",")
-        for ip_node in ip_list:
-            if ip_node:
-                self.add_node(ip_node)
-    except IndexError:
-        pass
-    for ip_node in self.other_nodes:
-        if ip_node != ip:
-            send_message(ip_node, "****joined")
-
-
-def join_protocol(self, ip, message):
-    print("===== Add node")
-    self.add_node(ip)
-    mess = "****join_resp|"
-    for ip_node in self.other_nodes:
-        if ip_node != ip:
-            mess += ip_node + ","
-    mess = mess[:-1]
-    send_message(ip, mess)
-    mess2 = "****blockchain|"
-    last_height = message.split("|")[1]
-    list_blocks = []
-
-    leaves = self.blockchain.get_leaves()
-
-    for leaf in leaves:
-        leaf_block = self.blockchain.get_leaves(leaf["hash"])
-        current_block = leaf_block
-        for i in range(int(last_height), leaf_block.index + 1):
-            if current_block not in list_blocks:
-                list_blocks.append(current_block)
-            if current_block.index != 0:
-                current_block = self.blockchain.get_block(current_block.previous_hash)
-
-    # sorted(list_blocks,key=) trier en fonction de l'id mais est ce vraiment utile?
-    mess2 += json.dumps(list_blocks, cls=BlockEncoder)
-    mess2 += "|"
-
-    leaves = self.blockchain.get_leaves()
-    mess2 += json.dumps(leaves)
-
-    if mess2 != "":
-        send_message(ip, mess2)
-
-
-def send_message_to_all(self, message):
-    connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    for ip in self.other_nodes.keys():
-        connection.connect((ip, SERVER_PORT))
-        print("Client Connected")
-        message = message.encode()
-        connection.send(message)
-        connection.close()
-
-
-def run_server(self):
-    while self.keep_running_server:
-        incoming_connections, wlist, xlist = select.select(
-            [self.server], [], [], LISTEN_TIME
-        )
-
-        for connection in incoming_connections:
-            client_connection, client_connection_info = connection.accept()
-            self.connected_clients.append(client_connection)
-
-        clients_to_be_read = []
+    def join_resp_protocol(self, ip, message):
+        self.add_node(ip)
         try:
-            clients_to_be_read, wlist, xlist = select.select(
-                self.connected_clients, [], [], LISTEN_TIME
-            )
-        except select.error:
-            print("error")
-        else:
-            for client in clients_to_be_read:
-                message = client.recv(RECV_SIZE)
-                ip, port = client.getpeername()
-                message = message.decode()
-                self.process_message(message, ip)
-                self.connected_clients.remove(client)
-                client.close()
+            ip_list = message.split("|")[1].split(",")
+            for ip_node in ip_list:
+                if ip_node:
+                    self.add_node(ip_node)
+        except IndexError:
+            pass
+        for ip_node in self.other_nodes:
+            if ip_node != ip:
+                send_message(ip_node, "****joined")
 
-    for client in self.connected_clients:
-        client.close()
+    def join_protocol(self, ip, message):
+        print("===== Add node")
+        self.add_node(ip)
+        mess = "****join_resp|"
+        for ip_node in self.other_nodes:
+            if ip_node != ip:
+                mess += ip_node + ","
+        mess = mess[:-1]
+        send_message(ip, mess)
+        mess2 = "****blockchain|"
+        last_height = message.split("|")[1]
+        list_blocks = []
+
+        leaves = self.blockchain.get_leaves()
+
+        for leaf in leaves:
+            leaf_block = self.blockchain.get_leaves(leaf["hash"])
+            current_block = leaf_block
+            for i in range(int(last_height), leaf_block.index + 1):
+                if current_block not in list_blocks:
+                    list_blocks.append(current_block)
+                if current_block.index != 0:
+                    current_block = self.blockchain.get_block(
+                        current_block.previous_hash
+                    )
+
+        # sorted(list_blocks,key=) trier en fonction de l'id mais est ce vraiment utile?
+        mess2 += json.dumps(list_blocks, cls=BlockEncoder)
+        mess2 += "|"
+
+        leaves = self.blockchain.get_leaves()
+        mess2 += json.dumps(leaves)
+
+        if mess2 != "":
+            send_message(ip, mess2)
+
+    def send_message_to_all(self, message):
+        connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        for ip in self.other_nodes.keys():
+            connection.connect((ip, SERVER_PORT))
+            print("Client Connected")
+            message = message.encode()
+            connection.send(message)
+            connection.close()
+
+    def run_server(self):
+        while self.keep_running_server:
+            incoming_connections, wlist, xlist = select.select(
+                [self.server], [], [], LISTEN_TIME
+            )
+
+            for connection in incoming_connections:
+                client_connection, client_connection_info = connection.accept()
+                self.connected_clients.append(client_connection)
+
+            clients_to_be_read = []
+            try:
+                clients_to_be_read, wlist, xlist = select.select(
+                    self.connected_clients, [], [], LISTEN_TIME
+                )
+            except select.error:
+                print("error")
+            else:
+                for client in clients_to_be_read:
+                    message = client.recv(RECV_SIZE)
+                    ip, port = client.getpeername()
+                    message = message.decode()
+                    self.process_message(message, ip)
+                    self.connected_clients.remove(client)
+                    client.close()
+
+        for client in self.connected_clients:
+            client.close()
