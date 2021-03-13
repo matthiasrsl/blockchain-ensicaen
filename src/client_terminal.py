@@ -22,14 +22,21 @@ class Client_terminal:
                 data = input("data:")
                 self.create_block(data)
 
-            if command == "m":
+            elif command == "m":
                 data = input("message")
                 self.send_message(data)
 
-            if command == "m_ip":
+            elif command == "m_ip":
                 ip = input("ip")
                 data = input("message")
                 self.send_message_to_ip(data, ip)
+
+            elif command == "exit":
+                exit()
+
+            else:
+                print("command not recognised")
+
 
     def send_message(self, message=None):
         message = "****"
@@ -50,3 +57,5 @@ class Client_terminal:
         message = "****"
         message += mes
         send_message(ip, message)
+
+
