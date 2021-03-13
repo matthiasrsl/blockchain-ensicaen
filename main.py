@@ -22,6 +22,7 @@ def launch_visualizer_server():
 
     if REDIRECT_VISUALIZER_SERVER_LOG:
         old_stderr = sys.stderr
+        pathlib.Path("./etc/logs").mkdir(parents=True, exist_ok=True)
         sys.stderr = open("etc/logs/visualizer.log", "a")
         sys.stderr.write("=========== NEW SESSION ============\n")
 
