@@ -1,6 +1,7 @@
 import json
 import select
 import socket
+from typing import Dict, Any
 
 from src.block import Block, BlockEncoder
 from src.blockchain import Blockchain
@@ -51,6 +52,7 @@ class NetworkHandler:
     def add_node(self, ip):
         node = Node(ip)
         self.other_nodes[ip] = node
+        self.updateVisualizer()
 
     def remove_node(self, ip):
         try:
@@ -109,7 +111,7 @@ class NetworkHandler:
         block_info_json = json.loads(message.split("|")[1])
         block_to_add = Block(**block_info_json)
         if block_to_add.is_valid() and self.blockchain.get_last_block().is_previous(
-                block_to_add
+            block_to_add
         ):
             self.blockchain.add_block(block_to_add)
 
@@ -161,6 +163,17 @@ class NetworkHandler:
             message = message.encode()
             connection.send(message)
             connection.close()
+
+    def updateVisualizer(self):
+        all_nodes = []
+
+        for ip in self.other_nodes.keys():
+            all_nodes.append(ip)
+
+        nodes = {"Nodes:": all_nodes}
+        nodes_json = json.dumps()
+        with open("etc/visudata/nodes.json", "w") as file:
+            file.write(nodes_json)
 
     def run_server(self):
         while self.keep_running_server:
