@@ -1,7 +1,7 @@
 import json
 import select
 import socket
-from typing import Dict, Any
+from typing import Dict, Any, Union
 
 from src.block import Block, BlockEncoder
 from src.blockchain import Blockchain
@@ -166,12 +166,12 @@ class NetworkHandler:
 
     def updateVisualizer(self):
         all_nodes = []
-
         for ip in self.other_nodes.keys():
-            all_nodes.append(ip)
+            node = {"name": "Prénom", "ip": ip}  # "Prenom" to change
+            all_nodes.append(node)
 
         nodes = {"Nodes:": all_nodes}
-        nodes_json = json.dumps()
+        nodes_json = json.dumps(nodes)
         with open("etc/visudata/nodes.json", "w") as file:
             file.write(nodes_json)
 
