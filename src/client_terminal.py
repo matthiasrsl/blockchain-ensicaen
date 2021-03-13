@@ -9,7 +9,7 @@ class Client_terminal:
     def __init__(self, handler):
         self.handler = handler
         self.blockchain = handler.blockchain
-        bool = input("Are you first? [y/n]")
+        bool = input("Are you first? [y/n]:")
         if bool == "n":
             self.blockchain.blocks.clearDB()
         elif bool != "y":
@@ -23,12 +23,12 @@ class Client_terminal:
                 self.create_block(data)
 
             elif command == "m":
-                data = input("message")
+                data = input("message:")
                 self.send_message(data)
 
             elif command == "m_ip":
-                ip = input("ip")
-                data = input("message")
+                ip = input("ip:")
+                data = input("message:")
                 self.send_message_to_ip(data, ip)
 
             elif command == "exit":
