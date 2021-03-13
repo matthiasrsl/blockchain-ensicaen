@@ -22,11 +22,11 @@ class Client_terminal:
                 data = input("data:")
                 self.create_block(data)
 
-            elif command == "m":
+            elif command == "m" or command == "message":
                 data = input("message:")
                 self.send_message(data)
 
-            elif command == "m_ip":
+            elif command == "m_ip" or command == "message_to_ip":
                 ip = input("ip:")
                 data = input("message:")
                 self.send_message_to_ip(data, ip)
@@ -34,13 +34,20 @@ class Client_terminal:
             elif command == "exit":
                 exit()
 
+            elif command == "h" or command == "help" :
+                print("You can use:\n"
+                      "- create or c to create a block\n"
+                      "- m or message to send a message to all\n"
+                      "- m_ip or message_to_ip to send a message to a specific ip\n"
+                      "- exit to quit")
+
             else:
-                print("command not recognised")
+                print("command not recognised, use h or help.")
 
 
-    def send_message(self, message=None):
+    def send_message(self, data):
         message = "****"
-        message += message
+        message += data
         self.handler.send_message_to_all(message)
 
     def create_block(self, data):
