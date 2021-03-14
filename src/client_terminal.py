@@ -9,6 +9,7 @@ class Client_terminal:
     def __init__(self, handler):
         self.handler = handler
         self.blockchain = handler.blockchain
+        handler.client = self
 
         self.hiddenRefreshButton = type('', (object,), {'click': lambda: self.set_displayer_text})
 
