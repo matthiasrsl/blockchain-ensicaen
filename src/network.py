@@ -241,7 +241,7 @@ class NetworkHandler:
                     self.connected_clients, [], [], LISTEN_TIME
                 )
             except select.error:
-                print("error")
+                pass
             else:
                 for client in clients_to_be_read:
                     message = client.recv(RECV_SIZE)
