@@ -57,7 +57,7 @@ class Client_terminal:
         self.handler.send_message_to_all(message)
 
     def create_block(self, data):
-        last_block = self.blockchain.get_last_block()
+        last_block = self.blockchain.get_last_blocks()[0]
         block = Block(last_block.index + 1, data, last_block.hash, datetime.now())
         block.mine()
         message = "****"
