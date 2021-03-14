@@ -116,35 +116,39 @@ class NetworkHandler:
 
     def mined_block_protocol(self, message):
         block_info_json = json.loads(message.split("|")[1])
-        block_to_add = Block(**block_info_json)
+        self.block_to_add = Block(**block_info_json)
         leaves = self.blockchain.get_leaves()
+        self.client.hiddenRefreshButton.click()
+        if self.manual_validation:
+            self.wait = True
+            while self.wait:
+                pass
 
-        for leaf in leaves:
-            leaf_block = self.blockchain.get_block(leaf["hash"])
-            if (  # fork case
-                block_to_add.index == leaf_block.index
-                and block_to_add.is_valid()
-                and self.blockchain.get_block(leaf_block.previous_hash).is_previous(
-                    block_to_add
+        else:
+            for leaf in leaves:
+                leaf_block = self.blockchain.get_block(leaf["hash"])
+                if (  # fork case
+                        self.block_to_add.index == leaf_block.index
+                        and self.block_to_add.is_valid()
+                        and self.blockchain.get_block(leaf_block.previous_hash).is_previous(
+                    self.block_to_add
                 )
-            ):
-                self.blockchain.add_fork(block_to_add.hash, block_to_add.index)
-                self.blockchain.add_block(block_to_add)
-                for ip_node in self.other_nodes:
-                    send_message(ip_node, "****accept")
+                ):
+                    self.blockchain.add_fork(self.block_to_add.hash, self.block_to_add.index)
+                    self.accept_mined_block()
 
-            elif (  # normal case
-                block_to_add.is_valid()
-                and block_to_add.index == leaf_block.index + 1
-                and leaf_block.is_previous(block_to_add)
-            ):
-                self.blockchain.drop_fork(leaf_block.hash)
-                self.blockchain.add_block(block_to_add)
-                self.blockchain.add_fork(block_to_add.hash, block_to_add.index)
 
-            else:
-                for ip_node in self.other_nodes:
-                    send_message(ip_node, "****refuse")
+                elif (  # normal case
+                        self.block_to_add.is_valid()
+                        and self.block_to_add.index == leaf_block.index + 1
+                        and leaf_block.is_previous(self.block_to_add)
+                ):
+                    self.blockchain.drop_fork(leaf_block.hash)
+                    self.accept_mined_block()
+                    self.blockchain.add_fork(self.block_to_add.hash, self.block_to_add.index)
+
+                else:
+                    self.refuse_mined_block()
 
     def join_resp_protocol(self, ip, message):
         self.add_node(ip)
@@ -207,18 +211,14 @@ class NetworkHandler:
     def accept_mined_block(self):
         self.blockchain.add_block(self.block_to_add)
 
-        for ip_node in self.other_nodes:
-            send_message(
-                ip_node, "****accept"
-            )  # dans ****accepte rajouter le hash ou l'index pour identifier le block
+        self.send_message_to_all("****accept")
 
         self.wait = False
         self.block_to_add = None
         self.client.hiddenRefreshButton.click()
 
     def refuse_mined_block(self):
-        for ip_node in self.other_nodes:
-            send_message(ip_node, "****refuse")
+        self.send_message_to_all("****refuse")
 
         self.wait = False
         self.block_to_add = None
