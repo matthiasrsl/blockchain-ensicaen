@@ -13,6 +13,11 @@ class Block:
         self.hash = self.calculate_hash()
 
     def calculate_hash(self):
+        """
+
+        :return:
+        :rtype:
+        """
         return sha256(
             f"{self.index}${self.nonce}${self.date}${self.data}${self.previous_hash}".encode(
                 "utf-8"
@@ -20,6 +25,11 @@ class Block:
         ).hexdigest()
 
     def mine(self, number_0=2):
+        """
+
+        :param number_0:
+        :type number_0:
+        """
         time_begin = time()
         while self.hash[:number_0] != number_0 * "0":
             self.nonce += 1
@@ -31,6 +41,13 @@ class Block:
         )
 
     def is_valid(self, number_0=2):
+        """
+
+        :param number_0:
+        :type number_0:
+        :return:
+        :rtype:
+        """
         if self.hash != self.calculate_hash():
             return False
         if self.hash[:number_0] != number_0 * "0":
@@ -38,6 +55,13 @@ class Block:
         return True
 
     def is_previous(self, other):  # declare type block ? (faire passer en argument seulement le hash au lieu du block pour reduire le temps d'éxécution)
+        """
+
+        :param other:
+        :type other:
+        :return:
+        :rtype:
+        """
         return other.previous_hash == self.hash
 
 
