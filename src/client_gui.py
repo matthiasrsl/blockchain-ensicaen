@@ -21,10 +21,14 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
         if message:
             print(message)
             send_message(self.ip, message)
+            message_dict = {"sender": "Me", "content": message}
+            self.handler.message_list.append(message_dict)
         else:
             message = "****"
             message += self.lineMessage.toPlainText()
             self.handler.send_message_to_all(message)
+            message_dict = {"sender": "Me", "content": message}
+            self.handler.message_list.append(message_dict)
 
     def create_block(self):
         data = self.dataText.toPlainText()
@@ -36,3 +40,5 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
         message += json.dumps(block, cls=BlockEncoder)
         self.blockchain.add_block(block)
         self.handler.send_message_to_all(message)
+        message_dict = {"sender": "Me", "content": message}
+        self.handler.message_list.append(message_dict)

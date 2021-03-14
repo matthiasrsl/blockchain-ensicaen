@@ -1,7 +1,6 @@
 import json
 import select
 import socket
-from typing import Dict, Any, Union
 
 from src.block import Block, BlockEncoder
 from src.blockchain import Blockchain
@@ -41,6 +40,7 @@ class NetworkHandler:
         self.blockchain = Blockchain(clear=True)
 
         self.server_host = get_local_ip()
+        self.message_list = []
 
         # self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.keep_running_server = True
@@ -62,6 +62,10 @@ class NetworkHandler:
 
     def process_message(self, message, ip):
         print(f"Received: {message}")
+
+        message_dict = {"sender": ip, "content": message}
+        self.message_list.append(message_dict)
+        self.updateVisualizerMessage()
 
         if message[:4] != "****":
             print("Error: bad request")
@@ -119,9 +123,13 @@ class NetworkHandler:
                 send_message(
                     ip_node, "****accept"
                 )  # dans ****accepte rajouter le hash ou l'index pour identifier le block
+                message_dict = {"sender": "Me", "content": "****accept"}
+                self.message_list.append(message_dict)
         else:
             for ip_node in self.other_nodes:
                 send_message(ip_node, "****refuse")
+            message_dict = {"sender": "Me", "content": "****refuse"}
+            self.message_list.append(message_dict)
 
     def join_resp_protocol(self, ip, message):
         self.add_node(ip)
@@ -135,6 +143,8 @@ class NetworkHandler:
         for ip_node in self.other_nodes:
             if ip_node != ip:
                 send_message(ip_node, "****joined")
+        message_dict = {"sender": "Me", "content": "****joined"}
+        self.message_list.append(message_dict)
 
     def join_protocol(self, ip, message):
         print("===== Add node")
@@ -145,6 +155,8 @@ class NetworkHandler:
                 mess += ip_node + ","
         mess = mess[:-1]
         send_message(ip, mess)
+        message_dict = {"sender": "Me", "content": mess}
+        self.message_list.append(message_dict)
         mess2 = "****blockchain|"
         last_height = message.split("|")[1]
         list_blocks = []
@@ -154,8 +166,11 @@ class NetworkHandler:
         mess2 += json.dumps(list_blocks, cls=BlockEncoder)
         if mess2 != "":
             send_message(ip, mess2)
+            message_dict2 = {"sender": "Me", "content": mess2}
+            self.message_list.append(message_dict)
 
     def send_message_to_all(self, message):
+        self.updateVisualizerMessage()
         connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         for ip in self.other_nodes.keys():
             connection.connect((ip, SERVER_PORT))
@@ -174,6 +189,12 @@ class NetworkHandler:
         nodes_json = json.dumps(nodes)
         with open("etc/visudata/nodes.json", "w") as file:
             file.write(nodes_json)
+
+    def updateVisualizerMessage(self):
+        messages = {"Messages:": self.message_list}
+        messages_json = json.dumps(messages)
+        with open("etc/visudata/messages.json", "w") as file:
+            file.write(messages_json)
 
     def run_server(self):
         while self.keep_running_server:
