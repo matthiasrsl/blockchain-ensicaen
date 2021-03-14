@@ -15,6 +15,7 @@ class Blockchain:
         first_block = Block(0, "First Block", None, datetime.now())
         # We can reduce the format if we want to take less space
         self.add_block(first_block)
+        self.add_fork(first_block.hash,0)
 
     def verify_blockchain(self):
         curr_index = self.get_last_block().index
@@ -31,14 +32,39 @@ class Blockchain:
     def add_block(self, block):
         self.blocks.add_block(block)
 
-    def get_last_block(self):
-        return self.blocks.getLastBlock()
+    def get_last_blocks(self):
+        return self.blocks.getLastBlocks()
+
+    def get_real_last_block(self):
+        list_block = self.get_last_blocks()
+        last_block = list_block[0]
+
+        for block in list_block:
+            if last_block.date < block.date:
+                last_block = block
+
+        return last_block
+
+    def get_leaves(self):
+        return self.blocks.get_leaves()
 
     def get_block_at_index(self, index):
         return self.blocks.getBlockAtIndex(index)
 
     def get_height(self):
-        return self.get_last_block().index
+        return self.get_last_blocks()[0].index
+
+    def get_previous_block(self,hash_block):
+        return self.get_previous_block(hash_block)
+
+    def get_block(self,hash_block):
+        return self.blocks.get_block(hash_block)
+
+    def add_fork(self, hash_block, id):
+        self.blocks.add_fork(hash_block,id)
+
+    def drop_fork(self,hash_block):
+        self.blocks.drop_fork(hash_block)
 
     def __del__(self):
         del self.blocks
