@@ -45,6 +45,7 @@ class Client_terminal:
                       "- create or c to create a block\n"
                       "- me or message to send a message to all\n"
                       "- me_ip or message_to_ip to send a message to a specific ip\n"
+                      "- ma or manual to toggle manual mode\n"
                       "- exit to quit")
 
             else:
