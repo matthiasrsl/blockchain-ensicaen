@@ -51,7 +51,10 @@ class DataBaseManager:
             block.previous_hash,
             block.date,
         ]
-        c.execute("INSERT INTO blocks VALUES (?,?,?,?,?,?)", row)
+        try:
+            c.execute("INSERT INTO blocks VALUES (?,?,?,?,?,?)", row)
+        except sqlite3.IntegrityError:
+            print("Error block already in blockchain")
         conn.commit()
         conn.close()
 

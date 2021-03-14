@@ -6,7 +6,7 @@ from src.block import Block, BlockEncoder
 from src.blockchain import Blockchain
 
 SERVER_PORT = 16385
-RECV_SIZE = 1024
+RECV_SIZE = 8192
 LISTEN_TIME = 5
 
 
@@ -144,11 +144,14 @@ class NetworkHandler:
                         and leaf_block.is_previous(self.block_to_add)
                 ):
                     self.blockchain.drop_fork(leaf_block.hash)
-                    self.accept_mined_block()
                     self.blockchain.add_fork(self.block_to_add.hash, self.block_to_add.index)
+                    self.accept_mined_block()
+
 
                 else:
                     self.refuse_mined_block()
+
+        self.block_to_add = None
 
     def join_resp_protocol(self, ip, message):
         self.add_node(ip)
@@ -179,7 +182,7 @@ class NetworkHandler:
         leaves = self.blockchain.get_leaves()
 
         for leaf in leaves:
-            leaf_block = self.blockchain.get_leaves(leaf["hash"])
+            leaf_block = self.blockchain.get_block(leaf["hash"])
             current_block = leaf_block
             for i in range(int(last_height), leaf_block.index + 1):
                 if current_block not in list_blocks:
@@ -214,14 +217,12 @@ class NetworkHandler:
         self.send_message_to_all("****accept")
 
         self.wait = False
-        self.block_to_add = None
         self.client.hiddenRefreshButton.click()
 
     def refuse_mined_block(self):
         self.send_message_to_all("****refuse")
 
         self.wait = False
-        self.block_to_add = None
         self.client.hiddenRefreshButton.click()
 
     def run_server(self):
