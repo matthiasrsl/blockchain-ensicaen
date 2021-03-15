@@ -5,14 +5,12 @@ import socketserver
 import sys
 import threading
 
-from PyQt5.QtWidgets import QApplication
-
+from src.client_terminal import Client_terminal
 from src.network import NetworkHandler
-from src.start_gui import Start
 
 VISUALIZER_PORT = 8000
 REDIRECT_VISUALIZER_SERVER_LOG = True
-LAUNCH_VISUALIZER = False
+LAUNCH_VISUALIZER = True
 
 handler = NetworkHandler()
 
@@ -22,7 +20,6 @@ def launch_server():
     handler.run_server()
 
 
-# noinspection PyUnboundLocalVariable
 def launch_visualizer_server():
     if REDIRECT_VISUALIZER_SERVER_LOG:
         old_stderr = sys.stderr
@@ -35,6 +32,7 @@ def launch_visualizer_server():
         httpd.serve_forever()
 
     if REDIRECT_VISUALIZER_SERVER_LOG:
+        # noinspection PyUnboundLocalVariable
         sys.stderr = old_stderr
 
 
@@ -63,11 +61,6 @@ if __name__ == "__main__":
         thread_visualiser_client = threading.Thread(target=launch_visualizer_client, daemon=True)
         thread_visualiser_client.start()
 
-    app = QApplication.instance()
-    if not app:
-        app = QApplication(sys.argv)
-
-    gui = Start(handler)
-    app.exec_()
+    client = Client_terminal(handler)
 
     thread_server.join()

@@ -2,6 +2,7 @@ block_list = [];
 ip_list = [];
 new_blocks = [];
 first_update = true;
+message_list = [];
 
 function loadJSON(path, callback) {
     var xhr = new XMLHttpRequest();
@@ -102,6 +103,20 @@ function updateNodes(data) {
             node_section.appendChild(node_p);
             ip_list.push(node.ip);
         }
+    }
+}
+
+function updateMessages(data) {
+    let message_section = document.getElementById("messages");
+    let messages = data.messages;
+
+    for(mess of messages) {
+        message_p = document.createElement("p");
+        message_p.innerHTML = `
+            <span class="sender">${mess.sender}</span> <span class="content">${mess.content}</span> 
+        `
+        message_section.appendChild(message_p);
+        message_list.push(mess.content);
     }
 }
 
