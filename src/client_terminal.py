@@ -10,6 +10,7 @@ class Client_terminal:
         self.handler = handler
         self.blockchain = handler.blockchain
         handler.client = self
+        self.block_to_accept = False
 
         self.hiddenRefreshButton = type('', (object,), {'click': lambda: self.set_displayer_text()})
 
@@ -22,37 +23,58 @@ class Client_terminal:
 
         print("different print can overlap in this window, don't hesitate to type h to see if you have the hand")
 
+        self.main_command()
+
+    def main_command(self):
         while True:
             command = input("command:")
-            if command == "create" or command == "c":
-                data = input("data:")
-                self.create_block(data)
+            if self.handler.manual_validation and self.block_to_accept:
+                if command == 'y':
+                    self.handler.accept_mined_block()
+                    self.block_to_accept = False
 
-            elif command == "me" or command == "message":
-                data = input("message:")
-                self.send_message(data)
+                elif command == 'n':
+                    self.handler.refuse_mined_block()
+                    self.block_to_accept = False
 
-            elif command == "me_ip" or command == "message_to_ip":
-                ip = input("ip:")
-                data = input("message:")
-                self.send_message_to_ip(data, ip)
-
-            elif command == "ma" or command == "manual":
-                self.check_receive()
-
-            elif command == "exit":
-                exit()
-
-            elif command == "h" or command == "help":
-                print("You can use:\n"
-                      "- create or c to create a block\n"
-                      "- me or message to send a message to all\n"
-                      "- me_ip or message_to_ip to send a message to a specific ip\n"
-                      "- ma or manual to toggle manual mode\n"
-                      "- exit to quit")
+                else:
+                    print("error answer was not n or y")
 
             else:
-                print("command not recognised, use h or help.")
+                if command == "create" or command == "c":
+                    data = input("data:")
+                    self.create_block(data)
+
+                elif command == "me" or command == "message":
+                    data = input("message:")
+                    self.send_message(data)
+
+                elif command == "me_ip" or command == "message_to_ip":
+
+                    ip = input("ip:")
+
+                    data = input("message:")
+                    self.send_message_to_ip(data, ip)
+
+                elif command == "ma" or command == "manual":
+                    self.check_receive()
+
+                elif command == "exit":
+                    exit()
+
+                elif command == "h" or command == "help":
+                    print("You can use:\n"
+                          "- create or c to create a block\n"
+                          "- me or message to send a message to all\n"
+                          "- me_ip or message_to_ip to send a message to a specific ip\n"
+                          "- ma or manual to toggle manual mode\n"
+                          "- exit to quit")
+
+                elif command == "r":
+                    pass
+
+                else:
+                    print("command not recognised, use h or help.")
 
     def send_message(self, data):
         message = "****"
@@ -81,8 +103,5 @@ class Client_terminal:
     def set_displayer_text(self):
         print(str(self.handler.block_to_add))
         if self.handler.manual_validation:
-            rep = input("Accept this block? [y/..]")
-            if rep == 'y':
-                self.handler.accept_mined_block()
-            else:
-                self.handler.refuse_mined_block()
+            print("Accept this block? [y/..]")
+            self.block_to_accept = True
