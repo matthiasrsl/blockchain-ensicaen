@@ -134,7 +134,7 @@ class NetworkHandler:
                     self.block_to_add
                 )
                 ):
-                    self.blockchain.add_fork(self.block_to_add.hash, self.block_to_add.index)
+
                     self.accept_mined_block()
 
 
@@ -144,7 +144,6 @@ class NetworkHandler:
                         and leaf_block.is_previous(self.block_to_add)
                 ):
                     self.blockchain.drop_fork(leaf_block.hash)
-                    self.blockchain.add_fork(self.block_to_add.hash, self.block_to_add.index)
                     self.accept_mined_block()
 
 
@@ -212,6 +211,7 @@ class NetworkHandler:
             connection.close()
 
     def accept_mined_block(self):
+        self.blockchain.add_fork(self.block_to_add.hash, self.block_to_add.index)
         self.blockchain.add_block(self.block_to_add)
 
         self.send_message_to_all("****accept")

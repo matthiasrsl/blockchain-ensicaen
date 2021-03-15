@@ -1,4 +1,5 @@
 import json
+import signal
 from datetime import datetime
 
 from src.block import Block, BlockEncoder
@@ -11,7 +12,8 @@ class Client_terminal:
         self.blockchain = handler.blockchain
         handler.client = self
 
-        self.hiddenRefreshButton = type('', (object,), {'click': lambda: self.set_displayer_text})
+        self.hiddenRefreshButton = type('', (object,), {'click': lambda: signal.pthread_kill(1,signal.SIGUSR1)})
+        signal.signal(signal.SIGUSR1, self.set_displayer_text) #works only because is main thread
 
         bool = input("Are you first? [y/n]:")
         if bool == "n":
@@ -19,6 +21,8 @@ class Client_terminal:
         elif bool != "y":
             print("error answer was not n or y")
             exit()
+
+        print("different print can overlap in this window, don't hesitate to type h to see if you have the hand")
 
         while True:
             command = input("command:")
@@ -78,3 +82,10 @@ class Client_terminal:
 
     def set_displayer_text(self):
         print(str(self.handler.block_to_add))
+        if self.handler.manual_validation:
+            rep = input("Accept this block? [y/n]")
+            if rep == 'y':
+                self.handler.accept_mined_block()
+            else:
+                self.handler.refuse_mined_block()
+
