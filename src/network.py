@@ -222,7 +222,6 @@ class NetworkHandler:
         mess2 += json.dumps(list_blocks, cls=BlockEncoder)
         mess2 += "|"
 
-        leaves = self.blockchain.get_leaves()
         mess2 += json.dumps(leaves)
 
         if mess2 != "":
