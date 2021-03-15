@@ -12,11 +12,19 @@ class Blockchain:
             self.create_first_block()  # The first block doesn't have previous hash
 
     def create_first_block(self):
+        """
+        Create the frist block of the blockchain
+        """
         first_block = Block(0, "First Block", None, datetime.now())
         # We can reduce the format if we want to take less space
         self.add_block(first_block)
 
     def verify_blockchain(self):
+        """
+        Verify that the blockchain is well chained and that block are mined
+        :return: True if the blockchain is sane
+        :rtype: bool
+        """
         curr_index = self.get_last_block().index
         curr_block = self.get_block_at_index(curr_index)
         for i in range(curr_index - 1, -1, -1):
