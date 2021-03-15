@@ -16,7 +16,7 @@ class Test(TestCase):
         dbmanager.add_block(block1)
         dbmanager.add_block(block2)
 
-        blockTest = dbmanager.getLastBlock()
+        blockTest = dbmanager.getLastBlocks()[0]
 
         self.assertTrue(block2 == blockTest)
         self.assertTrue(block2 == dbmanager.getBlockAtIndex(2))

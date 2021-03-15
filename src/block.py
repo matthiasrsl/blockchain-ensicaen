@@ -3,6 +3,7 @@ from hashlib import sha256
 from time import time
 
 
+# noinspection PyUnusedLocal
 class Block:
     def __init__(self, index, data, previous_hash, date, nonce=0, **kwargs):
         self.previous_hash = previous_hash
@@ -37,16 +38,17 @@ class Block:
             return False
         return True
 
-    def is_previous(self, other):  # declare type block ? (faire passer en argument seulement le hash au lieu du block pour reduire le temps d'éxécution)
+    def is_previous(self,
+                    other):  # declare type block ? (faire passer en argument seulement le hash au lieu du block
+        # pour reduire le temps d'éxécution)
         return other.previous_hash == self.hash
-
 
     def __eq__(self, other):
         return self.hash == other.hash
 
     def __str__(self):
-        return f"{self.index}${self.nonce}${self.date}${self.data}${self.previous_hash}${self.hash}"
-
+        return f"index = {self.index}\nnonce={self.nonce}\ndate={self.date}\ndata={self.data}\n" \
+               f"previous_hash={self.previous_hash}\nhash={self.hash} "
 
 
 class BlockEncoder(json.JSONEncoder):
