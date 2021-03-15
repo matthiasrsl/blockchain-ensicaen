@@ -103,5 +103,5 @@ class Client_terminal:
     def set_displayer_text(self):
         if self.handler.manual_validation and self.handler.block_to_add:
             print(str(self.handler.block_to_add))
-            print("Accept this block? [y/..]")
+            print("Accept this block? [y/n]")
             self.block_to_accept = True
