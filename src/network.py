@@ -239,6 +239,7 @@ class NetworkHandler:
                 client_connection, client_connection_info = connection.accept()
                 self.connected_clients.append(client_connection)
 
+            # noinspection PyUnusedLocal
             clients_to_be_read = []
             try:
                 clients_to_be_read, wlist, xlist = select.select(

@@ -3,6 +3,7 @@ from hashlib import sha256
 from time import time
 
 
+# noinspection PyUnusedLocal
 class Block:
     def __init__(self, index, data, previous_hash, date, nonce=0, **kwargs):
         self.previous_hash = previous_hash
@@ -38,7 +39,8 @@ class Block:
         return True
 
     def is_previous(self,
-                    other):  # declare type block ? (faire passer en argument seulement le hash au lieu du block pour reduire le temps d'éxécution)
+                    other):  # declare type block ? (faire passer en argument seulement le hash au lieu du block
+        # pour reduire le temps d'éxécution)
         return other.previous_hash == self.hash
 
     def __eq__(self, other):
