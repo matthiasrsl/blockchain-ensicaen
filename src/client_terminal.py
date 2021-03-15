@@ -101,7 +101,7 @@ class Client_terminal:
         print(f'Manual is enabled:{self.handler.manual_validation}')
 
     def set_displayer_text(self):
-        print(str(self.handler.block_to_add))
-        if self.handler.manual_validation:
+        if self.handler.manual_validation and self.handler.block_to_add:
+            print(str(self.handler.block_to_add))
             print("Accept this block? [y/..]")
             self.block_to_accept = True
