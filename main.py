@@ -21,14 +21,14 @@ def launch_server():
     handler.start_server()
     handler.run_server()
 
-def launch_visualizer_server():
 
+# noinspection PyUnboundLocalVariable
+def launch_visualizer_server():
     if REDIRECT_VISUALIZER_SERVER_LOG:
         old_stderr = sys.stderr
         pathlib.Path("./etc/logs").mkdir(parents=True, exist_ok=True)
         sys.stderr = open("etc/logs/visualizer.log", "a")
         sys.stderr.write("=========== NEW SESSION ============\n")
-
 
     visualizer_handler = http.server.SimpleHTTPRequestHandler
     with socketserver.TCPServer(("", VISUALIZER_PORT), visualizer_handler) as httpd:
@@ -37,13 +37,16 @@ def launch_visualizer_server():
     if REDIRECT_VISUALIZER_SERVER_LOG:
         sys.stderr = old_stderr
 
+
 def init_visulizer_data():
     pathlib.Path("./etc/visudata").mkdir(parents=True, exist_ok=True)
     with open("etc/visudata/blockchain.json", "w") as file:
         file.write('''{"blockchain": []}''')
 
+
 def launch_visualizer_client():
     os.system("firefox localhost:8000/src/visualizer/visualizer.html")
+
 
 if __name__ == "__main__":
     init_visulizer_data()
@@ -66,6 +69,5 @@ if __name__ == "__main__":
 
     gui = Start(handler)
     app.exec_()
-
 
     thread_server.join()
