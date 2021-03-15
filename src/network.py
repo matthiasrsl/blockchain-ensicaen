@@ -185,13 +185,13 @@ class NetworkHandler:
             node = {"name": "Prénom", "ip": ip}  # "Prenom" to change
             all_nodes.append(node)
 
-        nodes = {"Nodes:": all_nodes}
+        nodes = {"nodes": all_nodes}
         nodes_json = json.dumps(nodes)
         with open("etc/visudata/nodes.json", "w") as file:
             file.write(nodes_json)
 
     def updateVisualizerMessage(self):
-        messages = {"Messages:": self.message_list}
+        messages = {"messages": self.message_list}
         messages_json = json.dumps(messages)
         with open("etc/visudata/messages.json", "w") as file:
             file.write(messages_json)
