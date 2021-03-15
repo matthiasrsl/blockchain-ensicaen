@@ -170,7 +170,7 @@ class NetworkHandler:
         leaves = self.blockchain.get_leaves()
 
         for leaf in leaves:
-            leaf_block = self.blockchain.get_leaves(leaf["hash"])
+            leaf_block = self.blockchain.get_block(leaf["hash"])
             current_block = leaf_block
             for i in range(int(last_height), leaf_block.index + 1):
                 if current_block not in list_blocks:
