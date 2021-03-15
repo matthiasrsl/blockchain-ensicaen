@@ -135,7 +135,9 @@ class NetworkHandler:
                 )
                 ):
 
-                    self.accept_mined_block()
+                    self.blockchain.add_fork(self.block_to_add.hash, self.block_to_add.index)
+                    self.blockchain.add_block(self.block_to_add)
+                    self.send_message_to_all("****accept")
 
 
                 elif (  # normal case
@@ -144,11 +146,11 @@ class NetworkHandler:
                         and leaf_block.is_previous(self.block_to_add)
                 ):
                     self.blockchain.drop_fork(leaf_block.hash)
-                    self.accept_mined_block()
-
+                    self.blockchain.add_block(self.block_to_add)
+                    self.blockchain.add_fork(self.block_to_add.hash, self.block_to_add.index)
 
                 else:
-                    self.refuse_mined_block()
+                    self.send_message_to_all("****refuse")
 
         self.block_to_add = None
 
@@ -216,6 +218,7 @@ class NetworkHandler:
 
         self.send_message_to_all("****accept")
 
+        self.block_to_add = None
         self.wait = False
         self.client.hiddenRefreshButton.click()
 
@@ -223,6 +226,7 @@ class NetworkHandler:
         self.send_message_to_all("****refuse")
 
         self.wait = False
+        self.block_to_add = None
         self.client.hiddenRefreshButton.click()
 
     def run_server(self):
