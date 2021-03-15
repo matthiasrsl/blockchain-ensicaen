@@ -1,9 +1,9 @@
 import http.server
 import os
+import pathlib
 import socketserver
 import sys
 import threading
-import pathlib
 
 from PyQt5.QtWidgets import QApplication
 
@@ -12,6 +12,7 @@ from src.start_gui import Start
 
 VISUALIZER_PORT = 8000
 REDIRECT_VISUALIZER_SERVER_LOG = True
+LAUNCH_VISUALIZER = False
 
 handler = NetworkHandler()
 
