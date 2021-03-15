@@ -180,11 +180,9 @@ class NetworkHandler:
                         current_block.previous_hash
                     )
 
-        # sorted(list_blocks,key=) trier en fonction de l'id mais est ce vraiment utile?
         mess2 += json.dumps(list_blocks, cls=BlockEncoder)
         mess2 += "|"
 
-        leaves = self.blockchain.get_leaves()
         mess2 += json.dumps(leaves)
 
         if mess2 != "":

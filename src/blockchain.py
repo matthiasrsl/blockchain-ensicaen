@@ -42,7 +42,6 @@ class Blockchain:
         for block in list_block:
             if last_block.date < block.date:
                 last_block = block
-
         return last_block
 
     def get_leaves(self):
