@@ -168,7 +168,7 @@ class NetworkHandler:
                     """self.blockchain.add_fork(
                         self.block_to_add.hash, self.block_to_add.index
                     )"""
-                    self.blockchain.update_fork(leaf["fork_id"], self.block_to_add.hash, self.block_to_add.height)
+                    self.blockchain.update_fork(leaf["fork_id"], self.block_to_add.hash, self.block_to_add.index)
                     for ip_node in self.other_nodes:
                         send_message(
                             ip_node, "****accept"
