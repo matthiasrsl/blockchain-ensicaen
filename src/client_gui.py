@@ -13,7 +13,6 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
         super(Client, self).__init__(parent)
         self.setupUi(self)
         self.handler = handler
-        self.blockchain = handler.blockchain
         handler.client = self
         self.hiddenRefreshButton.setVisible(False)
 
@@ -40,14 +39,14 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
     def create_block(self):  # A modifier il faut qu'il puisse choisir sa branche et que les conditions dans la methode
         # mined_block_protocol soient respecté avant de l'ajouter (add_block et add_fork)
         data = self.dataText.toPlainText()
-        last_block = self.blockchain.get_last_blocks()
+        last_block = self.handler.blockchain.get_last_blocks()
         block = Block(last_block[0].index + 1, data, last_block[0].hash, datetime.now())
         block.mine()
         message = "****"
         message += "mined_block|"
         message += json.dumps(block, cls=BlockEncoder)
-        self.blockchain.add_block(block)  # problème!
-        self.blockchain.add_fork(block.hash, block.index)
+        self.handler.blockchain.add_block(block)  # problème!
+        self.handler.blockchain.add_fork(block.hash, block.index)
         self.handler.send_message_to_all(message)
         message_dict = {"sender": "Me", "content": message}
         self.handler.message_list.append(message_dict)
