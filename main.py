@@ -70,4 +70,3 @@ if __name__ == "__main__":
     gui = Start(handler)
     app.exec_()
 
-    thread_server.join()
