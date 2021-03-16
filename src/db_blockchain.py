@@ -14,7 +14,7 @@ class DataBaseManager:
         c = conn.cursor()
         c.execute(
             """CREATE TABLE IF NOT EXISTS blocks(id INTEGER , nonce INTEGER,
-             data TEXT , hash TEXT PRIMARY KEY, precedent_hash TEXT , d DATE )"""
+             data TEXT , hash TEXT PRIMARY KEY, precedent_hash TEXT , d DATE, miner TEXT )"""
         )
         c.execute(
             """CREATE TABLE IF NOT EXISTS forks(hash_feuille TEXT,id_feuille INTEGER , FOREIGN KEY (hash_feuille) 
@@ -54,9 +54,10 @@ class DataBaseManager:
             block.hash,
             block.previous_hash,
             block.date,
+            block.miner
         ]
         try:
-            c.execute("INSERT INTO blocks VALUES (?,?,?,?,?,?)", row)
+            c.execute("INSERT INTO blocks VALUES (?,?,?,?,?,?,?)", row)
         except sqlite3.IntegrityError:
             print("Error block already in blockchain")
         conn.commit()
@@ -82,9 +83,9 @@ class DataBaseManager:
         blocks = []
         for row in result:
             hash_last = row[1]
-            c.execute("SELECT id ,data  , precedent_hash , d,nonce FROM blocks WHERE hash=?", (hash_last,))
+            c.execute("SELECT id ,data  , precedent_hash , d, miner, nonce FROM blocks WHERE hash=?", (hash_last,))
             result = c.fetchone()
-            blocks.append(Block(result[0], result[1], result[2], result[3], result[4]))
+            blocks.append(Block(result[0], result[1], result[2], result[3], result[4],result[5]))
         conn.commit()
         conn.close()
         return blocks
@@ -95,10 +96,10 @@ class DataBaseManager:
         c.execute("SELECT precedent_hash FROM blocks WHERE hash=?",
                   (hash_block,))  # pour être a l'abris des collisions ont peut également verifier les indexs
         result = c.fetchone()
-        c.execute("SELECT id ,data , precedent_hash , d,nonce FROM blocks WHERE hash=?",
+        c.execute("SELECT id ,data , precedent_hash , d, miner, nonce FROM blocks WHERE hash=?",
                   (result,))  # pour être a l'abris des collisions ont peut également verifier les indexs
         result = c.fetchone()
-        block = (Block(result[0], result[1], result[2], result[3], result[4]))
+        block = (Block(result[0], result[1], result[2], result[3], result[4], result[5]))
         conn.commit()
         conn.close()
         return block
@@ -106,10 +107,10 @@ class DataBaseManager:
     def get_block(self,hash_block):
         conn = sqlite3.connect(self.name_data_base)
         c = conn.cursor()
-        c.execute("SELECT id , data ,precedent_hash , d, nonce  FROM blocks WHERE hash=?",
+        c.execute("SELECT id , data ,precedent_hash , d, miner, nonce  FROM blocks WHERE hash=?",
                   (hash_block,))
         result = c.fetchone()
-        block = (Block(result[0], result[1], result[2], result[3], result[4]))
+        block = (Block(result[0], result[1], result[2], result[3], result[4], result[5]))
         conn.commit()
         conn.close()
         return block
@@ -119,7 +120,7 @@ class DataBaseManager:
         c = conn.cursor()
         c.execute("SELECT * FROM blocks")
         blocks_raw = c.fetchall()
-        blocks = [Block(result[0], result[2], result[4], result[5], result[1]) for result in blocks_raw]
+        blocks = [Block(result[0], result[2], result[4], result[5], result[6], result[1]) for result in blocks_raw]
         conn.commit()
         conn.close()
         return blocks

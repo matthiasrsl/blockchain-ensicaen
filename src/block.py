@@ -5,12 +5,13 @@ from time import time
 
 # noinspection PyUnusedLocal
 class Block:
-    def __init__(self, index, data, previous_hash, date, nonce=0, **kwargs):
+    def __init__(self, index, data, previous_hash, date, miner, nonce=0, **kwargs):
         self.previous_hash = previous_hash
         self.index = index
         self.nonce = nonce
         self.data = data
         self.date = date
+        self.miner=miner
         self.hash = self.calculate_hash()
 
     def calculate_hash(self):
@@ -61,5 +62,6 @@ class BlockEncoder(json.JSONEncoder):
                 "data": obj.data,
                 "date": str(obj.date),
                 "hash": obj.hash,
+                "miner":obj.miner
             }
         return json.JSONEncoder.default(self, obj)
