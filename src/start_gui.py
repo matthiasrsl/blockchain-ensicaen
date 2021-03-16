@@ -19,6 +19,7 @@ class Start(QtWidgets.QMainWindow, src.gui_ressources.gui_start.Ui_MainWindow):
         self.handler = handler
 
     def go_button(self):
+        self.handler.create_blockchain(False)
         self.hide()
         self.client.show()
         self.client.ip = self.ipLine.text()
@@ -26,5 +27,6 @@ class Start(QtWidgets.QMainWindow, src.gui_ressources.gui_start.Ui_MainWindow):
         self.handler.blockchain.blocks.clearDB()
 
     def first_button(self):
+        self.handler.create_blockchain(True)
         self.hide()
         self.client.show()
