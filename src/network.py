@@ -109,7 +109,7 @@ class NetworkHandler:
         block_info_json = json.loads(message.split("|")[1])
         block_to_add = Block(**block_info_json)
         if block_to_add.is_valid() and self.blockchain.get_last_block().is_previous(
-                block_to_add
+            block_to_add
         ):
             self.blockchain.add_block(block_to_add)
 
