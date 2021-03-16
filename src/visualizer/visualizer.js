@@ -62,6 +62,10 @@ function updateBlockchain(data) {
                 </p>
 
                 <p class="block_info">
+                    <strong>Mined by</strong> ${block.miner}
+                </p>
+
+                <p class="block_info">
                     <strong>Data</strong>
                 </p>
 
@@ -72,10 +76,8 @@ function updateBlockchain(data) {
             `
 
             bk_section.appendChild(block_div);
-            //block_div.className = "block";
             block_list.push(block.hash);
             new_blocks.push(block_div);
-            //setTimeout((e) => { block_div.className = "block" }, 1000, block_div)
         }
     }
 

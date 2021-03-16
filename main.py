@@ -12,7 +12,7 @@ from src.start_gui import Start
 
 VISUALIZER_PORT = 8000
 REDIRECT_VISUALIZER_SERVER_LOG = True
-LAUNCH_VISUALIZER = False
+LAUNCH_VISUALIZER = True
 
 handler = NetworkHandler()
 
@@ -70,4 +70,4 @@ if __name__ == "__main__":
     gui = Start(handler)
     app.exec_()
 
-    thread_server.join()
+    #thread_server.join()  # Useless as we want the thread to be killed when we close the window.
