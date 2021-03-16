@@ -132,8 +132,6 @@ class NetworkHandler:
 
 
         else:
-            for ip_node in self.other_nodes:
-                send_message(ip_node, "****refuse")
             message_dict = {"sender": "Me", "content": "****refuse"}
             self.message_list.append(message_dict)
             for leaf in leaves:
