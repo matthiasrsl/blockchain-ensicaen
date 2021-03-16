@@ -125,7 +125,6 @@ class NetworkHandler:
     def mined_block_protocol(self, message):
         block_info_json = json.loads(message.split("|")[1])
         self.block_to_add = Block(**block_info_json)
-        leaves = self.blockchain.get_leaves()
         self.client.hiddenRefreshButton.click()
         if self.manual_validation:
             self.wait = True
@@ -133,50 +132,13 @@ class NetworkHandler:
                 pass
 
         else:
-            message_dict = {"sender": "Me", "content": "****refuse"}
+            message = self.blockchain.new_block(self.block_to_add)
+            for ip_node in self.other_nodes:
+                send_message(
+                    ip_node, message
+                )  
+            message_dict = {"sender": "Me", "content": message}
             self.message_list.append(message_dict)
-            for leaf in leaves:
-                leaf_block = self.blockchain.get_block(leaf["hash"])
-                if (  # fork case
-                    self.block_to_add.index == leaf_block.index
-                    and self.block_to_add.is_valid()
-                    and self.blockchain.get_block(leaf_block.previous_hash).is_previous(
-                        self.block_to_add
-                    )
-                ):
-
-                    self.blockchain.add_fork(
-                        self.block_to_add.hash, self.block_to_add.index
-                    )
-                    self.blockchain.add_block(self.block_to_add)
-                    self.send_message_to_all("****accept")
-
-                    for ip_node in self.other_nodes:
-                        send_message(
-                            ip_node, "****accept"
-                        )  # dans ****accepte rajouter le hash ou l'index pour identifier le block
-                        message_dict = {"sender": "Me", "content": "****accept"}
-                        self.message_list.append(message_dict)
-
-                elif (  # normal case
-                    self.block_to_add.is_valid()
-                    and self.block_to_add.index == leaf_block.index + 1
-                    and leaf_block.is_previous(self.block_to_add)
-                ):
-                    #self.blockchain.drop_fork(leaf_block.hash)
-                    self.blockchain.add_block(self.block_to_add)
-                    """self.blockchain.add_fork(
-                        self.block_to_add.hash, self.block_to_add.index
-                    )"""
-                    self.blockchain.update_fork(leaf["fork_id"], self.block_to_add.hash, self.block_to_add.index)
-                    for ip_node in self.other_nodes:
-                        send_message(
-                            ip_node, "****accept"
-                        )  # dans ****accepte rajouter le hash ou l'index pour identifier le block
-                        message_dict = {"sender": "Me", "content": "****accept"}
-                        self.message_list.append(message_dict)
-                else:
-                    self.send_message_to_all("****refuse")
 
         self.block_to_add = None
 

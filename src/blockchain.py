@@ -30,7 +30,52 @@ class Blockchain:
         return True
 
     def add_block(self, block):
+        """
+        Low-level method to add a block to the blockchain.
+        Should only be called by Blockchain.new_block() and Blockchain.create_first_block().
+        """
         self.blocks.add_block(block)
+
+    def new_block(self, block_to_add):
+        """
+        This mathod is used to add a new block to the blockchain, be it created by this node
+        or coming from another node.
+        This method handles the creation of forks if needed.
+        It should be the only place in the codebase where forks are created.
+        """
+        leaves = self.get_leaves()
+        for leaf in leaves:
+            leaf_block = self.get_block(leaf["hash"])
+            if (  # fork case: The new bloc as a height (index) that already exists.
+                block_to_add.index == leaf_block.index
+                and block_to_add.is_valid()
+                and self.get_block(leaf_block.previous_hash).is_previous(
+                    block_to_add
+                )
+            ):
+
+                self.add_fork(
+                    block_to_add.hash, block_to_add.index
+                )
+                self.add_block(block_to_add)
+                message = "****accept" # dans ****accepte rajouter le hash ou l'index pour identifier le block
+
+                
+
+            elif (  # normal case: the new block's height(index) id greater that any other block's height.
+                block_to_add.is_valid()
+                and block_to_add.index == leaf_block.index + 1
+                and leaf_block.is_previous(block_to_add)
+            ):
+                #self.blockchain.drop_fork(leaf_block.hash)
+                self.add_block(block_to_add)
+                """self.add_fork(
+                    block_to_add.hash, block_to_add.index
+                )"""
+                self.update_fork(leaf["fork_id"], block_to_add.hash, block_to_add.index)
+                message = "****accept" # dans ****accepte rajouter le hash ou l'index pour identifier le block
+            else:
+                message = "****refuse"
 
     def get_last_blocks(self):
         return self.blocks.getLastBlocks()
