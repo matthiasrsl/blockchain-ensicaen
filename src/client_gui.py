@@ -41,7 +41,7 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
         # mined_block_protocol soient respecté avant de l'ajouter (add_block et add_fork)
         data = self.dataText.toPlainText()
         last_block = self.blockchain.get_last_blocks()
-        block = Block(last_block[0].index + 1, data, last_block[0].hash, datetime.now())
+        block = Block(last_block[0].index + 1, data, last_block[0].hash, datetime.now(),"ip")
         block.mine()
         message = "****"
         message += "mined_block|"
