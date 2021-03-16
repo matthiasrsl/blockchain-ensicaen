@@ -34,6 +34,9 @@ class DataBaseManager:
         conn.commit()
         conn.close()
 
+    def update_fork(fork_id, new_hash, new_height):
+        pass
+
     def drop_fork(self, hash_block):
         conn = sqlite3.connect(self.name_data_base)
         c = conn.cursor()
@@ -140,11 +143,12 @@ class DataBaseManager:
     def get_leaves(self):
         conn = sqlite3.connect(self.name_data_base)
         c = conn.cursor()
-        c.execute("SELECT * FROM forks")
+        c.execute("SELECT rowid,* FROM forks")
         result = c.fetchall()
         leaves = []
         for row in result:
-            leaves.append({"hash": row[0], "id": row[1]})
+            leaves.append({"hash": row[1], "id": row[2], "fork_id": row[0]})
+            print(leaves)
         conn.commit()
         conn.close()
         return leaves
