@@ -1,5 +1,6 @@
 import os
 import sqlite3
+import pathlib
 
 from src.block import *
 
@@ -132,6 +133,7 @@ class DataBaseManager:
             
         blockchain = {"blockchain": blocks}
         blockchain_json = json.dumps(blockchain, cls=BlockEncoder)
+        pathlib.Path("./etc/visudata/").mkdir(parents=True, exist_ok=True)
         with open("etc/visudata/blockchain.json", "w") as file:
             file.write(blockchain_json)
 
