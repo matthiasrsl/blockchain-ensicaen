@@ -163,11 +163,12 @@ class NetworkHandler:
                     and self.block_to_add.index == leaf_block.index + 1
                     and leaf_block.is_previous(self.block_to_add)
                 ):
-                    self.blockchain.drop_fork(leaf_block.hash)
+                    #self.blockchain.drop_fork(leaf_block.hash)
                     self.blockchain.add_block(self.block_to_add)
-                    self.blockchain.add_fork(
+                    """self.blockchain.add_fork(
                         self.block_to_add.hash, self.block_to_add.index
-                    )
+                    )"""
+                    self.blockchain.update_fork(leaf["fork_id"], self.block_to_add.hash, self.block_to_add.height)
                     for ip_node in self.other_nodes:
                         send_message(
                             ip_node, "****accept"
