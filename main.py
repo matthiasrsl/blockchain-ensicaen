@@ -42,6 +42,10 @@ def init_visulizer_data():
     pathlib.Path("./etc/visudata/").mkdir(parents=True, exist_ok=True)
     with open("etc/visudata/blockchain.json", "w") as file:
         file.write('''{"blockchain": []}''')
+    with open("etc/visudata/messages.json", "w") as file:
+        file.write('''{"messages": []}''')
+    with open("etc/visudata/nodes.json", "w") as file:
+        file.write('''{"nodes": []}''')
 
 
 def launch_visualizer_client():

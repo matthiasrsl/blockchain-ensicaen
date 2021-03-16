@@ -38,7 +38,7 @@ class DataBaseManager:
         conn = sqlite3.connect(self.name_data_base)
         c = conn.cursor()
         data = (new_hash, new_height, fork_id)
-        c.execute("UPDATE forks hash_feuille=?, id_feuille=? WHERE rowid=?", data)
+        c.execute("UPDATE forks SET hash_feuille=?, id_feuille=? WHERE rowid=?", data)
         conn.commit()
         conn.close()
 
