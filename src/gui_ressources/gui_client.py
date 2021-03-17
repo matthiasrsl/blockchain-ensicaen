@@ -8,12 +8,10 @@
 
 from PyQt5 import QtCore, QtWidgets
 
-
-# noinspection PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit,PyAttributeOutsideInit
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(941, 610)
+        MainWindow.resize(1017, 708)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.sendButton = QtWidgets.QPushButton(self.centralwidget)
@@ -57,12 +55,32 @@ class Ui_MainWindow(object):
         self.hiddenRefreshButton = QtWidgets.QPushButton(self.centralwidget)
         self.hiddenRefreshButton.setGeometry(QtCore.QRect(30, 530, 16, 16))
         self.hiddenRefreshButton.setObjectName("hiddenRefreshButton")
+        self.widget = QtWidgets.QWidget(self.centralwidget)
+        self.widget.setGeometry(QtCore.QRect(10, 600, 491, 27))
+        self.widget.setObjectName("widget")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.label_3 = QtWidgets.QLabel(self.widget)
+        self.label_3.setObjectName("label_3")
+        self.horizontalLayout.addWidget(self.label_3)
+        self.ipLine = QtWidgets.QLineEdit(self.widget)
+        self.ipLine.setEnabled(False)
+        self.ipLine.setObjectName("ipLine")
+        self.horizontalLayout.addWidget(self.ipLine)
+        self.joinButton = QtWidgets.QPushButton(self.widget)
+        self.joinButton.setEnabled(False)
+        self.joinButton.setObjectName("joinButton")
+        self.horizontalLayout.addWidget(self.joinButton)
+        self.leaveButton = QtWidgets.QPushButton(self.widget)
+        self.leaveButton.setObjectName("leaveButton")
+        self.horizontalLayout.addWidget(self.leaveButton)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 941, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1017, 22))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.actionSendMessage = QtWidgets.QAction(MainWindow)
@@ -87,5 +105,8 @@ class Ui_MainWindow(object):
 "</style></head><body style=\" font-family:\'Ubuntu\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">None</p></body></html>"))
         self.hiddenRefreshButton.setText(_translate("MainWindow", "PushButton"))
+        self.label_3.setText(_translate("MainWindow", "Ip:"))
+        self.joinButton.setText(_translate("MainWindow", "Join Network"))
+        self.leaveButton.setText(_translate("MainWindow", "Leave Network"))
         self.actionSendMessage.setText(_translate("MainWindow", "SendMessage"))
 
