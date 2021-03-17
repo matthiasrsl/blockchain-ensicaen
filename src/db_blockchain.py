@@ -16,7 +16,7 @@ class DataBaseManager:
         c = conn.cursor()
         c.execute(
             """CREATE TABLE IF NOT EXISTS blocks(id INTEGER , nonce INTEGER,
-             data TEXT , hash TEXT PRIMARY KEY, precedent_hash TEXT , d DATE, miner TEXT )"""
+             data TEXT , hash TEXT PRIMARY KEY, precedent_hash TEXT , d DATE, miner TEXT, branch_id INTEGER )"""
         )
         c.execute(
             """CREATE TABLE IF NOT EXISTS forks(hash_feuille TEXT,id_feuille INTEGER , FOREIGN KEY (hash_feuille) 
@@ -37,6 +37,7 @@ class DataBaseManager:
 
         c.execute("SELECT rowid FROM forks WHERE hash_feuille=?", (hash_block,))
         fork_id = c.fetchone()[0]
+        print(f"fork id: {fork_id}")
         conn.close()
 
         return fork_id
@@ -67,10 +68,11 @@ class DataBaseManager:
             block.hash,
             block.previous_hash,
             block.date,
-            block.miner
+            block.miner,
+            block.branch_id
         ]
         try:
-            c.execute("INSERT INTO blocks VALUES (?,?,?,?,?,?,?)", row)
+            c.execute("INSERT INTO blocks VALUES (?,?,?,?,?,?,?,?)", row)
         except sqlite3.IntegrityError:
             print("Error block already in blockchain")
         conn.commit()
