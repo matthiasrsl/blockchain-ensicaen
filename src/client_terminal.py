@@ -11,6 +11,11 @@ class Client_terminal:
         self.blockchain = handler.blockchain
         handler.client = self
         self.block_to_accept = False
+        name = input("What's your name?")
+        if name is "":
+            self.name = "DefaultName"
+        else:
+            self.name = name
 
         self.hiddenRefreshButton = type('', (object,), {'click': lambda: self.set_displayer_text()})
 

@@ -16,6 +16,7 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
         self.blockchain = handler.blockchain
         handler.client = self
         self.hiddenRefreshButton.setVisible(False)
+        self.name = None
 
         self.sendButton.clicked.connect(self.send_message)
         self.createButton.clicked.connect(self.create_block)
