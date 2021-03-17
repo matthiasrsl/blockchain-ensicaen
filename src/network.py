@@ -68,7 +68,7 @@ class NetworkHandler:
             print(f"{ip} tried to be removed but not in list")
 
     def process_message(self, message, ip):
-        print(f"RECEIVED: {message}")
+        print(f"\n\nRECEIVED from {ip}: \n{message}\n\n")
 
         message_dict = {"sender": ip, "content": message}
         self.message_list.append(message_dict)

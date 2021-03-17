@@ -77,6 +77,8 @@ class Blockchain:
             else:
                 message = "****refuse"
 
+        return message
+
     def get_last_blocks(self):
         return self.blocks.getLastBlocks()
 
