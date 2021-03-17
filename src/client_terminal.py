@@ -2,13 +2,13 @@ import json
 from datetime import datetime
 
 from src.block import Block, BlockEncoder
-from src.network import send_message
+from src.network import send_message, NetworkHandler
 
 
 class Client_terminal:
-    def __init__(self, handler):
+    def __init__(self, handler: NetworkHandler):
         self.handler = handler
-        self.blockchain = handler.blockchain
+
         handler.client = self
         self.block_to_accept = False
 
@@ -16,8 +16,10 @@ class Client_terminal:
 
         bool = input("Are you first? [y/n]:")
         if bool == "n":
-            self.blockchain.blocks.clearDB()
-        elif bool != "y":
+            self.handler.create_blockchain(False)
+        elif bool == "y":
+            self.handler.create_blockchain(True)
+        else:
             print("error answer was not n or y")
             exit()
 
@@ -82,13 +84,13 @@ class Client_terminal:
         self.handler.send_message_to_all(message)
 
     def create_block(self, data):
-        last_block = self.blockchain.get_last_blocks()[0]
+        last_block = self.handler.blockchain.get_last_blocks()[0]
         block = Block(last_block.index + 1, data, last_block.hash, datetime.now())
         block.mine()
         message = "****"
         message += "mined_block|"
         message += json.dumps(block, cls=BlockEncoder)
-        self.blockchain.add_block(block)
+        self.handler.blockchain.add_block(block)
         self.handler.send_message_to_all(message)
 
     def send_message_to_ip(self, mes, ip):
