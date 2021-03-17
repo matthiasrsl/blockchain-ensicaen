@@ -41,7 +41,7 @@ section {
     background: #274f59;
     padding: 0 15px;
     margin-bottom: 5px;
-    height: 360px;
+    height: 390px;
     border-radius: 5px;
     color: #fffee1;
     transition: height 1000ms ease, margin-bottom 1000ms ease;/*, transform 1000ms linear;*/
@@ -71,7 +71,7 @@ section {
 }
 
 .hash_highlight {
-    color: #fe5849;
+    xcolor: #fe5849;
     font-weight: bold;
 }
 
@@ -112,9 +112,17 @@ pre.block_data {
     color: #fffee1;
 }
 
+.branch_0 .data_container {
+    background: #3d707c;
+}
+
 .branch_1 {
     background: #106162;
     color: #d7d6f3;
+}
+
+.branch_0 .data_container {
+    background: #3d707c;
 }
 
 .branch_2 {
@@ -122,9 +130,17 @@ pre.block_data {
     color: #213067;
 }
 
+.branch_2 .data_container {
+    background: #9b5625;
+}
+
 .branch_3 {
     background: #297215;
     color: #a1d2bb;
+}
+
+.branch_3 .data_container {
+    background: #225215;
 }
 
 .branch_4 {
@@ -132,9 +148,17 @@ pre.block_data {
     color: #f9fac5;
 }
 
+.branch_4 .data_container {
+    background: #25343b;
+}
+
 .branch_5 {
     background: #f20837;
     color: #dad8f2;
+}
+
+.branch_5 .data_container {
+    background: #c20e32;
 }
 
 .branch_6 {
@@ -142,9 +166,17 @@ pre.block_data {
     color: #3b334e;
 }
 
+.branch_6 .data_container {
+    background: #976b23;
+}
+
 .branch_7 {
     background: #f63126;
     color: #fffee1;
+}
+
+.branch_7 .data_container {
+    background: #b9251d;
 }
 
 .branch_8 {
@@ -152,7 +184,15 @@ pre.block_data {
     color: #fffee1;
 }
 
+.branch_8 .data_container {
+    background: #11233f;
+}
+
 .branch_9 {
     background: #5b1591;
     color: #e1f4ac;
+}
+
+.branch_9 .data_container {
+    background: #411563;
 }

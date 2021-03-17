@@ -27,6 +27,10 @@ function formatHash(hash) {
     return `${begin}<span class="hash_highlight">${end}</span>`
 }
 
+function shortHash(hash) {
+    return hash.slice(-6);
+}
+
 function updateBlockchain(data) {
     blockchain = data.blockchain;
 
@@ -36,16 +40,20 @@ function updateBlockchain(data) {
         if (!block_list.includes(block.hash)) {
             block_div = document.createElement("div");
             if (first_update) {
-                block_div.className = "block"
+                block_div.className = `block branch_${block.branch}`
             } else {
-                block_div.className = `block appearing branch_{block.branch}`
+                block_div.className = `block appearing branch_${block.branch}`
             }
             block_div.id = `block_${block.hash}`
 
             block_div.innerHTML = `
-                <h2>Block #${block.index}</h2>
+                <h2>Block #${shortHash(block.hash)}</h2>
                 <p class="block_info">
                     <strong class="hash_label">Hash</strong> <span class="hash">${formatHash(block.hash)}</span> 
+                </p>
+
+                <p class="block_info">
+                    <strong>Height</strong> ${block.index}
                 </p>
 
                 <p class="block_info">
