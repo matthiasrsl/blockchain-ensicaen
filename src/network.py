@@ -37,7 +37,7 @@ class NetworkHandler:
         self.other_nodes = {}
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connected_clients = []
-        self.blockchain = Blockchain(clear=True)
+        self.blockchain = None
         self.name = None
         self.server_host = get_local_ip()
         self.message_list = []
