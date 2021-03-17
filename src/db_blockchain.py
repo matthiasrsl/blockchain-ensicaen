@@ -36,7 +36,7 @@ class DataBaseManager:
         conn.commit()
 
         c.execute("SELECT rowid FROM forks WHERE hash_feuille=?", (hash_block,))
-        fork_id = c.fetchone[0]
+        fork_id = c.fetchone()[0]
         conn.close()
 
         return fork_id
