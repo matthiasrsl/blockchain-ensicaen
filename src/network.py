@@ -130,7 +130,6 @@ class NetworkHandler:
             while self.wait:
                 pass
 
-
         else:
             for ip_node in self.other_nodes:
                 send_message(ip_node, "****refuse")
@@ -139,14 +138,16 @@ class NetworkHandler:
             for leaf in leaves:
                 leaf_block = self.blockchain.get_block(leaf["hash"])
                 if (  # fork case
-                        self.block_to_add.index == leaf_block.index
-                        and self.block_to_add.is_valid()
-                        and self.blockchain.get_block(leaf_block.previous_hash).is_previous(
-                    self.block_to_add
-                )
+                    self.block_to_add.index == leaf_block.index
+                    and self.block_to_add.is_valid()
+                    and self.blockchain.get_block(leaf_block.previous_hash).is_previous(
+                        self.block_to_add
+                    )
                 ):
 
-                    self.blockchain.add_fork(self.block_to_add.hash, self.block_to_add.index)
+                    self.blockchain.add_fork(
+                        self.block_to_add.hash, self.block_to_add.index
+                    )
                     self.blockchain.add_block(self.block_to_add)
                     self.send_message_to_all("****accept")
 
@@ -158,13 +159,15 @@ class NetworkHandler:
                         self.message_list.append(message_dict)
 
                 elif (  # normal case
-                        self.block_to_add.is_valid()
-                        and self.block_to_add.index == leaf_block.index + 1
-                        and leaf_block.is_previous(self.block_to_add)
+                    self.block_to_add.is_valid()
+                    and self.block_to_add.index == leaf_block.index + 1
+                    and leaf_block.is_previous(self.block_to_add)
                 ):
                     self.blockchain.drop_fork(leaf_block.hash)
                     self.blockchain.add_block(self.block_to_add)
-                    self.blockchain.add_fork(self.block_to_add.hash, self.block_to_add.index)
+                    self.blockchain.add_fork(
+                        self.block_to_add.hash, self.block_to_add.index
+                    )
                     for ip_node in self.other_nodes:
                         send_message(
                             ip_node, "****accept"

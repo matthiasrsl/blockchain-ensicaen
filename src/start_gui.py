@@ -25,7 +25,7 @@ class Start(QtWidgets.QMainWindow, src.gui_ressources.gui_start.Ui_MainWindow):
         self.client.send_message("****join|0")
         self.handler.blockchain.blocks.clearDB()
         name = self.nameLine.text()
-        if name is "":
+        if name == "":
             self.client.name = "DefaultName"
         else:
             self.client.name = name
@@ -34,7 +34,7 @@ class Start(QtWidgets.QMainWindow, src.gui_ressources.gui_start.Ui_MainWindow):
         self.hide()
         self.client.show()
         name = self.nameLine.text()
-        if name is "":
+        if name == "":
             self.client.name = "DefaultName"
         else:
             self.client.name = name
