@@ -24,9 +24,9 @@ def get_local_ip():
 
 
 def send_message(ip, message):
+    print("SENT to {ip}: {message}")
     connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     connection.connect((ip, SERVER_PORT))
-    print("    SENT: " + message)
     message = message.encode()
     connection.send(message)
     connection.close()
