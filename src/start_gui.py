@@ -23,7 +23,7 @@ class Start(QtWidgets.QMainWindow, src.gui_ressources.gui_start.Ui_MainWindow):
         self.hide()
         self.client.show()
         self.client.ip = self.ipLine.text()
-        self.client.send_message("****join|0")
+        self.client.send_message("****join")
         self.handler.blockchain.blocks.clearDB()
         name = self.nameLine.text()
         if name == "":

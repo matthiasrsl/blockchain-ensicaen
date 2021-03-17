@@ -170,7 +170,6 @@ class NetworkHandler:
         message_dict = {"sender": "Me", "content": mess}
         self.message_list.append(message_dict)
         mess2 = "****blockchain|"
-        last_height = message.split("|")[1]
         list_blocks = []
 
         leaves = self.blockchain.get_leaves()
@@ -178,7 +177,7 @@ class NetworkHandler:
         for leaf in leaves:
             leaf_block = self.blockchain.get_block(leaf["hash"])
             current_block = leaf_block
-            for i in range(int(last_height), leaf_block.index + 1):
+            for i in range(0, leaf_block.index + 1):
                 if current_block not in list_blocks:
                     list_blocks.append(current_block)
                 if current_block.index != 0:
