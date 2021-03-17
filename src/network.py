@@ -50,7 +50,7 @@ class NetworkHandler:
         self.client = None
 
     def create_blockchain(self, first):
-        self.blockchain = Blockchain(clear=first)
+        self.blockchain = Blockchain(first=first)
 
     def start_server(self):
         self.server.bind((self.server_host, SERVER_PORT))

@@ -5,10 +5,9 @@ from src.block import *
 
 
 class DataBaseManager:
-    def __init__(self, name_data_base, clear=False):
+    def __init__(self, name_data_base, clear=True):
         self.name_data_base = name_data_base
-        if clear:
-            self.clearDB()
+        os.remove(self.name_data_base)
         conn = sqlite3.connect(name_data_base)
         c = conn.cursor()
         c.execute(
@@ -85,7 +84,8 @@ class DataBaseManager:
         conn.close()
         return blocks
 
-    def get_previous_block(self, hash_block): # au final pas très utile une fonction qui retourn un block en fontcion de son hash suffit
+    def get_previous_block(self,
+                           hash_block):  # au final pas très utile une fonction qui retourn un block en fontcion de son hash suffit
         conn = sqlite3.connect(self.name_data_base)
         c = conn.cursor()
         c.execute("SELECT precedent_hash FROM blocks WHERE hash=?",
@@ -99,7 +99,7 @@ class DataBaseManager:
         conn.close()
         return block
 
-    def get_block(self,hash_block):
+    def get_block(self, hash_block):
         conn = sqlite3.connect(self.name_data_base)
         c = conn.cursor()
         c.execute("SELECT id , data ,precedent_hash , d, nonce  FROM blocks WHERE hash=?",
@@ -129,7 +129,7 @@ class DataBaseManager:
             except json.decoder.JSONDecodeError:
                 block.data = block.data
             blocks.append(block)
-            
+
         blockchain = {"blockchain": blocks}
         blockchain_json = json.dumps(blockchain, cls=BlockEncoder)
         with open("etc/visudata/blockchain.json", "w") as file:
@@ -147,13 +147,12 @@ class DataBaseManager:
         conn.close()
         return leaves
 
-
     def clearDB(self):
         try:
             os.remove(self.name_data_base)
-            self.__init__(self.name_data_base)
+            self.__init__(self.name_data_base, clear=False)
         except FileNotFoundError:
-            self.__init__(self.name_data_base)
+            self.__init__(self.name_data_base, clear=False)
 
     # Might cause bug
     # def __del__(self):
