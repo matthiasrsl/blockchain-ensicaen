@@ -23,6 +23,7 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
         self.acceptBox.accepted.connect(self.handler.accept_mined_block)
         self.acceptBox.rejected.connect(self.handler.refuse_mined_block)
         self.hiddenRefreshButton.clicked.connect(self.set_displayer_text)
+        self.leaveButton.clicked.connect(self.leaveButton)
 
     def send_message(self, message=None):
         if message:
@@ -58,3 +59,9 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
 
     def set_displayer_text(self):
         self.blockDisplayer.setText(str(self.handler.block_to_add))
+
+    def leave(self):
+        self.handler.send_message_to_all("****leave")
+        self.handler.other_nodes = {}
+        self.joinButton.setEnabled(True)
+        self.ipLine.setEnabled(True)
