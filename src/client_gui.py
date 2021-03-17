@@ -65,3 +65,10 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
         self.handler.other_nodes = {}
         self.joinButton.setEnabled(True)
         self.ipLine.setEnabled(True)
+        self.leaveButton.setEnabled(False)
+
+    def join(self):
+        send_message(self.ipLine.text(), "****join|" + self.handler.blockchain.get_real_last_block().index)
+        self.leaveButton.setEnabled(True)
+        self.ipLine.setEnabled(False)
+        self.joinButton.setEnabled(False)
