@@ -55,7 +55,7 @@ class NetworkHandler:
 
     def start_server(self):
         self.server.bind((self.server_host, SERVER_PORT))
-        self.server.accept(5)
+        self.server.listen(5)
 
     def add_node(self, ip):
         node = Node(ip)
