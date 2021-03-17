@@ -8,7 +8,10 @@ from src.block import *
 class DataBaseManager:
     def __init__(self, name_data_base, clear=True):
         self.name_data_base = name_data_base
-        os.remove(self.name_data_base)
+        try:
+            os.remove(self.name_data_base)
+        except FileNotFoundError:
+            pass  # We juste want the file to not be present.
         conn = sqlite3.connect(name_data_base)
         c = conn.cursor()
         c.execute(
