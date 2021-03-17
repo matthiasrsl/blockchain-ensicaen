@@ -10,7 +10,7 @@ from src.network import NetworkHandler
 
 VISUALIZER_PORT = 8000
 REDIRECT_VISUALIZER_SERVER_LOG = True
-LAUNCH_VISUALIZER = True
+LAUNCH_VISUALIZER = False
 
 handler = NetworkHandler()
 
