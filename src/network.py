@@ -55,6 +55,7 @@ class NetworkHandler:
 
     def start_server(self):
         self.server.bind((self.server_host, SERVER_PORT))
+        self.server.accept(5)
 
     def add_node(self, ip):
         node = Node(ip)
@@ -197,14 +198,9 @@ class NetworkHandler:
 
     def send_message_to_all(self, message):
         self.updateVisualizerMessage()
-        #connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         for ip in self.other_nodes.keys():
             send_message(ip, message)
-            #connection.connect((ip, SERVER_PORT))
-            #print("Client Connected")
-            #message = message.encode()
-            #connection.send(message)
-            #connection.close()
+
 
     def updateVisualizer(self):
         all_nodes = []
