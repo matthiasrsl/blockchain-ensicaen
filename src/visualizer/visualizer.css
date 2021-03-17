@@ -41,17 +41,14 @@ section {
     background: #274f59;
     padding: 0 15px;
     margin-bottom: 5px;
-    height: 350px;
+    height: 360px;
     border-radius: 5px;
     color: #fffee1;
-    xtransform: scaleY(1);
     transition: height 1000ms ease, margin-bottom 1000ms ease;/*, transform 1000ms linear;*/
     overflow: hidden;
 }
 
 .block.appearing {
-    xbackground: red;
-    xtransform: scaleY(0);
     height: 0;
     margin-bottom: 0;
 }
@@ -105,4 +102,57 @@ pre.block_data {
 #nodes {
     background: #ffd8d6;
     width: 100%;
+}
+
+
+/* Branches backgrounds */
+
+.branch_0 {
+    background: #274f59;
+    color: #fffee1;
+}
+
+.branch_1 {
+    background: #106162;
+    color: #d7d6f3;
+}
+
+.branch_2 {
+    background: #db7831;
+    color: #213067;
+}
+
+.branch_3 {
+    background: #297215;
+    color: #a1d2bb;
+}
+
+.branch_4 {
+    background: #38505c;
+    color: #f9fac5;
+}
+
+.branch_5 {
+    background: #f20837;
+    color: #dad8f2;
+}
+
+.branch_6 {
+    background: #c18628;
+    color: #3b334e;
+}
+
+.branch_7 {
+    background: #f63126;
+    color: #fffee1;
+}
+
+.branch_8 {
+    background: #0f2c58;
+    color: #fffee1;
+}
+
+.branch_9 {
+    background: #5b1591;
+    color: #e1f4ac;
 }

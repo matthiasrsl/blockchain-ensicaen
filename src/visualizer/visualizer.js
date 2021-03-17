@@ -38,7 +38,7 @@ function updateBlockchain(data) {
             if (first_update) {
                 block_div.className = "block"
             } else {
-                block_div.className = "block appearing"
+                block_div.className = `block appearing branch_{block.branch}`
             }
             block_div.id = `block_${block.hash}`
 
@@ -63,6 +63,10 @@ function updateBlockchain(data) {
 
                 <p class="block_info">
                     <strong>Mined by</strong> ${block.miner}
+                </p>
+
+                <p class="block_info">
+                    <strong>Branch</strong> ${block.branch}
                 </p>
 
                 <p class="block_info">

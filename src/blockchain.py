@@ -12,7 +12,7 @@ class Blockchain:
             self.create_first_block()  # The first block doesn't have previous hash
 
     def create_first_block(self):
-        first_block = Block(0, "First Block", None, datetime.now(), "<first node (unknown ip)>")
+        first_block = Block(0, "First Block", None, datetime.now(), "<first node (unknown ip)>", branch_id=0)
         # We can reduce the format if we want to take less space
         self.add_block(first_block)
         self.add_fork(first_block.hash, 0)
@@ -45,6 +45,7 @@ class Blockchain:
         """
         leaves = self.get_leaves()
         for leaf in leaves:
+            block_to_add.branch_id = leaf["fork_id"]
             leaf_block = self.get_block(leaf["hash"])
             if (  # fork case: The new bloc as a height (index) that already exists.
                 block_to_add.index == leaf_block.index
@@ -67,11 +68,7 @@ class Blockchain:
                 and block_to_add.index == leaf_block.index + 1
                 and leaf_block.is_previous(block_to_add)
             ):
-                #self.blockchain.drop_fork(leaf_block.hash)
                 self.add_block(block_to_add)
-                """self.add_fork(
-                    block_to_add.hash, block_to_add.index
-                )"""
                 self.update_fork(leaf["fork_id"], block_to_add.hash, block_to_add.index)
                 message = "****accept" # dans ****accepte rajouter le hash ou l'index pour identifier le block
             else:
