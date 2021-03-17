@@ -47,6 +47,7 @@ class Blockchain:
         leaves = self.get_leaves()
         for leaf in leaves:
             block_to_add.branch_id = leaf["fork_id"]
+            print(f"Block branch id: {leaf['fork_id']}")
             leaf_block = self.get_block(leaf["hash"])
             if (  # fork case: The new bloc as a height (index) that already exists.
                 block_to_add.index == leaf_block.index
@@ -106,7 +107,7 @@ class Blockchain:
         return self.blocks.get_block(hash_block)
 
     def add_fork(self, hash_block, id):
-        self.blocks.add_fork(hash_block, id)
+        return self.blocks.add_fork(hash_block, id)
 
     def update_fork(self, fork_id, new_hash, new_height):
         self.blocks.update_fork(fork_id, new_hash, new_height)
