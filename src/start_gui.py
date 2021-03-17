@@ -35,6 +35,6 @@ class Start(QtWidgets.QMainWindow, src.gui_ressources.gui_start.Ui_MainWindow):
         self.client.show()
         name = self.nameLine.text()
         if name == "":
-            self.client.name = "DefaultName"
+            self.handler.name = "DefaultName"
         else:
-            self.client.name = name
+            self.handler.name = name
