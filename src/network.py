@@ -6,7 +6,7 @@ from src.block import Block, BlockEncoder
 from src.blockchain import Blockchain
 
 SERVER_PORT = 16385
-RECV_SIZE = 8192
+RECV_SIZE = 16384
 LISTEN_TIME = 5
 
 
@@ -197,13 +197,14 @@ class NetworkHandler:
 
     def send_message_to_all(self, message):
         self.updateVisualizerMessage()
-        connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         for ip in self.other_nodes.keys():
-            connection.connect((ip, SERVER_PORT))
-            print("Client Connected")
-            message = message.encode()
-            connection.send(message)
-            connection.close()
+            send_message(ip, message)
+            #connection.connect((ip, SERVER_PORT))
+            #print("Client Connected")
+            #message = message.encode()
+            #connection.send(message)
+            #connection.close()
 
     def updateVisualizer(self):
         all_nodes = []
