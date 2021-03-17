@@ -14,8 +14,9 @@ class Blockchain:
     def create_first_block(self):
         first_block = Block(0, "First Block", None, datetime.now(), "<first node (unknown ip)>", branch_id=0)
         # We can reduce the format if we want to take less space
+        fork_id = self.add_fork(first_block.hash, 0)
+        first_block.branch_id = fork_id
         self.add_block(first_block)
-        self.add_fork(first_block.hash, 0)
 
     def verify_blockchain(self):
         curr_index = self.get_last_blocks()[0].index
