@@ -34,7 +34,12 @@ class DataBaseManager:
         ]
         c.execute("INSERT INTO forks VALUES (?,?)", row)
         conn.commit()
+
+        c.execute("SELECT rowid FROM forks WHERE hash_feuille=?", (hash_block,))
+        fork_id = c.fetchone[0]
         conn.close()
+
+        return fork_id
 
     def update_fork(self, fork_id, new_hash, new_height):
         conn = sqlite3.connect(self.name_data_base)

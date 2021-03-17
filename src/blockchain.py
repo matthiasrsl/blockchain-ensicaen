@@ -55,9 +55,10 @@ class Blockchain:
                 )
             ):
 
-                self.add_fork(
+                fork_id = self.add_fork(
                     block_to_add.hash, block_to_add.index
                 )
+                block_to_add.branch_id = fork_id
                 self.add_block(block_to_add)
                 message = "****accept" # dans ****accepte rajouter le hash ou l'index pour identifier le block
 
