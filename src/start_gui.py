@@ -10,7 +10,7 @@ class Start(QtWidgets.QMainWindow, src.gui_ressources.gui_start.Ui_MainWindow):
     def __init__(self, handler, parent=None):
         super(Start, self).__init__(parent)
         self.setupUi(self)
-        self.label.setText("You local ip is " + get_local_ip() + "\nChoose an ip to connect to")
+        self.label.setText("You local ip is " + get_local_ip() + "\nChoose an ip to connect to:")
         self.ipLine.setText(get_local_ip())
         self.goButton.clicked.connect(self.go_button)
         self.firstButton.clicked.connect(self.first_button)
@@ -24,8 +24,19 @@ class Start(QtWidgets.QMainWindow, src.gui_ressources.gui_start.Ui_MainWindow):
         self.client.show()
         self.client.ip = self.ipLine.text()
         self.client.send_message("****join|0")
+        self.handler.blockchain.blocks.clearDB()
+        name = self.nameLine.text()
+        if name == "":
+            self.client.name = "DefaultName"
+        else:
+            self.client.name = name
 
     def first_button(self):
         self.handler.create_blockchain(True)
         self.hide()
         self.client.show()
+        name = self.nameLine.text()
+        if name == "":
+            self.handler.name = "DefaultName"
+        else:
+            self.handler.name = name

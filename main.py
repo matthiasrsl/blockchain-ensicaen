@@ -74,4 +74,3 @@ if __name__ == "__main__":
     gui = Start(handler)
     app.exec_()
 
-    #thread_server.join()  # Useless as we want the thread to be killed when we close the window.

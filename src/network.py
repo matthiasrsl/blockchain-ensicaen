@@ -37,7 +37,8 @@ class NetworkHandler:
         self.other_nodes = {}
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connected_clients = []
-        self.blockchain = None
+        self.blockchain = Blockchain(clear=True)
+        self.name = None
         self.server_host = get_local_ip()
         self.message_list = []
 
@@ -54,7 +55,6 @@ class NetworkHandler:
 
     def start_server(self):
         self.server.bind((self.server_host, SERVER_PORT))
-        self.server.listen(5)
 
     def add_node(self, ip):
         node = Node(ip)
@@ -209,7 +209,7 @@ class NetworkHandler:
     def updateVisualizer(self):
         all_nodes = []
         for ip in self.other_nodes.keys():
-            node = {"name": "Prénom", "ip": ip}  # "Prenom" to change
+            node = {"name": self.name, "ip": ip}  # "Prenom" to change
             all_nodes.append(node)
 
         nodes = {"nodes": all_nodes}

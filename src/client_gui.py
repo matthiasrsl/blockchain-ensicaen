@@ -15,6 +15,7 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
         self.handler = handler
         handler.client = self
         self.hiddenRefreshButton.setVisible(False)
+        self.name = None #useless
 
         self.sendButton.clicked.connect(self.send_message)
         self.createButton.clicked.connect(self.create_block)
