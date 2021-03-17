@@ -12,7 +12,7 @@ class Client_terminal:
         handler.client = self
         self.block_to_accept = False
         name = input("What's your name?")
-        if name is "":
+        if name == "":
             self.name = "DefaultName"
         else:
             self.name = name
