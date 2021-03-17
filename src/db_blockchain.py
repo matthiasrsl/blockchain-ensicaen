@@ -136,7 +136,7 @@ class DataBaseManager:
         c = conn.cursor()
         c.execute("SELECT * FROM blocks")
         blocks_raw = c.fetchall()
-        blocks = [Block(result[0], result[2], result[4], result[5], result[6], result[1]) for result in blocks_raw]
+        blocks = [Block(result[0], result[2], result[4], result[5], result[6], result[1], branch_id=result[7]) for result in blocks_raw]
         conn.commit()
         conn.close()
         return blocks
