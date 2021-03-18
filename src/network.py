@@ -11,7 +11,7 @@ LISTEN_TIME = 5
 
 
 class Node:
-    def __init__(self, ip_address,name):
+    def __init__(self, ip_address, name):
         self.ip_address = ip_address
         self.name = name
 
@@ -42,7 +42,7 @@ class NetworkHandler:
         self.name = None
         self.server_host = get_local_ip()
         self.message_list = []
-        self.ip=str(get_local_ip())
+        self.ip = str(get_local_ip())
 
         # self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.keep_running_server = True
@@ -59,8 +59,8 @@ class NetworkHandler:
         self.server.bind((self.server_host, SERVER_PORT))
         self.server.listen(5)
 
-    def add_node(self, ip,name):
-        node = Node(ip,name)
+    def add_node(self, ip, name):
+        node = Node(ip, name)
         self.other_nodes[ip] = node
         self.updateVisualizer()
 
@@ -90,7 +90,7 @@ class NetworkHandler:
             self.join_resp_protocol(ip, message)
 
         elif message[4:] == "joined":
-            self.add_node(ip,message.split("|")[1])
+            self.add_node(ip, message.split("|")[1])
             print("===== Nice to meet you")
 
         elif message[4:] == "ack":
@@ -137,33 +137,31 @@ class NetworkHandler:
         else:
             message = self.blockchain.new_block(self.block_to_add)
             for ip_node in self.other_nodes:
-                send_message(
-                    ip_node, message
-                )  
+                send_message(ip_node, message)
             message_dict = {"sender": "Me", "content": message}
             self.message_list.append(message_dict)
 
         self.block_to_add = None
 
-    def join_resp_protocol(self, ip, message):    
+    def join_resp_protocol(self, ip, message):
         node_list_str = message.split("|")[1]
-        node_list=json.loads(node_list_str,cls=NodeEncoder)
-        node_list.append(json.loads(message.split("|")[2],cls=NodeEncoder))
-        self.other_noders=node_list
+        node_list = json.loads(node_list_str, cls=NodeEncoder)
+        node_list.append(json.loads(message.split("|")[2], cls=NodeEncoder))
+        self.other_nodes = node_list
 
         for node in self.other_nodes:
             if ip != node.ip:
-                send_message(ip_node, "****joined|"+self.name)
+                send_message(node.ip, "****joined|" + self.name)
         message_dict = {"sender": "Me", "content": "****joined"}
         self.message_list.append(message_dict)
 
     def join_protocol(self, ip, message):
         print("===== Add node")
-        self.add_node(ip,message.split("|")[1])
+        self.add_node(ip, message.split("|")[1])
         mess = "****join_resp|"
-        mess+=json.dumps(self.other_nodes,cls=NodeEncoder)
-        mess+="|"
-        mess+=json.dumps(Node(self.ip,self.name),cls=NodeEncoder)
+        mess += json.dumps(self.other_nodes, cls=NodeEncoder)
+        mess += "|"
+        mess += json.dumps(Node(self.ip, self.name), cls=NodeEncoder)
         send_message(ip, mess)
         message_dict = {"sender": "Me", "content": mess}
         self.message_list.append(message_dict)
@@ -196,13 +194,10 @@ class NetworkHandler:
         pseudo = message.split("|")[1]
         self.names.append(pseudo)
 
-    
-
     def send_message_to_all(self, message):
         self.updateVisualizerMessage()
         for ip in self.other_nodes.keys():
             send_message(ip, message)
-
 
     def updateVisualizer(self):
         all_nodes = []
