@@ -50,7 +50,7 @@ def init_visulizer_data():
 
 
 def launch_visualizer_client():
-    os.system("firefox localhost:8000/src/visualizer/visualizer.html")
+    os.system("firefox localhost:8000/src/visualizer/branch_visu.html")
 
 
 if __name__ == "__main__":
