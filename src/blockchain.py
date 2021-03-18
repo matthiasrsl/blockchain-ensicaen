@@ -12,6 +12,10 @@ class Blockchain:
             self.create_first_block()  # The first block doesn't have previous hash
 
     def create_first_block(self):
+        """
+        Create the frist block of the blockchain
+        """
+
         first_block = Block(0, "First Block", None, datetime.now(), "<first node (unknown ip)>", branch_id=0)
         # We can reduce the format if we want to take less space
         fork_id = self.add_fork(first_block.hash, 0)
@@ -19,6 +23,11 @@ class Blockchain:
         self.add_block(first_block)
 
     def verify_blockchain(self):
+        """
+        Verify that the blockchain is well chained and that block are mined
+        :return: True if the blockchain is sane
+        :rtype: bool
+        """
         curr_index = self.get_last_blocks()[0].index
         curr_block = self.get_block_at_index(curr_index)
         for i in range(curr_index - 1, -1, -1):
@@ -67,7 +76,7 @@ class Blockchain:
                 block_to_add.branch_id = fork_id
                 self.add_block(block_to_add)
                 message = "****accept"  # dans ****accepte rajouter le hash ou l'index pour identifier le block
-                
+
 
             elif (  # normal case: the new block's height(index) id greater that any other block's height.
                     block_to_add.is_valid()
