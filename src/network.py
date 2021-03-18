@@ -145,9 +145,9 @@ class NetworkHandler:
 
     def join_resp_protocol(self, ip, message):
         node_list_str = message.split("|")[1]
-        node_list = json.loads(node_list_str, cls=NodeEncoder)
-        node_list.append(json.loads(message.split("|")[2], cls=NodeEncoder))
-        self.other_nodes = node_list
+        node_list = json.loads(node_list_str)
+        node_list.append(json.loads(message.split("|")[2]))
+        self.other_nodes = [Node(node_dict["ip"], node_dict["name"]) for node_dict in node_list]
 
         for node in self.other_nodes:
             if ip != node.ip:
