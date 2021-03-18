@@ -153,9 +153,9 @@ class NetworkHandler:
         for node_dict in nodes_dict.values():
             self.other_nodes[node_dict["ip"]] = Node(node_dict["ip"], node_dict["name"])
 
-        for node in self.other_nodes:
-            if ip != node.ip:
-                send_message(node.ip, "****joined|" + self.name)
+        for node in self.other_nodes.values():
+            if ip != node.ip_address:
+                send_message(node.ip_address, "****joined|" + self.name)
         message_dict = {"sender": "Me", "content": "****joined"}
         self.message_list.append(message_dict)
 
