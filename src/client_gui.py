@@ -44,7 +44,6 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
         data = self.dataText.toPlainText()
         last_block = self.handler.blockchain.get_last_blocks()
         block = Block(last_block[0].index + 1, data, last_block[0].hash, datetime.now(),str(self.handler.server_host))
-
         block.mine()
         message = "****"
         message += "mined_block|"
