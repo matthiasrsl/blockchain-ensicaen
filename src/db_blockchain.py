@@ -169,6 +169,15 @@ class DataBaseManager:
         conn.close()
         return leaves
 
+    def has_child(self,hash_father):
+        conn = sqlite3.connect(self.name_data_base)
+        c = conn.cursor()
+        c.execute("SELECT hash FROM blocks WHERE precedent_hash=?",(hash_father,))
+        result = c.fetchall()
+        conn.commit()
+        conn.close()
+        return len(result)
+
     def clearDB(self):
         try:
             os.remove(self.name_data_base)

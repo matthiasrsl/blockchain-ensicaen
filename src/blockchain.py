@@ -111,6 +111,9 @@ class Blockchain:
 
     def update_fork(self, fork_id, new_hash, new_height):
         self.blocks.update_fork(fork_id, new_hash, new_height)
+    
+    def has_child(self,hash_father):
+        self.blocks.has_father(hash_father)
 
     def drop_fork(self, hash_block):
         self.blocks.drop_fork(hash_block)

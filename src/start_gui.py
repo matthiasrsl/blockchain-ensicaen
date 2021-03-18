@@ -23,13 +23,15 @@ class Start(QtWidgets.QMainWindow, src.gui_ressources.gui_start.Ui_MainWindow):
         self.hide()
         self.client.show()
         self.client.ip = self.ipLine.text()
-        self.client.send_message("****join")
         self.handler.blockchain.blocks.clearDB()
         name = self.nameLine.text()
         if name == "":
-            self.client.name = "DefaultName"
+            self.handler.name = "DefaultName"
+            self.client.send_message("****join|DefaultName")
         else:
-            self.client.name = name
+            self.handler.name = name
+            self.client.send_message("****join|"+name)
+        
 
     def first_button(self):
         self.handler.create_blockchain(True)
@@ -38,5 +40,8 @@ class Start(QtWidgets.QMainWindow, src.gui_ressources.gui_start.Ui_MainWindow):
         name = self.nameLine.text()
         if name == "":
             self.handler.name = "DefaultName"
+            self.client.send_message("****join|DefaultName")
         else:
             self.handler.name = name
+            self.client.send_message("****join|"+name)
+        
