@@ -191,8 +191,6 @@ class NetworkHandler:
             message_dict2 = {"sender": "Me", "content": mess2}
             self.message_list.append(message_dict)
 
-        pseudo = message.split("|")[1]
-        self.names.append(pseudo)
 
     def send_message_to_all(self, message):
         self.updateVisualizerMessage()
@@ -201,8 +199,8 @@ class NetworkHandler:
 
     def updateVisualizer(self):
         all_nodes = []
-        for node in self.other_nodes:
-            node_dic = {"name": node.name, "ip": node.ip}  # "Prenom" to change
+        for node in self.other_nodes.values():
+            node_dic = {"name": node.name, "ip": node.ip_address}  # "Prenom" to change
             all_nodes.append(node_dic)
 
         nodes = {"nodes": all_nodes}
@@ -267,7 +265,7 @@ class NodeEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Node):
             return {
-                "ip": obj.ip,
+                "ip": obj.ip_address,
                 "name": obj.name,
             }
         return json.JSONEncoder.default(self, obj)

@@ -45,16 +45,17 @@ class Blockchain:
         It should be the only place in the codebase where forks are created.
         """
         leaves = self.get_leaves()
+        message = ""
         for leaf in leaves:
             block_to_add.branch_id = leaf["fork_id"]
             print(f"Block branch id: {leaf['fork_id']}")
             leaf_block = self.get_block(leaf["hash"])
             if (  # fork case: The new bloc as a height (index) that already exists.
-                block_to_add.index == leaf_block.index
-                and block_to_add.is_valid()
-                and self.get_block(leaf_block.previous_hash).is_previous(
-                    block_to_add
-                )
+                    block_to_add.index == leaf_block.index
+                    and block_to_add.is_valid()
+                    and self.get_block(leaf_block.previous_hash).is_previous(
+                block_to_add
+            )
             ):
 
                 fork_id = self.add_fork(
@@ -62,18 +63,18 @@ class Blockchain:
                 )
                 block_to_add.branch_id = fork_id
                 self.add_block(block_to_add)
-                message = "****accept" # dans ****accepte rajouter le hash ou l'index pour identifier le block
+                message = "****accept"  # dans ****accepte rajouter le hash ou l'index pour identifier le block
 
-                
+
 
             elif (  # normal case: the new block's height(index) id greater that any other block's height.
-                block_to_add.is_valid()
-                and block_to_add.index == leaf_block.index + 1
-                and leaf_block.is_previous(block_to_add)
+                    block_to_add.is_valid()
+                    and block_to_add.index == leaf_block.index + 1
+                    and leaf_block.is_previous(block_to_add)
             ):
                 self.add_block(block_to_add)
                 self.update_fork(leaf["fork_id"], block_to_add.hash, block_to_add.index)
-                message = "****accept" # dans ****accepte rajouter le hash ou l'index pour identifier le block
+                message = "****accept"  # dans ****accepte rajouter le hash ou l'index pour identifier le block
             else:
                 message = "****refuse"
 
@@ -111,9 +112,6 @@ class Blockchain:
 
     def update_fork(self, fork_id, new_hash, new_height):
         self.blocks.update_fork(fork_id, new_hash, new_height)
-    
-    def has_child(self,hash_father):
-        self.blocks.has_father(hash_father)
 
     def drop_fork(self, hash_block):
         self.blocks.drop_fork(hash_block)
