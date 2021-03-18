@@ -39,17 +39,20 @@ class Blockchain:
 
     def new_block(self, block_to_add):
         """
-        This mathod is used to add a new block to the blockchain, be it created by this node
+        This method is used to add a new block to the blockchain, be it created by this node
         or coming from another node.
         This method handles the creation of forks if needed.
         It should be the only place in the codebase where forks are created.
         """
-        leaves = self.get_leaves()
         message = ""
+        leaves = self.get_leaves()
         for leaf in leaves:
             block_to_add.branch_id = leaf["fork_id"]
             print(f"Block branch id: {leaf['fork_id']}")
             leaf_block = self.get_block(leaf["hash"])
+
+            # The if and elif predicates of this condition have to be exclusive.
+            # This is normally the case if is_previous is called in the predicates.
             if (  # fork case: The new bloc as a height (index) that already exists.
                     block_to_add.index == leaf_block.index
                     and block_to_add.is_valid()
@@ -64,8 +67,7 @@ class Blockchain:
                 block_to_add.branch_id = fork_id
                 self.add_block(block_to_add)
                 message = "****accept"  # dans ****accepte rajouter le hash ou l'index pour identifier le block
-
-
+                
 
             elif (  # normal case: the new block's height(index) id greater that any other block's height.
                     block_to_add.is_valid()
@@ -76,7 +78,8 @@ class Blockchain:
                 self.update_fork(leaf["fork_id"], block_to_add.hash, block_to_add.index)
                 message = "****accept"  # dans ****accepte rajouter le hash ou l'index pour identifier le block
             else:
-                message = "****refuse"
+                if not message:
+                    message = "****refuse"
 
         return message
 

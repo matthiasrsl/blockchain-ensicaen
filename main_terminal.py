@@ -7,6 +7,7 @@ import threading
 
 from src.client_terminal import Client_terminal
 from src.network import NetworkHandler
+from src.custom_tcp_server import AddressReuseTCPServer
 
 VISUALIZER_PORT = 8000
 REDIRECT_VISUALIZER_SERVER_LOG = False
@@ -29,7 +30,7 @@ def launch_visualizer_server():
         sys.stderr.write("=========== NEW SESSION ============\n")
 
     visualizer_handler = http.server.SimpleHTTPRequestHandler
-    with socketserver.TCPServer(("", VISUALIZER_PORT), visualizer_handler) as httpd:
+    with AddressReuseTCPServer(("", VISUALIZER_PORT), visualizer_handler) as httpd:
         httpd.serve_forever()
 
     if REDIRECT_VISUALIZER_SERVER_LOG:
