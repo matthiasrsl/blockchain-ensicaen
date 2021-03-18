@@ -161,9 +161,9 @@ class NetworkHandler:
 
     def join_protocol(self, ip, message):
         print("===== Add node")
-        self.add_node(ip, message.split("|")[1])
         mess = "****join_resp|"
         mess += json.dumps(self.other_nodes, cls=NodeEncoder)
+        self.add_node(ip, message.split("|")[1])
         mess += "|"
         mess += json.dumps(Node(self.ip, self.name), cls=NodeEncoder)
         send_message(ip, mess)
