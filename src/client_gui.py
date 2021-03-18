@@ -27,6 +27,12 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
         self.joinButton.clicked.connect(self.join)
 
     def send_message(self, message=None):
+        """
+        Send message, if there is an argument, it send to the ip attribut, else it send to all
+        the message is then taken from the GUI
+        :param message: A message to send
+        :type message: String
+        """
         if message:
             print(message)
             send_message(self.ip, message)
@@ -39,12 +45,13 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
             message_dict = {"sender": "Me", "content": message}
             self.handler.message_list.append(message_dict)
 
-    def create_block(self):  # A modifier il faut qu'il puisse choisir sa branche et que les conditions dans la methode
-        # mined_block_protocol soient respecté avant de l'ajouter (add_block et add_fork)
+    def create_block(self):
+        """
+        Create a block from what is typed in the GUI, mine it and send it
+        """
         data = self.dataText.toPlainText()
         last_block = self.handler.blockchain.get_last_blocks()
         block = Block(last_block[0].index + 1, data, last_block[0].hash, datetime.now(),str(self.handler.server_host))
-
         block.mine()
         message = "****"
         message += "mined_block|"

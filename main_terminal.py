@@ -10,7 +10,7 @@ from src.network import NetworkHandler
 from src.custom_tcp_server import AddressReuseTCPServer
 
 VISUALIZER_PORT = 8000
-REDIRECT_VISUALIZER_SERVER_LOG = True
+REDIRECT_VISUALIZER_SERVER_LOG = False
 LAUNCH_VISUALIZER = False
 
 handler = NetworkHandler()
@@ -21,6 +21,7 @@ def launch_server():
     handler.run_server()
 
 
+# noinspection PyUnboundLocalVariable
 def launch_visualizer_server():
     if REDIRECT_VISUALIZER_SERVER_LOG:
         old_stderr = sys.stderr
@@ -33,14 +34,17 @@ def launch_visualizer_server():
         httpd.serve_forever()
 
     if REDIRECT_VISUALIZER_SERVER_LOG:
-        # noinspection PyUnboundLocalVariable
         sys.stderr = old_stderr
 
 
 def init_visulizer_data():
-    pathlib.Path("./etc/visudata").mkdir(parents=True, exist_ok=True)
+    pathlib.Path("./etc/visudata/").mkdir(parents=True, exist_ok=True)
     with open("etc/visudata/blockchain.json", "w") as file:
         file.write('''{"blockchain": []}''')
+    with open("etc/visudata/messages.json", "w") as file:
+        file.write('''{"messages": []}''')
+    with open("etc/visudata/nodes.json", "w") as file:
+        file.write('''{"nodes": []}''')
 
 
 def launch_visualizer_client():
@@ -62,5 +66,7 @@ if __name__ == "__main__":
         thread_visualiser_client = threading.Thread(target=launch_visualizer_client, daemon=True)
         thread_visualiser_client.start()
 
+
     client = Client_terminal(handler)
+    app.exec_()
 

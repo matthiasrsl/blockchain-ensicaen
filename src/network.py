@@ -11,8 +11,9 @@ LISTEN_TIME = 5
 
 
 class Node:
-    def __init__(self, ip_address):
+    def __init__(self, ip_address, name):
         self.ip_address = ip_address
+        self.name = name
 
 
 def get_local_ip():
@@ -41,6 +42,7 @@ class NetworkHandler:
         self.name = None
         self.server_host = get_local_ip()
         self.message_list = []
+        self.ip = str(get_local_ip())
 
         # self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.keep_running_server = True
@@ -57,8 +59,8 @@ class NetworkHandler:
         self.server.bind((self.server_host, SERVER_PORT))
         self.server.listen(5)
 
-    def add_node(self, ip):
-        node = Node(ip)
+    def add_node(self, ip, name):
+        node = Node(ip, name)
         self.other_nodes[ip] = node
         self.updateVisualizer()
 
@@ -88,7 +90,7 @@ class NetworkHandler:
             self.join_resp_protocol(ip, message)
 
         elif message[4:] == "joined":
-            self.add_node(ip)
+            self.add_node(ip, message.split("|")[1])
             print("===== Nice to meet you")
 
         elif message[4:] == "ack":
@@ -135,37 +137,35 @@ class NetworkHandler:
         else:
             message = self.blockchain.new_block(self.block_to_add)
             for ip_node in self.other_nodes:
-                send_message(
-                    ip_node, message
-                )  
+                send_message(ip_node, message)
             message_dict = {"sender": "Me", "content": message}
             self.message_list.append(message_dict)
 
         self.block_to_add = None
 
     def join_resp_protocol(self, ip, message):
-        self.add_node(ip)
-        try:
-            ip_list = message.split("|")[1].split(",")
-            for ip_node in ip_list:
-                if ip_node:
-                    self.add_node(ip_node)
-        except IndexError:
-            pass
-        for ip_node in self.other_nodes:
-            if ip_node != ip:
-                send_message(ip_node, "****joined")
+        nodes_dict_str = message.split("|")[1]
+        print(nodes_dict_str)
+        nodes_dict = json.loads(nodes_dict_str)
+        print(nodes_dict)
+        sender_node_dict = json.loads(message.split("|")[2])
+        nodes_dict[sender_node_dict["ip"]] = sender_node_dict
+        for node_dict in nodes_dict.values():
+            self.other_nodes[node_dict["ip"]] = Node(node_dict["ip"], node_dict["name"])
+
+        for node in self.other_nodes.values():
+            if ip != node.ip_address:
+                send_message(node.ip_address, "****joined|" + self.name)
         message_dict = {"sender": "Me", "content": "****joined"}
         self.message_list.append(message_dict)
 
     def join_protocol(self, ip, message):
         print("===== Add node")
-        self.add_node(ip)
         mess = "****join_resp|"
-        for ip_node in self.other_nodes:
-            if ip_node != ip:
-                mess += ip_node + ","
-        mess = mess[:-1]
+        mess += json.dumps(self.other_nodes, cls=NodeEncoder)
+        self.add_node(ip, message.split("|")[1])
+        mess += "|"
+        mess += json.dumps(Node(self.ip, self.name), cls=NodeEncoder)
         send_message(ip, mess)
         message_dict = {"sender": "Me", "content": mess}
         self.message_list.append(message_dict)
@@ -195,17 +195,17 @@ class NetworkHandler:
             message_dict2 = {"sender": "Me", "content": mess2}
             self.message_list.append(message_dict)
 
+
     def send_message_to_all(self, message):
         self.updateVisualizerMessage()
         for ip in self.other_nodes.keys():
             send_message(ip, message)
 
-
     def updateVisualizer(self):
         all_nodes = []
-        for ip in self.other_nodes.keys():
-            node = {"name": self.name, "ip": ip}  # "Prenom" to change
-            all_nodes.append(node)
+        for node in self.other_nodes.values():
+            node_dic = {"name": node.name, "ip": node.ip_address}  # "Prenom" to change
+            all_nodes.append(node_dic)
 
         nodes = {"nodes": all_nodes}
         nodes_json = json.dumps(nodes)
@@ -263,3 +263,13 @@ class NetworkHandler:
 
         for client in self.connected_clients:
             client.close()
+
+
+class NodeEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Node):
+            return {
+                "ip": obj.ip_address,
+                "name": obj.name,
+            }
+        return json.JSONEncoder.default(self, obj)
