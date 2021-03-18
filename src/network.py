@@ -206,7 +206,7 @@ class NetworkHandler:
 
     def updateVisualizer(self):
         all_nodes = []
-        for node in self.other_nodes.keys():
+        for node in self.other_nodes:
             node_dic = {"name": node.name, "ip": node.ip}  # "Prenom" to change
             all_nodes.append(node_dic)
 
