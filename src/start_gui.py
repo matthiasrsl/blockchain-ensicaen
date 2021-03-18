@@ -40,8 +40,6 @@ class Start(QtWidgets.QMainWindow, src.gui_ressources.gui_start.Ui_MainWindow):
         name = self.nameLine.text()
         if name == "":
             self.handler.name = "DefaultName"
-            self.client.send_message("****join|DefaultName")
         else:
             self.handler.name = name
-            self.client.send_message("****join|"+name)
         
