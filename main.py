@@ -11,8 +11,8 @@ from src.network import NetworkHandler
 from src.start_gui import Start
 
 VISUALIZER_PORT = 8000
-REDIRECT_VISUALIZER_SERVER_LOG = False
-LAUNCH_VISUALIZER = False
+REDIRECT_VISUALIZER_SERVER_LOG = True
+LAUNCH_VISUALIZER = True
 
 handler = NetworkHandler()
 
