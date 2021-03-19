@@ -1,4 +1,6 @@
 block_list = [];
+block_div_list = new Map();
+block_map = new Map();
 ip_list = [];
 new_blocks = [];
 first_update = true;
@@ -40,7 +42,62 @@ function updateBlockchain(data) {
 
     for (block of blockchain) {
         if (!block_list.includes(block.hash)) {
-            graph.commit({subject: `Height ${block.index}`, body: block.data, author: block.miner, hash: shortHash(block.hash)});
+            block_div = document.createElement("div");
+            block_div.className = `block branch_${block.branch}`
+            block_div.id = `block_${block.hash}`
+
+            block_div.innerHTML = `
+                <h2>Block #${shortHash(block.hash)}</h2>
+                <p class="block_info">
+                    <strong class="hash_label">Hash</strong> <span class="hash">${formatHash(block.hash)}</span> 
+                </p>
+
+                <p class="block_info">
+                    <strong>Height</strong> ${block.index}
+                </p>
+
+                <p class="block_info">
+                    <strong>Previous hash</strong> 
+                    <span class="hash_previous">${formatHash(block.previous_hash)}</span>
+                </p>
+
+                <p class="block_info">
+                    <strong>Nonce</strong> ${block.nonce} 
+                </p>
+
+                <p class="block_info">
+                    <strong>Timestamp</strong> ${block.date} 
+                </p>
+
+                <p class="block_info">
+                    <strong>Mined by</strong> ${block.miner}
+                </p>
+
+                <p class="block_info">
+                    <strong>Branch</strong> ${block.branch}
+                </p>
+
+                <p class="block_info">
+                    <strong>Data</strong>
+                </p>
+
+                <div class="data_container">
+                    <pre class="block_data">${JSON.stringify(block.data, null, 4)}</pre>
+                </div>
+                </p>
+            `
+
+
+
+            graph.commit({
+                subject: `Height ${block.index}`, 
+                body: block.data, 
+                author: block.miner, 
+                hash: shortHash(block.hash),
+                onMessageClick: (e) => displayBlock(e),
+            });
+
+            block_div_list[shortHash(block.hash)] = block_div;
 
 
             block_list.push(block.hash);
@@ -48,6 +105,22 @@ function updateBlockchain(data) {
     }
 
     first_update = false;
+}
+
+function displayBlock(e) {
+    console.log(e);
+    e.commit({
+        subject: `Test branch`, 
+        body: "body", 
+        author: "block.miner", 
+    });
+    selected_block_div = document.querySelector("#selected_block");
+    try {
+        selected_block_div.firstElementChild.remove();
+    } catch (error) {
+        ;
+    }
+    selected_block_div.appendChild(block_div_list[e.hash]);
 }
 
 /*function finishBlockTransition() {
@@ -96,12 +169,11 @@ function initGitGraph() {
 function main() {
     initGitGraph();
     var intervalId = setInterval(function () {
-        console.log("Update !");
         //finishBlockTransition();
         loadJSON("http://localhost:8000/etc/visudata/blockchain.json", (data) => updateBlockchain(data));
         loadJSON("http://localhost:8000/etc/visudata/nodes.json", (data) => updateNodes(data));
         //loadJSON("messages.json", (data) => updateMessages(data));
-    }, 5000);
+    }, 2000);
 }
 
 main();

@@ -20,14 +20,14 @@ section {
 }
 
 #right_panel {
-    width: 40%;
+    width: 56%;
 }
 
 /* Blockchain section */
 
 #blockchain {
-    width: 55%;
-    min-width: 600px;
+    width: 40%;
+    xmin-width: 600px;
     min-height: 700px;
     background-color: #fff;
 }
@@ -38,8 +38,6 @@ section {
 }
 
 .block {
-    max-width: 400px;
-    max-height: 200px;
     background: #274f59;
     padding: 0 15px;
     margin-bottom: 5px;
@@ -109,7 +107,6 @@ pre.block_data {
 
 #nodes {
     background: #ffd8d6;
-    width: 100%;
 }
 
 
