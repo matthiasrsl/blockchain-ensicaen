@@ -62,7 +62,7 @@ class Blockchain:
         """
         previous_block = self.get_block(block.previous_hash)
         if not (
-            block.is_valid()
+            block.is_valid(number_0=self.number_0)
             and previous_block.is_previous(block)
             and block.index == previous_block.index + 1
         ):  # Block is not valid with regards to proof-of-work.
@@ -81,7 +81,7 @@ class Blockchain:
             fork_id = self.add_fork(block.hash, block.index)
             block.branch_id = fork_id
             self.add_block(block)
-            message = "****accept"
+            message = "****accept" + block.hash
 
         else:  # The previous block is a leaf, so we stay on the same branch
             parent_leaf = [leaf for leaf in leaves if leaf["hash"] == block.previous_hash]
@@ -94,7 +94,7 @@ class Blockchain:
             block.branch_id = parent_leaf["fork_id"]
             self.add_block(block)
             self.update_fork(parent_leaf["fork_id"], block.hash, block.index)
-            message = "****accept"
+            message = "****accept" + block.hash
 
         return message
 
