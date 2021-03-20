@@ -151,7 +151,10 @@ class NetworkHandler:
         sender_node_dict = json.loads(message.split("|")[2])
         nodes_dict[sender_node_dict["ip"]] = sender_node_dict
         for node_dict in nodes_dict.values():
-            self.other_nodes[node_dict["ip"]] = Node(node_dict["ip"], node_dict["name"])
+            if node_dict["ip"] != str(get_local_ip()):
+                self.other_nodes[node_dict["ip"]] = Node(
+                    node_dict["ip"], node_dict["name"]
+                )
 
         for node in self.other_nodes.values():
             if ip != node.ip_address:
@@ -194,7 +197,6 @@ class NetworkHandler:
             send_message(ip, mess2)
             message_dict2 = {"sender": "Me", "content": mess2}
             self.message_list.append(message_dict)
-
 
     def send_message_to_all(self, message):
         self.updateVisualizerMessage()
