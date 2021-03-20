@@ -85,7 +85,7 @@ class Blockchain:
             ):
                 self.add_block(block_to_add)
                 self.update_fork(leaf["fork_id"], block_to_add.hash, block_to_add.index)
-                message = "****accept" + block_to_add.hash  # dans ****accepte rajouter le hash ou l'index pour identifier le block
+                message = "****accept|" + block_to_add.hash  # dans ****accepte rajouter le hash ou l'index pour identifier le block
             else:
                 if not message:
                     message = "****refuse"
