@@ -89,14 +89,16 @@ class Client_terminal:
         self.handler.send_message_to_all(message)
 
     def create_block(self, data):
-        last_block = self.handler.blockchain.get_last_blocks()[0]
-        block = Block(last_block.index + 1, data, last_block.hash, datetime.now())
-        block.mine()
+        last_block = self.handler.blockchain.get_last_blocks()
+        block = Block(last_block[0].index + 1, data, last_block[0].hash, datetime.now(), str(self.handler.server_host))
+        block.mine(number_0=self.handler.blockchain.number_0)
         message = "****"
         message += "mined_block|"
         message += json.dumps(block, cls=BlockEncoder)
-        self.handler.blockchain.add_block(block)
+        self.handler.blockchain.new_block(block)
         self.handler.send_message_to_all(message)
+        message_dict = {"sender": "Me", "content": message}
+        self.handler.message_list.append(message_dict)
 
     def send_message_to_ip(self, mes, ip):
         message = "****"
