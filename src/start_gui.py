@@ -19,6 +19,8 @@ class Start(QtWidgets.QMainWindow, src.gui_ressources.gui_start.Ui_MainWindow):
         self.handler = handler
 
     def go_button(self):
+        self.goButton.setEnabled(False)
+        self.firstButton.setEnabled(False)
         self.handler.create_blockchain(False)
         self.hide()
         self.client.show()
@@ -34,6 +36,8 @@ class Start(QtWidgets.QMainWindow, src.gui_ressources.gui_start.Ui_MainWindow):
         
 
     def first_button(self):
+        self.goButton.setEnabled(False)
+        self.firstButton.setEnabled(False)
         self.handler.create_blockchain(True)
         self.hide()
         self.client.show()
