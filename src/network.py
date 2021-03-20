@@ -151,7 +151,7 @@ class NetworkHandler:
         sender_node_dict = json.loads(message.split("|")[2])
         nodes_dict[sender_node_dict["ip"]] = sender_node_dict
         for node_dict in nodes_dict.values():
-            if node_dict["ip"] != str(get_local_ip()):
+            if node_dict["ip"] != self.ip:
                 self.other_nodes[node_dict["ip"]] = Node(
                     node_dict["ip"], node_dict["name"]
                 )
