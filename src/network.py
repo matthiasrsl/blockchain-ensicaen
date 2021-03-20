@@ -148,27 +148,23 @@ class NetworkHandler:
         print(nodes_dict_str)
         nodes_dict = json.loads(nodes_dict_str)
         print(nodes_dict)
-        sender_node_dict = json.loads(message.split("|")[2])
-        nodes_dict[sender_node_dict["ip"]] = sender_node_dict
         for node_dict in nodes_dict.values():
-            if node_dict["ip"] != self.ip:
-                self.other_nodes[node_dict["ip"]] = Node(
-                    node_dict["ip"], node_dict["name"]
-                )
-
+            self.other_nodes[node_dict["ip"]] = Node(node_dict["ip"], node_dict["name"])
+        self.add_node(ip, message.split("|")[2])
         for node in self.other_nodes.values():
-            if ip != node.ip_address:
-                send_message(node.ip_address, "****joined|" + self.name)
+            send_message(node.ip_address, "****joined|" + self.name)
         message_dict = {"sender": "Me", "content": "****joined"}
         self.message_list.append(message_dict)
 
     def join_protocol(self, ip, message):
         print("===== Add node")
         mess = "****join_resp|"
-        mess += json.dumps(self.other_nodes, cls=NodeEncoder)
+        other_node_without_sender = self.other_nodes.copy()
+        del other_node_without_sender[ip]
+        mess += json.dumps(other_node_without_sender, cls=NodeEncoder)
         self.add_node(ip, message.split("|")[1])
         mess += "|"
-        mess += json.dumps(Node(self.ip, self.name), cls=NodeEncoder)
+        mess += self.name
         send_message(ip, mess)
         message_dict = {"sender": "Me", "content": mess}
         self.message_list.append(message_dict)
