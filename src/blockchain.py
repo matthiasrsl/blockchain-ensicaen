@@ -5,7 +5,7 @@ from src.db_blockchain import DataBaseManager
 
 
 class Blockchain:
-    def __init__(self, db_name="blockchain.db", number_0=2, first=False):
+    def __init__(self, db_name="blockchain.db", number_0=5, first=False):
         self.blocks = DataBaseManager(db_name)
         self.number_0 = number_0
         if first:
@@ -64,7 +64,7 @@ class Blockchain:
             # This is normally the case if is_previous is called in the predicates.
             if (  # fork case: The new bloc as a height (index) that already exists.
                     block_to_add.index == leaf_block.index
-                    and block_to_add.is_valid()
+                    and block_to_add.is_valid(number_0=self.number_0)
                     and self.get_block(leaf_block.previous_hash).is_previous(
                 block_to_add
             )
@@ -79,7 +79,7 @@ class Blockchain:
 
 
             elif (  # normal case: the new block's height(index) id greater that any other block's height.
-                    block_to_add.is_valid()
+                    block_to_add.is_valid(number_0=self.number_0)
                     and block_to_add.index == leaf_block.index + 1
                     and leaf_block.is_previous(block_to_add)
             ):
