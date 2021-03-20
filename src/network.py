@@ -134,6 +134,7 @@ class NetworkHandler:
     def blockchain_protocol(self, message):
         blockchain = json.loads(message.split("|")[1])
         leaves = json.loads(message.split("|")[2])
+        blockchain = list(reversed(blockchain))
         for block in blockchain:
             self.blockchain.add_block(Block(**block))
 
