@@ -99,7 +99,11 @@ class NetworkHandler:
         elif message.split("|")[0][4:] == "mined_block":
             self.mined_block_protocol(message)
 
-        elif message[4:] == "accept":
+        elif message.split("|")[0][4:] == "accept":
+            hash_block = message.split("|")[1]
+            if self.blockchain.get_block(hash_block) == None:
+                mess = "****askblock|" + hash_block
+                send_message(ip, mess)
             print("===== Node accepted")
 
         elif message[4:] == "refuse":
@@ -110,6 +114,17 @@ class NetworkHandler:
 
         elif message.split("|")[0][4:] == "ackdefault":
             print("==== This node may be defective")
+
+        elif message.split("|")[0][4:] == "askblock":
+            hash_block = message.split("|")[1]
+            block_to_send = self.blockchain.get_block(hash_block)
+            mess = "block|"
+            mess += json.dumps(block_to_send, cls=BlockEncoder)
+            send_message(ip, mess)
+
+        elif message.split("|")[0][4:] == "block":
+            block = json.loads(message.split("|")[1])
+            self.blockchain.new_block(Block(**block))
 
         else:
             print("Error: bad request")

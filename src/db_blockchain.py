@@ -126,7 +126,9 @@ class DataBaseManager:
         c.execute("SELECT id , data ,precedent_hash , d, miner, nonce, branch_id  FROM blocks WHERE hash=?",
                   (hash_block,))
         result = c.fetchone()
-        block = (Block(result[0], result[1], result[2], result[3], result[4], result[5], branch_id=result[6]))
+        block = None
+        if result != None:
+            block = (Block(result[0], result[1], result[2], result[3], result[4], result[5], branch_id=result[6]))
         conn.commit()
         conn.close()
         return block

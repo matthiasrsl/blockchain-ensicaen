@@ -75,7 +75,7 @@ class Blockchain:
                 )
                 block_to_add.branch_id = fork_id
                 self.add_block(block_to_add)
-                message = "****accept"  # dans ****accepte rajouter le hash ou l'index pour identifier le block
+                message = "****accept|" + block_to_add.hash # dans ****accepte rajouter le hash ou l'index pour identifier le block
 
 
             elif (  # normal case: the new block's height(index) id greater that any other block's height.
