@@ -83,12 +83,12 @@ class Blockchain:
             self.add_block(block)
             message = "****accept"
 
-        else:  # The previous block is not a leaf, so we stay on the same branch
+        else:  # The previous block is a leaf, so we stay on the same branch
             parent_leaf = [leaf for leaf in leaves if leaf["hash"] == block.previous_hash]
             if len(parent_leaf) != 1:
                 raise ValueError(
                     f"Inconsistent data: block {block.previous_hash} is "
-                    "the leaf block of {len(parent_leaf)} branches (should be 1)."
+                    f"the leaf block of {len(parent_leaf)} branches (should be 1)."
                 )
             parent_leaf = parent_leaf[0]
             block.branch_id = parent_leaf["fork_id"]
