@@ -159,13 +159,11 @@ class NetworkHandler:
     def join_protocol(self, ip, message):
         print("===== Add node")
         mess = "****join_resp|"
-        other_node_without_sender = self.other_nodes.copy()
-        del other_node_without_sender[ip]
-        mess += json.dumps(other_node_without_sender, cls=NodeEncoder)
-        self.add_node(ip, message.split("|")[1])
+        mess += json.dumps(self.other_nodes, cls=NodeEncoder)
         mess += "|"
         mess += self.name
         send_message(ip, mess)
+        self.add_node(ip, message.split("|")[1])
         message_dict = {"sender": "Me", "content": mess}
         self.message_list.append(message_dict)
         mess2 = "****blockchain|"
