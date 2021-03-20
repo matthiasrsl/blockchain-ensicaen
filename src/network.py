@@ -195,7 +195,6 @@ class NetworkHandler:
             message_dict2 = {"sender": "Me", "content": mess2}
             self.message_list.append(message_dict)
 
-
     def send_message_to_all(self, message):
         self.updateVisualizerMessage()
         for ip in self.other_nodes.keys():
