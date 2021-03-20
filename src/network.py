@@ -89,7 +89,7 @@ class NetworkHandler:
         elif message.split("|")[0][4:] == "join_resp":
             self.join_resp_protocol(ip, message)
 
-        elif message[4:] == "joined":
+        elif message.split("|")[0][4:] == "joined":
             self.add_node(ip, message.split("|")[1])
             print("===== Nice to meet you")
 
