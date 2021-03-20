@@ -101,7 +101,7 @@ class NetworkHandler:
 
         elif message.split("|")[0][4:] == "accept":
             hash_block = message.split("|")[1]
-            if self.blockchain.get_block(hash_block) == None:
+            if self.blockchain.get_block(hash_block) is None:
                 mess = "****askblock|" + hash_block
                 send_message(ip, mess)
             print("===== Node accepted")
