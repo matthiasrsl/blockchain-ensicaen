@@ -118,7 +118,7 @@ class NetworkHandler:
         elif message.split("|")[0][4:] == "askblock":
             hash_block = message.split("|")[1]
             block_to_send = self.blockchain.get_block(hash_block)
-            mess = "block|"
+            mess = "****block|"
             mess += json.dumps(block_to_send, cls=BlockEncoder)
             send_message(ip, mess)
 
