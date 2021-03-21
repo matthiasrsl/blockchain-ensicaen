@@ -67,6 +67,9 @@ class Client_terminal:
                     self.check_receive()
 
                 elif command == "exit":
+                    self.handler.send_message_to_all("****leave")
+                    message_dict = {"sender": "Me", "content": "****leave"}
+                    self.handler.message_list.append(message_dict)
                     exit()
 
                 elif command == "h" or command == "help":
