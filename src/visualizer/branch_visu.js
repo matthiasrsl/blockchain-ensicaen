@@ -106,16 +106,15 @@ function updateBlockchain(data) {
                     var new_block_branch = graph.branch(shortHash(block.hash));
                     branch_block_map[block.hash] = new_block_branch;
                 } catch {
-                    var parent_branch = branch_map[block_map[block.previous_hash].branch];
+                    var parent_branch = branch_map[`branch${block_map[block.previous_hash].branch}`];
                     console.log(block.hash)
                     console.log(block.previous_hash)
                     console.log(block_map[block.previous_hash].branch)
                     console.log(branch_map)
-                    parent_branch.checkout();
-                    var new_branch = graph.branch(block.branch);
+                    var new_branch = graph.branch({name: `branch${block.branch}`, parentBranch: parent_branch});
                     new_branch.commit({
                         subject: `Height ${block.index}`, 
-                        body: block.data, 
+                        body: `${block.data}\n${block.previous_hash}`, 
                         author: block.miner, 
                         hash: shortHash(block.hash),
                         onMessageClick: (e) => displayBlock(e),
@@ -128,7 +127,7 @@ function updateBlockchain(data) {
                 
             } else {
                 var origin_branch = graph.branch(shortHash(block.hash));
-                branch_map[block.branch] = origin_branch;
+                branch_map[`branch${block.branch}`] = origin_branch;
                 branch_block_map[block.branch_id] = origin_branch;
                 origin_branch.commit({
                     subject: `Height ${block.index}`, 
