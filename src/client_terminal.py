@@ -52,7 +52,7 @@ class Client_terminal:
                     data = input("data:")
                     self.create_block(data)
 
-                elif command == "me" or command == "message":
+                elif command == "me" or command == "message_to_all":
                     data = input("message:")
                     self.send_message(data)
 
