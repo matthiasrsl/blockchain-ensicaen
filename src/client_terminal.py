@@ -13,9 +13,9 @@ class Client_terminal:
         self.block_to_accept = False
         name = input("What's your name?")
         if name == "":
-            self.name = "DefaultName"
+            self.handler.name = "DefaultName"
         else:
-            self.name = name
+            self.handler.name = name
 
         self.hiddenRefreshButton = type('', (object,), {'click': lambda: self.set_displayer_text()})
 
