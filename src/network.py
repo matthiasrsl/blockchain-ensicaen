@@ -118,13 +118,10 @@ class NetworkHandler:
         elif message.split("|")[0][4:] == "askblock":
             hash_block = message.split("|")[1]
             block_to_send = self.blockchain.get_block(hash_block)
-            mess = "****block|"
+            mess = "****"
+            mess += "mined_block|"
             mess += json.dumps(block_to_send, cls=BlockEncoder)
             send_message(ip, mess)
-
-        elif message.split("|")[0][4:] == "block":
-            block = json.loads(message.split("|")[1])
-            self.blockchain.new_block(Block(**block))
 
         else:
             print("Error: bad request")
