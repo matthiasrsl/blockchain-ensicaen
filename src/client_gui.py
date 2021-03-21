@@ -85,3 +85,9 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
         self.leaveButton.setEnabled(True)
         self.ipLine.setEnabled(False)
         self.joinButton.setEnabled(False)
+
+    def closeEvent(self, event):
+        self.handler.send_message_to_all("****leave")
+        message_dict = {"sender": "Me", "content": "****leave"}
+        self.handler.message_list.append(message_dict)
+        exit()
