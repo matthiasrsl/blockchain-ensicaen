@@ -1,4 +1,5 @@
 import json
+import signal
 from datetime import datetime
 
 from src.block import Block, BlockEncoder
@@ -11,6 +12,8 @@ class Client_terminal:
 
         handler.client = self
         self.block_to_accept = False
+        signal.signal(signal.SIGINT, self.signal_handler)
+
         name = input("What's your name?")
         if name == "":
             self.handler.name = "DefaultName"
@@ -117,3 +120,9 @@ class Client_terminal:
             print(str(self.handler.block_to_add))
             print("Accept this block? [y/n]")
             self.block_to_accept = True
+
+    def signal_handler(self, sig, frame):
+        self.handler.send_message_to_all("****leave")
+        message_dict = {"sender": "Me", "content": "****leave"}
+        self.handler.message_list.append(message_dict)
+        exit()
