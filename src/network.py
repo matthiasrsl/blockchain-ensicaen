@@ -156,6 +156,7 @@ class NetworkHandler:
             self.message_list.append(message_dict)
 
         self.block_to_add = None
+        self.client.hiddenRefreshButton.click()
 
     def join_resp_protocol(self, ip, message):
         nodes_dict_str = message.split("|")[1]
@@ -227,12 +228,9 @@ class NetworkHandler:
             file.write(messages_json)
 
     def accept_mined_block(self):
-        self.blockchain.add_fork(self.block_to_add.hash, self.block_to_add.index)
         self.blockchain.add_block(self.block_to_add)
 
-        self.send_message_to_all("****accept")
-
-        self.block_to_add = None
+        self.send_message_to_all("****accept|"+self.block_to_add.hash)
         self.wait = False
         self.client.hiddenRefreshButton.click()
 
