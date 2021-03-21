@@ -6,7 +6,7 @@ from src.block import Block, BlockEncoder
 from src.blockchain import Blockchain
 
 SERVER_PORT = 16385
-RECV_SIZE = 16384
+RECV_SIZE = 4096
 LISTEN_TIME = 5
 
 
@@ -262,7 +262,12 @@ class NetworkHandler:
                 pass
             else:
                 for client in clients_to_be_read:
-                    message = client.recv(RECV_SIZE)
+                    message = b''
+                    while True:
+                        part = client.recv(RECV_SIZE)
+                        message += part
+                        if len(part) < RECV_SIZE:  # We have reached the end of the stream
+                            break
                     ip, port = client.getpeername()
                     message = message.decode()
                     self.process_message(message, ip)
