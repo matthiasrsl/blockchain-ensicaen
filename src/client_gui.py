@@ -1,4 +1,5 @@
 import json
+import threading
 from datetime import datetime
 
 from PyQt5 import QtWidgets
@@ -52,7 +53,9 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
         data = self.dataText.toPlainText()
         last_block = self.handler.blockchain.get_last_blocks()
         block = Block(last_block[0].index + 1, data, last_block[0].hash, datetime.now(),str(self.handler.server_host))
-        block.mine(number_0=self.handler.blockchain.number_0)
+        thread_mine = threading.Thread(target=block.mine,args=(self.handler.blockchain.number_0,) ,daemon=True)
+        thread_mine.start()
+        #block.mine(number_0=self.handler.blockchain.number_0)
         message = "****"
         message += "mined_block|"
         message += json.dumps(block, cls=BlockEncoder)

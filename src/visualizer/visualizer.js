@@ -106,17 +106,16 @@ function finishBlockTransition() {
 
 function updateNodes(data) {
     let node_section = document.getElementById("nodes");
+    node_section.firstElementChild.remove()
     let nodes = data.nodes;
 
     for (node of nodes) {
-        if (!ip_list.includes(node.ip)) {
-            node_p = document.createElement("p");
-            node_p.innerHTML = `
-                <span class="node_name">${node.name}</span> <span class="node_ip">${node.ip}</span>
+        node_p = document.createElement("p");
+        node_p.innerHTML = `
+               <span class="node_name">${node.name}</span> <span class="node_ip">${node.ip}</span>
             `
-            node_section.appendChild(node_p);
-            ip_list.push(node.ip);
-        }
+        node_section.appendChild(node_p);
+        ip_list.push(node.ip);
     }
 }
 
