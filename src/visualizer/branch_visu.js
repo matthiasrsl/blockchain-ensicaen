@@ -95,7 +95,7 @@ function updateBlockchain(data) {
 
             if (block.previous_hash) {
                 try {
-                    var branch = branch_map[block.branch];
+                    var branch = branch_map[`branch${block.branch}`];
                     branch.commit({
                         subject: `Height ${block.index}`, 
                         body: block.data, 
@@ -105,12 +105,9 @@ function updateBlockchain(data) {
                     });
                     var new_block_branch = graph.branch(shortHash(block.hash));
                     branch_block_map[block.hash] = new_block_branch;
+                    console.log(`Block ${shortHash(block.hash)} branch id: ${block.branch} (found)`);
                 } catch {
                     var parent_branch = branch_map[`branch${block_map[block.previous_hash].branch}`];
-                    console.log(block.hash)
-                    console.log(block.previous_hash)
-                    console.log(block_map[block.previous_hash].branch)
-                    console.log(branch_map)
                     var new_branch = graph.branch({name: `branch${block.branch}`, parentBranch: parent_branch});
                     new_branch.commit({
                         subject: `Height ${block.index}`, 
@@ -121,14 +118,16 @@ function updateBlockchain(data) {
                     });
                     var new_block_branch = graph.branch(shortHash(block.hash));
                     branch_block_map[block.hash] = new_block_branch;
-                    branch_map[block.branch] = new_branch;
+                    branch_map[`branch${block.branch}`] = new_branch;
+                    console.log(`Block ${shortHash(block.hash)} branch id: ${block.branch} (not found)`);
                 }
 
                 
             } else {
                 var origin_branch = graph.branch(shortHash(block.hash));
                 branch_map[`branch${block.branch}`] = origin_branch;
-                branch_block_map[block.branch_id] = origin_branch;
+                branch_block_map[block.hash] = origin_branch;
+                console.log(`Origin branch id: ${block.branch}`);
                 origin_branch.commit({
                     subject: `Height ${block.index}`, 
                     body: block.data, 

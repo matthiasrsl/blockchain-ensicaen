@@ -38,8 +38,6 @@ section {
 }
 
 .block {
-    max-width: 400px;
-    max-height: 200px;
     background: #274f59;
     padding: 0 15px;
     margin-bottom: 5px;
