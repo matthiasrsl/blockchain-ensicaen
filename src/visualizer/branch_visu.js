@@ -1,6 +1,8 @@
 block_list = [];
 block_div_list = new Map();
 block_map = new Map();
+branch_map = new Map();
+branch_block_map = new Map();
 ip_list = [];
 new_blocks = [];
 first_update = true;
@@ -39,6 +41,9 @@ function updateBlockchain(data) {
     blockchain = data.blockchain;
 
     container = document.querySelector("#block_list");
+    /*container.firstElementChild.remove();
+
+    graph = initGitGraph();*/
 
     for (block of blockchain) {
         if (!block_list.includes(block.hash)) {
@@ -88,19 +93,57 @@ function updateBlockchain(data) {
             `
 
 
+            if (block.previous_hash) {
+                try {
+                    var branch = branch_map[block.branch];
+                    branch.commit({
+                        subject: `Height ${block.index}`, 
+                        body: block.data, 
+                        author: block.miner, 
+                        hash: shortHash(block.hash),
+                        onMessageClick: (e) => displayBlock(e),
+                    });
+                    var new_block_branch = graph.branch(shortHash(block.hash));
+                    branch_block_map[block.hash] = new_block_branch;
+                } catch {
+                    var parent_branch = branch_map[block_map[block.previous_hash].branch];
+                    console.log(block.hash)
+                    console.log(block.previous_hash)
+                    console.log(block_map[block.previous_hash].branch)
+                    console.log(branch_map)
+                    parent_branch.checkout();
+                    var new_branch = graph.branch(block.branch);
+                    new_branch.commit({
+                        subject: `Height ${block.index}`, 
+                        body: block.data, 
+                        author: block.miner, 
+                        hash: shortHash(block.hash),
+                        onMessageClick: (e) => displayBlock(e),
+                    });
+                    var new_block_branch = graph.branch(shortHash(block.hash));
+                    branch_block_map[block.hash] = new_block_branch;
+                    branch_map[block.branch] = new_branch;
+                }
 
-            graph.commit({
-                subject: `Height ${block.index}`, 
-                body: block.data, 
-                author: block.miner, 
-                hash: shortHash(block.hash),
-                onMessageClick: (e) => displayBlock(e),
-            });
+                
+            } else {
+                var origin_branch = graph.branch(shortHash(block.hash));
+                branch_map[block.branch] = origin_branch;
+                branch_block_map[block.branch_id] = origin_branch;
+                origin_branch.commit({
+                    subject: `Height ${block.index}`, 
+                    body: block.data, 
+                    author: block.miner, 
+                    hash: shortHash(block.hash),
+                    onMessageClick: (e) => displayBlock(e),
+                });
+            }
 
             block_div_list[shortHash(block.hash)] = block_div;
 
 
             block_list.push(block.hash);
+            block_map[block.hash] = block;
         }
     }
 
@@ -164,6 +207,8 @@ function updateNodes(data) {
 function initGitGraph() {
     container = document.querySelector("#block_list");
     graph = GitgraphJS.createGitgraph(container);
+
+    return graph;
 }
 
 function main() {
