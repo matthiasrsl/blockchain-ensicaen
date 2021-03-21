@@ -69,6 +69,7 @@ class NetworkHandler:
             del self.other_nodes[ip]
         except KeyError:
             print(f"{ip} tried to be removed but not in list")
+        self.updateVisualizer()
 
     def process_message(self, message, ip):
         print(f"\n\nRECEIVED from {ip}: \n{message}\n\n")
