@@ -106,8 +106,12 @@ function finishBlockTransition() {
 
 function updateNodes(data) {
     let node_section = document.getElementById("nodes");
-    node_section.firstElementChild.remove()
+    //node_section.firstElementChild.remove()
     let nodes = data.nodes;
+    let nodes_to_remove = node_section.childNodes;
+    for(i=1;i<nodes_to_remove.length;i++) {
+        nodes_to_remove[i].remove();
+    }
 
     for (node of nodes) {
         node_p = document.createElement("p");
