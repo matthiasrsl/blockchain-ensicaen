@@ -15,6 +15,12 @@ class Block:
         self.branch_id = branch_id
         self.hash = self.calculate_hash()
 
+    def __lt__(self, other_block):
+        return self.index < other_block.index
+
+    def __le__(self, other_block):
+        return self.index <= other_block.index
+
     def calculate_hash(self):
         """
         calculate hash

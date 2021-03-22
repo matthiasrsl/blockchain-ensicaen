@@ -180,6 +180,15 @@ class DataBaseManager:
         conn.close()
         return len(result)
 
+    def is_empty(self):
+        conn = sqlite3.connect(self.name_data_base)
+        c = conn.cursor()
+        c.execute("SELECT * FROM blocks")
+        result = c.fetchall()
+        conn.commit()
+        conn.close()
+        return len(result) == 0
+
     def clearDB(self):
         try:
             os.remove(self.name_data_base)

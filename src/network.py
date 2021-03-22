@@ -2,6 +2,7 @@ import json
 import select
 import socket
 
+from src import block
 from src.block import Block, BlockEncoder
 from src.blockchain import Blockchain
 
@@ -132,12 +133,12 @@ class NetworkHandler:
     def blockchain_protocol(self, message):
         blockchain = json.loads(message.split("|")[1])
         leaves = json.loads(message.split("|")[2])
-        blockchain = list(reversed(blockchain))
-        for block in blockchain:
-            self.blockchain.add_block(Block(**block))
+        blockchain = [Block(**block) for block in blockchain]
+        blockchain.sort()  # The blocks are sorted by height.
 
-        for leaf in leaves:
-            self.blockchain.add_fork(leaf["hash"], leaf["id"])
+        for block in blockchain:
+            self.blockchain.new_block(block)
+
 
     def mined_block_protocol(self, message):
         block_info_json = json.loads(message.split("|")[1])
@@ -228,9 +229,34 @@ class NetworkHandler:
             file.write(messages_json)
 
     def accept_mined_block(self):
-        self.blockchain.add_block(self.block_to_add)
+        leaves = self.blockchain.get_leaves()
+        leaves_hashes = [leaf["hash"] for leaf in leaves]
+        if self.blockchain.nb_children(self.block_to_add.previous_hash) > 0:
+            # The previous block is not a leaf, so we create a fork
+            #if block.previous_hash in leaves_hashes:
+                # Just to check
+                #raise ValueError(
+                #    f"Inconsistent data: block {block.previous_hash} is "
+                #    "listed as a leaf but has at least one child block."
+                #)
+            fork_id = self.blockchain.add_fork(self.block_to_add.hash, self.block_to_add.index)
+            self.block_to_add.branch_id = fork_id
+            self.blockchain.add_block(self.block_to_add)
 
-        self.send_message_to_all("****accept|" + self.block_to_add.hash)
+        else:  # The previous block is a leaf, so we stay on the same branch
+            parent_leaf = [leaf for leaf in leaves if leaf["hash"] == self.block_to_add.previous_hash]
+            if len(parent_leaf) != 1:
+                raise ValueError(
+                    f"Inconsistent data: block {block.previous_hash} is "
+                    f"the leaf block of {len(parent_leaf)} branches (should be 1)."
+                )
+            parent_leaf = parent_leaf[0]
+            self.block_to_add.branch_id = parent_leaf["fork_id"]
+            self.blockchain.add_block(self.block_to_add)
+            self.blockchain.update_fork(parent_leaf["fork_id"], self.block_to_add.hash, self.block_to_add.index)
+
+
+        self.send_message_to_all("****accept|"+self.block_to_add.hash)
         self.wait = False
         self.client.hiddenRefreshButton.click()
 
@@ -260,19 +286,17 @@ class NetworkHandler:
                 pass
             else:
                 for client in clients_to_be_read:
-                    message = b""
-                    i = 0
+                    message = b''
+                    chunks = 0
                     while True:
-                        i += 1
+                        chunks += 1
                         part = client.recv(RECV_SIZE)
-                        message += part
-                        if (
-                            len(part) < RECV_SIZE
-                        ):  # We have reached the end of the stream
+                        if len(part) == 0:  # We have reached the end of the stream
                             break
+                        message += part
                     ip, port = client.getpeername()
                     message = message.decode()
-                    self.process_message(message, ip, i)
+                    self.process_message(message, ip, chunks)
                     self.connected_clients.remove(client)
                     client.close()
 
