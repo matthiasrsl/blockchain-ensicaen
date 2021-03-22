@@ -60,6 +60,13 @@ class Blockchain:
         This method handles the creation of forks if needed.
         It should be the only place in the codebase where forks are created.
         """
+        if self.is_empty and not block.previous_hash:
+            # First block, usually received when joining the network
+            fork_id = self.add_fork(block.hash, 0)
+            block.branch_id = fork_id
+            self.add_block(block)
+            return "****accept"
+
         previous_block = self.get_block(block.previous_hash)
         if not (
             block.is_valid(number_0=self.number_0)
@@ -85,11 +92,11 @@ class Blockchain:
 
         else:  # The previous block is a leaf, so we stay on the same branch
             parent_leaf = [leaf for leaf in leaves if leaf["hash"] == block.previous_hash]
-            if len(parent_leaf) != 1:
+            '''if len(parent_leaf) != 1:
                 raise ValueError(
                     f"Inconsistent data: block {block.previous_hash} is "
                     f"the leaf block of {len(parent_leaf)} branches (should be 1)."
-                )
+                )'''
             parent_leaf = parent_leaf[0]
             block.branch_id = parent_leaf["fork_id"]
             self.add_block(block)
@@ -118,6 +125,9 @@ class Blockchain:
 
     def nb_children(self, hash_father):
         return self.blocks.nb_children(hash_father)
+
+    def is_empty(self):
+        return self.blocks.is_empty()
 
     def get_height(self):
         return self.get_last_blocks()[0].index

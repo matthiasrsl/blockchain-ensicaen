@@ -132,13 +132,12 @@ class NetworkHandler:
     def blockchain_protocol(self, message):
         blockchain = json.loads(message.split("|")[1])
         leaves = json.loads(message.split("|")[2])
-        blockchain = list(reversed(blockchain))
+        blockchain = [Block(**block) for block in blockchain]
         blockchain.sort()  # The blocks are sorted by height.
-        for block in blockchain:
-            self.blockchain.new_block(Block(**block))
 
-        for leaf in leaves:
-            self.blockchain.add_fork(leaf["hash"], leaf["id"])
+        for block in blockchain:
+            self.blockchain.new_block(block)
+
 
     def mined_block_protocol(self, message):
         block_info_json = json.loads(message.split("|")[1])
