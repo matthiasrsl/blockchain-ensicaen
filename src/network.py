@@ -6,7 +6,7 @@ from src.block import Block, BlockEncoder
 from src.blockchain import Blockchain
 
 SERVER_PORT = 16385
-RECV_SIZE = 16384
+RECV_SIZE = 1024
 LISTEN_TIME = 5
 
 
@@ -69,9 +69,10 @@ class NetworkHandler:
             del self.other_nodes[ip]
         except KeyError:
             print(f"{ip} tried to be removed but not in list")
+        self.updateVisualizer()
 
-    def process_message(self, message, ip):
-        print(f"\n\nRECEIVED from {ip}: \n{message}\n\n")
+    def process_message(self, message, ip, i):
+        print(f"\n\nRECEIVED from {ip} in {i} chunks: \n{message}\n\n")
 
         message_dict = {"sender": ip, "content": message}
         self.message_list.append(message_dict)
@@ -89,7 +90,7 @@ class NetworkHandler:
         elif message.split("|")[0][4:] == "join_resp":
             self.join_resp_protocol(ip, message)
 
-        elif message[4:] == "joined":
+        elif message.split("|")[0][4:] == "joined":
             self.add_node(ip, message.split("|")[1])
             print("===== Nice to meet you")
 
@@ -99,7 +100,11 @@ class NetworkHandler:
         elif message.split("|")[0][4:] == "mined_block":
             self.mined_block_protocol(message)
 
-        elif message[4:] == "accept":
+        elif message.split("|")[0][4:] == "accept":
+            hash_block = message.split("|")[1]
+            if self.blockchain.get_block(hash_block) is None:
+                mess = "****askblock|" + hash_block
+                send_message(ip, mess)
             print("===== Node accepted")
 
         elif message[4:] == "refuse":
@@ -111,6 +116,14 @@ class NetworkHandler:
         elif message.split("|")[0][4:] == "ackdefault":
             print("==== This node may be defective")
 
+        elif message.split("|")[0][4:] == "askblock":
+            hash_block = message.split("|")[1]
+            block_to_send = self.blockchain.get_block(hash_block)
+            mess = "****"
+            mess += "mined_block|"
+            mess += json.dumps(block_to_send, cls=BlockEncoder)
+            send_message(ip, mess)
+
         else:
             print("Error: bad request")
 
@@ -119,6 +132,7 @@ class NetworkHandler:
     def blockchain_protocol(self, message):
         blockchain = json.loads(message.split("|")[1])
         leaves = json.loads(message.split("|")[2])
+        blockchain = list(reversed(blockchain))
         for block in blockchain:
             self.blockchain.add_block(Block(**block))
 
@@ -142,23 +156,16 @@ class NetworkHandler:
             self.message_list.append(message_dict)
 
         self.block_to_add = None
+        self.client.hiddenRefreshButton.click()
 
     def join_resp_protocol(self, ip, message):
         nodes_dict_str = message.split("|")[1]
-        print(nodes_dict_str)
         nodes_dict = json.loads(nodes_dict_str)
-        print(nodes_dict)
-        sender_node_dict = json.loads(message.split("|")[2])
-        nodes_dict[sender_node_dict["ip"]] = sender_node_dict
         for node_dict in nodes_dict.values():
-            if node_dict["ip"] != self.ip:
-                self.other_nodes[node_dict["ip"]] = Node(
-                    node_dict["ip"], node_dict["name"]
-                )
-
+            self.other_nodes[node_dict["ip"]] = Node(node_dict["ip"], node_dict["name"])
+        self.add_node(ip, message.split("|")[2])
         for node in self.other_nodes.values():
-            if ip != node.ip_address:
-                send_message(node.ip_address, "****joined|" + self.name)
+            send_message(node.ip_address, "****joined|" + self.name)
         message_dict = {"sender": "Me", "content": "****joined"}
         self.message_list.append(message_dict)
 
@@ -166,10 +173,10 @@ class NetworkHandler:
         print("===== Add node")
         mess = "****join_resp|"
         mess += json.dumps(self.other_nodes, cls=NodeEncoder)
-        self.add_node(ip, message.split("|")[1])
         mess += "|"
-        mess += json.dumps(Node(self.ip, self.name), cls=NodeEncoder)
+        mess += self.name
         send_message(ip, mess)
+        self.add_node(ip, message.split("|")[1])
         message_dict = {"sender": "Me", "content": mess}
         self.message_list.append(message_dict)
         mess2 = "****blockchain|"
@@ -221,12 +228,9 @@ class NetworkHandler:
             file.write(messages_json)
 
     def accept_mined_block(self):
-        self.blockchain.add_fork(self.block_to_add.hash, self.block_to_add.index)
         self.blockchain.add_block(self.block_to_add)
 
-        self.send_message_to_all("****accept")
-
-        self.block_to_add = None
+        self.send_message_to_all("****accept|"+self.block_to_add.hash)
         self.wait = False
         self.client.hiddenRefreshButton.click()
 
@@ -256,10 +260,17 @@ class NetworkHandler:
                 pass
             else:
                 for client in clients_to_be_read:
-                    message = client.recv(RECV_SIZE)
+                    message = b''
+                    i = 0
+                    while True:
+                        i += 1
+                        part = client.recv(RECV_SIZE)
+                        message += part
+                        if len(part) < RECV_SIZE:  # We have reached the end of the stream
+                            break
                     ip, port = client.getpeername()
                     message = message.decode()
-                    self.process_message(message, ip)
+                    self.process_message(message, ip, i)
                     self.connected_clients.remove(client)
                     client.close()
 

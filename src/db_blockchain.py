@@ -126,7 +126,9 @@ class DataBaseManager:
         c.execute("SELECT id , data ,precedent_hash , d, miner, nonce, branch_id  FROM blocks WHERE hash=?",
                   (hash_block,))
         result = c.fetchone()
-        block = (Block(result[0], result[1], result[2], result[3], result[4], result[5], branch_id=result[6]))
+        block = None
+        if result != None:
+            block = (Block(result[0], result[1], result[2], result[3], result[4], result[5], branch_id=result[6]))
         conn.commit()
         conn.close()
         return block
@@ -169,10 +171,10 @@ class DataBaseManager:
         conn.close()
         return leaves
 
-    def has_child(self,hash_father):
+    def nb_children(self, hash_father):
         conn = sqlite3.connect(self.name_data_base)
         c = conn.cursor()
-        c.execute("SELECT hash FROM blocks WHERE precedent_hash=?",(hash_father,))
+        c.execute("SELECT hash FROM blocks WHERE precedent_hash=?", (hash_father,))
         result = c.fetchall()
         conn.commit()
         conn.close()

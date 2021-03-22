@@ -11,7 +11,6 @@ class Start(QtWidgets.QMainWindow, src.gui_ressources.gui_start.Ui_MainWindow):
         super(Start, self).__init__(parent)
         self.setupUi(self)
         self.label.setText("You local ip is " + get_local_ip() + "\nChoose an ip to connect to:")
-        self.ipLine.setText(get_local_ip())
         self.goButton.clicked.connect(self.go_button)
         self.firstButton.clicked.connect(self.first_button)
         self.client = Client(handler)
