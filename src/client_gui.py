@@ -53,14 +53,10 @@ class Client(QtWidgets.QMainWindow, src.gui_ressources.gui_client.Ui_MainWindow)
         data = self.dataText.toPlainText()
         last_block = self.handler.blockchain.get_last_blocks()
         block = Block(last_block[0].index + 1, data, last_block[0].hash, datetime.now(),str(self.handler.server_host))
-        thread_mine = threading.Thread(target=block.mine,args=(self.handler.blockchain.number_0,) ,daemon=True)
-        thread_mine.start()
-        #block.mine(number_0=self.handler.blockchain.number_0)
+        block.mine(number_0=self.handler.blockchain.number_0)
         message = "****"
         message += "mined_block|"
         message += json.dumps(block, cls=BlockEncoder)
-        #self.handler.blockchain.add_block(block)  # problème!
-        #self.handler.blockchain.add_fork(block.hash, block.index)
         self.handler.blockchain.new_block(block)
         self.handler.send_message_to_all(message)
         message_dict = {"sender": "Me", "content": message}
