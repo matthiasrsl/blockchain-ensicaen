@@ -105,7 +105,7 @@ function updateBlockchain(data) {
                     });
                     var new_block_branch = graph.branch(shortHash(block.hash));
                     branch_block_map[block.hash] = new_block_branch;
-                    console.log(`Block ${shortHash(block.hash)} branch id: ${block.branch} (found)`);
+                    console.log(`Block ${shortHash(block.hash)} added to branch id: ${block.branch} (already present)`);
                 } catch {
                     var parent_branch = branch_block_map[block.previous_hash];
                     var new_branch = graph.branch({name: `branch${block.branch}`, parentBranch: parent_branch});
@@ -119,7 +119,7 @@ function updateBlockchain(data) {
                     var new_block_branch = graph.branch(shortHash(block.hash));
                     branch_block_map[block.hash] = new_block_branch;
                     branch_map[`branch${block.branch}`] = new_branch;
-                    console.log(`Block ${shortHash(block.hash)} branch id: ${block.branch} (not found)`);
+                    console.log(`Block ${shortHash(block.hash)} to branch id: ${block.branch} (created)`);
                 }
 
                 
@@ -212,7 +212,6 @@ function initGitGraph() {
 function main() {
     initGitGraph();
     var intervalId = setInterval(function () {
-        //finishBlockTransition();
         loadJSON("http://localhost:8000/etc/visudata/blockchain.json", (data) => updateBlockchain(data));
         loadJSON("http://localhost:8000/etc/visudata/nodes.json", (data) => updateNodes(data));
         //loadJSON("messages.json", (data) => updateMessages(data));
