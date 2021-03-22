@@ -286,16 +286,16 @@ class NetworkHandler:
             else:
                 for client in clients_to_be_read:
                     message = b''
-                    i = 0
+                    chunks = 0
                     while True:
-                        i += 1
+                        chunks += 1
                         part = client.recv(RECV_SIZE)
-                        message += part
-                        if len(part) < RECV_SIZE:  # We have reached the end of the stream
+                        if len(part) == 0:  # We have reached the end of the stream
                             break
+                        message += part
                     ip, port = client.getpeername()
                     message = message.decode()
-                    self.process_message(message, ip, i)
+                    self.process_message(message, ip, chunks)
                     self.connected_clients.remove(client)
                     client.close()
 
