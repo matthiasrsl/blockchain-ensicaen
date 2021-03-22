@@ -133,8 +133,9 @@ class NetworkHandler:
         blockchain = json.loads(message.split("|")[1])
         leaves = json.loads(message.split("|")[2])
         blockchain = list(reversed(blockchain))
+        blockchain.sort()  # The blocks are sorted by height.
         for block in blockchain:
-            self.blockchain.add_block(Block(**block))
+            self.blockchain.new_block(Block(**block))
 
         for leaf in leaves:
             self.blockchain.add_fork(leaf["hash"], leaf["id"])
