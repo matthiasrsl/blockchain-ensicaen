@@ -251,10 +251,9 @@ class NetworkHandler:
                 )
             parent_leaf = parent_leaf[0]
             self.block_to_add.branch_id = parent_leaf["fork_id"]
-            self.blockchain.add_block(block_to_add)
+            self.blockchain.add_block(self.block_to_add)
             self.blockchain.update_fork(parent_leaf["fork_id"], self.block_to_add.hash, self.block_to_add.index)
 
-        self.blockchain.add_block(self.block_to_add)
 
         self.send_message_to_all("****accept|"+self.block_to_add.hash)
         self.wait = False
