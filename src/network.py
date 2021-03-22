@@ -228,6 +228,32 @@ class NetworkHandler:
             file.write(messages_json)
 
     def accept_mined_block(self):
+        leaves = self.blockchain.get_leaves()
+        leaves_hashes = [leaf["hash"] for leaf in leaves]
+        if self.blockchain.nb_children(self.block_to_add.previous_hash) > 0:
+            # The previous block is not a leaf, so we create a fork
+            #if block.previous_hash in leaves_hashes:
+                # Just to check
+                #raise ValueError(
+                #    f"Inconsistent data: block {block.previous_hash} is "
+                #    "listed as a leaf but has at least one child block."
+                #)
+            fork_id = self.blockchain.add_fork(self.block_to_add.hash, self.block_to_add.index)
+            self.block_to_add.branch_id = fork_id
+            self.blockchain.add_block(block_to_add)
+
+        else:  # The previous block is a leaf, so we stay on the same branch
+            parent_leaf = [leaf for leaf in leaves if leaf["hash"] == self.block_to_add.previous_hash]
+            if len(parent_leaf) != 1:
+                raise ValueError(
+                    f"Inconsistent data: block {block.previous_hash} is "
+                    f"the leaf block of {len(parent_leaf)} branches (should be 1)."
+                )
+            parent_leaf = parent_leaf[0]
+            self.block_to_add.branch_id = parent_leaf["fork_id"]
+            self.blockchain.add_block(block_to_add)
+            self.blockchain.update_fork(parent_leaf["fork_id"], self.block_to_add.hash, self.block_to_add.index)
+
         self.blockchain.add_block(self.block_to_add)
 
         self.send_message_to_all("****accept|"+self.block_to_add.hash)
