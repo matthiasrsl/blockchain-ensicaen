@@ -107,7 +107,7 @@ function updateBlockchain(data) {
                     branch_block_map[block.hash] = new_block_branch;
                     console.log(`Block ${shortHash(block.hash)} branch id: ${block.branch} (found)`);
                 } catch {
-                    var parent_branch = branch_map[`branch${block_map[block.previous_hash].branch}`];
+                    var parent_branch = branch_block_map[block.previous_hash];
                     var new_branch = graph.branch({name: `branch${block.branch}`, parentBranch: parent_branch});
                     new_branch.commit({
                         subject: `Height ${block.index}`, 
