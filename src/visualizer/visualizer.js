@@ -106,19 +106,20 @@ function finishBlockTransition() {
 
 function updateNodes(data) {
     let node_section = document.getElementById("nodes");
-    //node_section.firstElementChild.remove()
+    nodes_div = document.getElementById("nodes_div");
+    nodes_div.remove();
+    //node_section.firstElementChild.remove()//.nextElementSibling.remove();
+    div = document.createElement("div");
+    div.setAttribute("id","nodes_div");
+    node_section.appendChild(div);
     let nodes = data.nodes;
-    let nodes_to_remove = node_section.childNodes;
-    for(i=1;i<nodes_to_remove.length;i++) {
-        nodes_to_remove[i].remove();
-    }
 
     for (node of nodes) {
         node_p = document.createElement("p");
         node_p.innerHTML = `
                <span class="node_name">${node.name}</span> <span class="node_ip">${node.ip}</span>
             `
-        node_section.appendChild(node_p);
+        div.appendChild(node_p);
         ip_list.push(node.ip);
     }
 }
