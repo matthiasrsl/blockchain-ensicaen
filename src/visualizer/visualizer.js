@@ -143,7 +143,7 @@ function main() {
         console.log("Update !");
         finishBlockTransition();
         loadJSON("http://localhost:8000/etc/visudata/blockchain.json", (data) => updateBlockchain(data));
-        //loadJSON("http://localhost:8000/etc/visudata/nodes.json", (data) => updateNodes(data));
+        loadJSON("http://localhost:8000/etc/visudata/nodes.json", (data) => updateNodes(data));
         //loadJSON("messages.json", (data) => updateMessages(data));
     }, 200);
 }
