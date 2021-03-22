@@ -106,8 +106,11 @@ function finishBlockTransition() {
 
 function updateNodes(data) {
     let node_section = document.getElementById("nodes");
-    node_section.firstElementChild.nextElementSibling.remove();
+    nodes_div = document.getElementById("nodes_div");
+    nodes_div.remove();
+    //node_section.firstElementChild.remove()//.nextElementSibling.remove();
     div = document.createElement("div");
+    div.setAttribute("id","nodes_div");
     node_section.appendChild(div);
     let nodes = data.nodes;
 
@@ -116,7 +119,7 @@ function updateNodes(data) {
         node_p.innerHTML = `
                <span class="node_name">${node.name}</span> <span class="node_ip">${node.ip}</span>
             `
-        node_section.firstElementChild.nextElementSibling.appendChild(node_p);
+        div.appendChild(node_p);
         ip_list.push(node.ip);
     }
 }
