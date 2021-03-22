@@ -6,7 +6,7 @@ from src.block import Block, BlockEncoder
 from src.blockchain import Blockchain
 
 SERVER_PORT = 16385
-RECV_SIZE = 4096
+RECV_SIZE = 1024
 LISTEN_TIME = 5
 
 
@@ -71,8 +71,8 @@ class NetworkHandler:
             print(f"{ip} tried to be removed but not in list")
         self.updateVisualizer()
 
-    def process_message(self, message, ip):
-        print(f"\n\nRECEIVED from {ip}: \n{message}\n\n")
+    def process_message(self, message, ip, i):
+        print(f"\n\nRECEIVED from {ip} in {i} chunks: \n{message}\n\n")
 
         message_dict = {"sender": ip, "content": message}
         self.message_list.append(message_dict)
@@ -263,14 +263,16 @@ class NetworkHandler:
             else:
                 for client in clients_to_be_read:
                     message = b''
+                    i = 0
                     while True:
+                        i += 1
                         part = client.recv(RECV_SIZE)
                         message += part
                         if len(part) < RECV_SIZE:  # We have reached the end of the stream
                             break
                     ip, port = client.getpeername()
                     message = message.decode()
-                    self.process_message(message, ip)
+                    self.process_message(message, ip, i)
                     self.connected_clients.remove(client)
                     client.close()
 
