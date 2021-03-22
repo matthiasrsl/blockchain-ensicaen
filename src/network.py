@@ -240,7 +240,7 @@ class NetworkHandler:
                 #)
             fork_id = self.blockchain.add_fork(self.block_to_add.hash, self.block_to_add.index)
             self.block_to_add.branch_id = fork_id
-            self.blockchain.add_block(block_to_add)
+            self.blockchain.add_block(self.block_to_add)
 
         else:  # The previous block is a leaf, so we stay on the same branch
             parent_leaf = [leaf for leaf in leaves if leaf["hash"] == self.block_to_add.previous_hash]
