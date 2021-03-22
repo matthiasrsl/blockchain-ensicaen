@@ -72,12 +72,12 @@ class Blockchain:
         leaves_hashes = [leaf["hash"] for leaf in leaves]
         if self.nb_children(block.previous_hash) > 0:
             # The previous block is not a leaf, so we create a fork
-            if block.previous_hash in leaves_hashes:
+            #if block.previous_hash in leaves_hashes:
                 # Just to check
-                raise ValueError(
-                    f"Inconsistent data: block {block.previous_hash} is "
-                    "listed as a leaf but has at least one child block."
-                )
+                #raise ValueError(
+                #    f"Inconsistent data: block {block.previous_hash} is "
+                #    "listed as a leaf but has at least one child block."
+                #)
             fork_id = self.add_fork(block.hash, block.index)
             block.branch_id = fork_id
             self.add_block(block)
