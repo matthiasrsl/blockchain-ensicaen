@@ -230,7 +230,7 @@ class NetworkHandler:
     def accept_mined_block(self):
         self.blockchain.add_block(self.block_to_add)
 
-        self.send_message_to_all("****accept|"+self.block_to_add.hash)
+        self.send_message_to_all("****accept|" + self.block_to_add.hash)
         self.wait = False
         self.client.hiddenRefreshButton.click()
 
@@ -260,13 +260,15 @@ class NetworkHandler:
                 pass
             else:
                 for client in clients_to_be_read:
-                    message = b''
+                    message = b""
                     i = 0
                     while True:
                         i += 1
                         part = client.recv(RECV_SIZE)
                         message += part
-                        if len(part) < RECV_SIZE:  # We have reached the end of the stream
+                        if (
+                            len(part) < RECV_SIZE
+                        ):  # We have reached the end of the stream
                             break
                     ip, port = client.getpeername()
                     message = message.decode()
