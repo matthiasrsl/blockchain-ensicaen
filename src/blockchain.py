@@ -21,7 +21,7 @@ class Blockchain:
             "First Block",
             None,
             datetime.now(),
-            "<first node (unknown ip)>",
+            "unknown",
             branch_id=0,
         )
         # We can reduce the format if we want to take less space

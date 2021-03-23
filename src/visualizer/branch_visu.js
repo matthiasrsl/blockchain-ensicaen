@@ -4,10 +4,23 @@ block_map = new Map();
 branch_map = new Map();
 branch_block_map = new Map();
 ip_list = [];
+node_map = new Map();
+node_map["unknown"] = "First node";
 new_blocks = [];
 first_update = true;
 message_list = [];
+last_block = "";
+last_update_block = "";
+forceBranches = false;
 
+var withoutBranchLabel = GitgraphJS.templateExtend(
+    GitgraphJS.TemplateName.Metro, {
+        branch: {
+        label: {
+            display: false,
+        },
+    },
+});
 graph = null;
 
 function loadJSON(path, callback) {
@@ -42,12 +55,20 @@ function updateBlockchain(data) {
 
     container = document.querySelector("#branch_list");
     bk_section = document.querySelector("#block_list");
-    /*container.firstElementChild.remove();
 
-    graph = initGitGraph();*/
+    last_block = blockchain[blockchain.length - 1].hash;
+
+    if ((last_block != last_update_block) || forceBranches) {
+        container.firstElementChild.remove();
+        graph = initGitGraph();
+        console.log("update graph")
+        console.log(last_block)
+        console.log(last_update_block)
+    }
 
     for (block of blockchain) {
         if (!block_list.includes(block.hash)) {
+            console.log("adding block " + block.hash)
             block_div = document.createElement("div");
             if (first_update) {
                 block_div.className = `block branch_${block.branch}`
@@ -97,70 +118,75 @@ function updateBlockchain(data) {
                 </p>
             `
 
+            bk_section.appendChild(block_div);
+            block_list.push(block.hash);
+            new_blocks.push(block_div);
+        }
+
+        if ((last_block != last_update_block) || forceBranches) {
+            commit_options = {
+                dotText: String(block.index),
+                subject: `${block.data.slice(0, 20)}${block.data.length > 20 ? "..." : ""}`,
+                body: block.data,
+                author: `${node_map[block.miner]} <${block.miner}>`,
+                hash: shortHash(block.hash),
+                onMessageClick: (e) => displayBlock(e),
+            }
 
             if (block.previous_hash) {
                 try {
                     var branch = branch_map[`branch${block.branch}`];
-                    branch.commit({
-                        subject: `Height ${block.index}`, 
-                        body: block.data, 
-                        author: block.miner, 
-                        hash: shortHash(block.hash),
-                        onMessageClick: (e) => displayBlock(e),
-                    });
+                    branch.commit(commit_options);
                     var new_block_branch = graph.branch(shortHash(block.hash));
                     branch_block_map[block.hash] = new_block_branch;
                     console.log(`Block ${shortHash(block.hash)} added to branch id: ${block.branch} (already present)`);
                 } catch {
                     var parent_branch = branch_block_map[block.previous_hash];
-                    var new_branch = graph.branch({name: `branch${block.branch}`, parentBranch: parent_branch});
-                    parent_branch.commit({
-                        subject: `Height ${block.index}`, 
-                        body: `${block.data}\n${block.previous_hash}`, 
-                        author: block.miner, 
-                        hash: shortHash(block.hash),
-                        onMessageClick: (e) => displayBlock(e),
-                    });
+                    var new_branch = graph.branch({ name: `branch${block.branch}`, parentBranch: parent_branch });
+                    parent_branch.commit(commit_options);
                     var new_block_branch = graph.branch(shortHash(block.hash));
                     branch_block_map[block.hash] = new_block_branch;
                     branch_map[`branch${block.branch}`] = parent_branch;
                     console.log(`Block ${shortHash(block.hash)} to branch id: ${block.branch} (created) (parent branch: ${block.previous_hash})`);
                 }
 
-                
+
             } else {
-                var origin_branch = graph.branch(shortHash(block.hash));
+                var origin_branch = graph.branch({
+                    name: shortHash(block.hash),
+                    style: {
+                        label: {
+                            bgColor: "#274f59",
+                            color: "#274f59",
+                            strokeColor: "#274f59",
+                        }
+                    }
+                });
                 branch_map[`branch${block.branch}`] = origin_branch;
                 branch_block_map[block.hash] = origin_branch;
                 console.log(`Origin branch id: ${block.branch}`);
-                origin_branch.commit({
-                    subject: `Height ${block.index}`, 
-                    body: block.data, 
-                    author: block.miner, 
-                    hash: shortHash(block.hash),
-                    onMessageClick: (e) => displayBlock(e),
-                });
+                origin_branch.commit(commit_options);
             }
 
             block_div_list[shortHash(block.hash)] = block_div;
-
-
-            bk_section.appendChild(block_div);
-            block_list.push(block.hash);
-            new_blocks.push(block_div)
             block_map[block.hash] = block;
         }
     }
 
+    if ((last_block != last_update_block) || forceBranches) {
+        last_update_block = last_block;
+    }
+
+    forceBranches = false;
     first_update = false;
 }
 
 function displayBlock(e) {
     console.log(e);
     e.commit({
-        subject: `Test branch`, 
-        body: "body", 
-        author: "block.miner", 
+        subject: `Test branch`,
+        body: "body",
+        author: "block.miner",
     });
     selected_block_div = document.querySelector("#selected_block");
     try {
@@ -191,6 +217,7 @@ function updateNodes(data) {
             `
             node_section.appendChild(node_p);
             ip_list.push(node.ip);
+            node_map[node.ip] = node.name;
         }
     }
 }
@@ -211,7 +238,9 @@ function updateNodes(data) {
 
 function initGitGraph() {
     container = document.querySelector("#branch_list");
-    graph = GitgraphJS.createGitgraph(container);
+    graph = GitgraphJS.createGitgraph(container, {
+        template: withoutBranchLabel,
+    });
 
     return graph;
 }
@@ -226,6 +255,8 @@ function displayBranches(e) {
     branch_section.style.display = "block";
     block_button.className = "mainbutton";
     branch_button.className = "mainbutton selected";
+
+    forceBranches = true;
 }
 
 function displayBlocks(e) {
@@ -249,10 +280,11 @@ function main() {
     branch_button.addEventListener("click", (e) => displayBranches(e));
 
     var intervalId = setInterval(function () {
+        finishBlockTransition();
         loadJSON("http://localhost:8000/etc/visudata/blockchain.json", (data) => updateBlockchain(data));
         loadJSON("http://localhost:8000/etc/visudata/nodes.json", (data) => updateNodes(data));
         //loadJSON("messages.json", (data) => updateMessages(data));
-    }, 2000);
+    }, 200);
 }
 
 main();

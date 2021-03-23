@@ -53,6 +53,8 @@ class NetworkHandler:
         self.wait = False
         self.client = None
 
+        self.updateVisualizer()
+
     def create_blockchain(self, first):
         self.blockchain = Blockchain(first=first)
 
@@ -215,6 +217,8 @@ class NetworkHandler:
         for node in self.other_nodes.values():
             node_dic = {"name": node.name, "ip": node.ip_address}  # "Prenom" to change
             all_nodes.append(node_dic)
+        my_node = {"name": "You", "ip": self.ip}
+        all_nodes.insert(0, my_node)
 
         nodes = {"nodes": all_nodes}
         nodes_json = json.dumps(nodes)
