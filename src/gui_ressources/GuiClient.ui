@@ -136,7 +136,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Block recieved</string>
+     <string>Block received</string>
     </property>
    </widget>
    <widget class="QDialogButtonBox" name="acceptBox">

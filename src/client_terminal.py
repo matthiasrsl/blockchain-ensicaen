@@ -1,4 +1,5 @@
 import json
+import signal
 from datetime import datetime
 
 from src.block import Block, BlockEncoder
@@ -11,11 +12,13 @@ class Client_terminal:
 
         handler.client = self
         self.block_to_accept = False
+        signal.signal(signal.SIGINT, self.signal_handler)
+
         name = input("What's your name?")
         if name == "":
-            self.name = "DefaultName"
+            self.handler.name = "DefaultName"
         else:
-            self.name = name
+            self.handler.name = name
 
         self.hiddenRefreshButton = type('', (object,), {'click': lambda: self.set_displayer_text()})
 
@@ -52,7 +55,7 @@ class Client_terminal:
                     data = input("data:")
                     self.create_block(data)
 
-                elif command == "me" or command == "message":
+                elif command == "me" or command == "message_to_all":
                     data = input("message:")
                     self.send_message(data)
 
@@ -67,6 +70,9 @@ class Client_terminal:
                     self.check_receive()
 
                 elif command == "exit":
+                    self.handler.send_message_to_all("****leave")
+                    message_dict = {"sender": "Me", "content": "****leave"}
+                    self.handler.message_list.append(message_dict)
                     exit()
 
                 elif command == "h" or command == "help":
@@ -114,3 +120,9 @@ class Client_terminal:
             print(str(self.handler.block_to_add))
             print("Accept this block? [y/n]")
             self.block_to_accept = True
+
+    def signal_handler(self, sig, frame):
+        self.handler.send_message_to_all("****leave")
+        message_dict = {"sender": "Me", "content": "****leave"}
+        self.handler.message_list.append(message_dict)
+        exit()

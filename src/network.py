@@ -2,11 +2,12 @@ import json
 import select
 import socket
 
+from src import block
 from src.block import Block, BlockEncoder
 from src.blockchain import Blockchain
 
 SERVER_PORT = 16385
-RECV_SIZE = 16384
+RECV_SIZE = 1024
 LISTEN_TIME = 5
 
 
@@ -69,9 +70,10 @@ class NetworkHandler:
             del self.other_nodes[ip]
         except KeyError:
             print(f"{ip} tried to be removed but not in list")
+        self.updateVisualizer()
 
-    def process_message(self, message, ip):
-        print(f"\n\nRECEIVED from {ip}: \n{message}\n\n")
+    def process_message(self, message, ip, i):
+        print(f"\n\nRECEIVED from {ip} in {i} chunks: \n{message}\n\n")
 
         message_dict = {"sender": ip, "content": message}
         self.message_list.append(message_dict)
@@ -118,13 +120,10 @@ class NetworkHandler:
         elif message.split("|")[0][4:] == "askblock":
             hash_block = message.split("|")[1]
             block_to_send = self.blockchain.get_block(hash_block)
-            mess = "****block|"
+            mess = "****"
+            mess += "mined_block|"
             mess += json.dumps(block_to_send, cls=BlockEncoder)
             send_message(ip, mess)
-
-        elif message.split("|")[0][4:] == "block":
-            block = json.loads(message.split("|")[1])
-            self.blockchain.new_block(Block(**block))
 
         else:
             print("Error: bad request")
@@ -134,12 +133,11 @@ class NetworkHandler:
     def blockchain_protocol(self, message):
         blockchain = json.loads(message.split("|")[1])
         leaves = json.loads(message.split("|")[2])
-        blockchain = list(reversed(blockchain))
-        for block in blockchain:
-            self.blockchain.add_block(Block(**block))
+        blockchain = [Block(**block) for block in blockchain]
+        blockchain.sort()  # The blocks are sorted by height.
 
-        for leaf in leaves:
-            self.blockchain.add_fork(leaf["hash"], leaf["id"])
+        for block in blockchain:
+            self.blockchain.new_block(block)
 
     def mined_block_protocol(self, message):
         block_info_json = json.loads(message.split("|")[1])
@@ -158,6 +156,7 @@ class NetworkHandler:
             self.message_list.append(message_dict)
 
         self.block_to_add = None
+        self.client.hiddenRefreshButton.click()
 
     def join_resp_protocol(self, ip, message):
         nodes_dict_str = message.split("|")[1]
@@ -229,12 +228,41 @@ class NetworkHandler:
             file.write(messages_json)
 
     def accept_mined_block(self):
-        self.blockchain.add_fork(self.block_to_add.hash, self.block_to_add.index)
-        self.blockchain.add_block(self.block_to_add)
+        leaves = self.blockchain.get_leaves()
+        leaves_hashes = [leaf["hash"] for leaf in leaves]
+        if self.blockchain.nb_children(self.block_to_add.previous_hash) > 0:
+            # The previous block is not a leaf, so we create a fork
+            # if block.previous_hash in leaves_hashes:
+            # Just to check
+            # raise ValueError(
+            #    f"Inconsistent data: block {block.previous_hash} is "
+            #    "listed as a leaf but has at least one child block."
+            # )
+            fork_id = self.blockchain.add_fork(
+                self.block_to_add.hash, self.block_to_add.index
+            )
+            self.block_to_add.branch_id = fork_id
+            self.blockchain.add_block(self.block_to_add)
 
-        self.send_message_to_all("****accept")
+        else:  # The previous block is a leaf, so we stay on the same branch
+            parent_leaf = [
+                leaf
+                for leaf in leaves
+                if leaf["hash"] == self.block_to_add.previous_hash
+            ]
+            if len(parent_leaf) != 1:
+                raise ValueError(
+                    f"Inconsistent data: block {block.previous_hash} is "
+                    f"the leaf block of {len(parent_leaf)} branches (should be 1)."
+                )
+            parent_leaf = parent_leaf[0]
+            self.block_to_add.branch_id = parent_leaf["fork_id"]
+            self.blockchain.add_block(self.block_to_add)
+            self.blockchain.update_fork(
+                parent_leaf["fork_id"], self.block_to_add.hash, self.block_to_add.index
+            )
 
-        self.block_to_add = None
+        self.send_message_to_all("****accept|" + self.block_to_add.hash)
         self.wait = False
         self.client.hiddenRefreshButton.click()
 
@@ -264,10 +292,17 @@ class NetworkHandler:
                 pass
             else:
                 for client in clients_to_be_read:
-                    message = client.recv(RECV_SIZE)
+                    message = b""
+                    chunks = 0
+                    while True:
+                        chunks += 1
+                        part = client.recv(RECV_SIZE)
+                        if len(part) == 0:  # We have reached the end of the stream
+                            break
+                        message += part
                     ip, port = client.getpeername()
                     message = message.decode()
-                    self.process_message(message, ip)
+                    self.process_message(message, ip, chunks)
                     self.connected_clients.remove(client)
                     client.close()
 
