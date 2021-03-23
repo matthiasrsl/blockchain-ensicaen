@@ -40,7 +40,8 @@ function shortHash(hash) {
 function updateBlockchain(data) {
     blockchain = data.blockchain;
 
-    container = document.querySelector("#block_list");
+    container = document.querySelector("#branch_list");
+    bk_section = document.querySelector("#block_list");
     /*container.firstElementChild.remove();
 
     graph = initGitGraph();*/
@@ -48,7 +49,11 @@ function updateBlockchain(data) {
     for (block of blockchain) {
         if (!block_list.includes(block.hash)) {
             block_div = document.createElement("div");
-            block_div.className = `block branch_${block.branch}`
+            if (first_update) {
+                block_div.className = `block branch_${block.branch}`
+            } else {
+                block_div.className = `block appearing branch_${block.branch}`
+            }
             block_div.id = `block_${block.hash}`
 
             block_div.innerHTML = `
@@ -140,7 +145,9 @@ function updateBlockchain(data) {
             block_div_list[shortHash(block.hash)] = block_div;
 
 
+            bk_section.appendChild(block_div);
             block_list.push(block.hash);
+            new_blocks.push(block_div)
             block_map[block.hash] = block;
         }
     }
@@ -164,13 +171,13 @@ function displayBlock(e) {
     selected_block_div.appendChild(block_div_list[e.hash]);
 }
 
-/*function finishBlockTransition() {
+function finishBlockTransition() {
     block_div = new_blocks.pop();
     while (block_div) {
         block_div.className = "block";
         block_div = new_blocks.pop();
     }
-}*/
+}
 
 function updateNodes(data) {
     let node_section = document.getElementById("nodes");
@@ -203,14 +210,44 @@ function updateNodes(data) {
 }*/
 
 function initGitGraph() {
-    container = document.querySelector("#block_list");
+    container = document.querySelector("#branch_list");
     graph = GitgraphJS.createGitgraph(container);
 
     return graph;
 }
 
+function displayBranches(e) {
+    var block_section = document.querySelector("#block_list");
+    var branch_section = document.querySelector("#branch_list");
+    var block_button = document.querySelector("#normal_visu_button");
+    var branch_button = document.querySelector("#branch_visu_button");
+
+    block_section.style.display = "none";
+    branch_section.style.display = "block";
+    block_button.className = "mainbutton";
+    branch_button.className = "mainbutton selected";
+}
+
+function displayBlocks(e) {
+    var block_section = document.querySelector("#block_list");
+    var branch_section = document.querySelector("#branch_list");
+    var block_button = document.querySelector("#normal_visu_button");
+    var branch_button = document.querySelector("#branch_visu_button");
+
+    block_section.style.display = "flex";
+    branch_section.style.display = "none";
+    block_button.className = "mainbutton selected";
+    branch_button.className = "mainbutton";
+}
+
 function main() {
     initGitGraph();
+
+    var block_button = document.querySelector("#normal_visu_button");
+    var branch_button = document.querySelector("#branch_visu_button");
+    block_button.addEventListener("click", (e) => displayBlocks(e));
+    branch_button.addEventListener("click", (e) => displayBranches(e));
+
     var intervalId = setInterval(function () {
         loadJSON("http://localhost:8000/etc/visudata/blockchain.json", (data) => updateBlockchain(data));
         loadJSON("http://localhost:8000/etc/visudata/nodes.json", (data) => updateNodes(data));

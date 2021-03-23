@@ -27,14 +27,34 @@ section {
 
 #blockchain {
     width: 40%;
-    xmin-width: 600px;
+    min-width: 600px;
     min-height: 700px;
     background-color: #fff;
 }
 
+.mainbutton {
+    font-size: 1.5em;
+    color: #999;
+    transition: color 0.5s;
+}
+
+.mainbutton.selected, .mainbutton.selected:hover {
+    color: black;
+}
+
+.mainbutton:hover {
+    color: #444;
+}
+
 #block_list {
-    display: flex;
+    display: none;
     flex-direction: column-reverse;
+}
+
+#branch_list {
+    display: block;
+    min-width: 500px;
+    min-height: 500px;
 }
 
 .block {
