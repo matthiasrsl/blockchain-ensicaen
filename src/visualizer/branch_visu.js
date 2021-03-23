@@ -1,6 +1,6 @@
 block_list = [];
 block_div_list = new Map();
-block_map = new Map();
+//block_map = new Map();
 branch_map = new Map();
 branch_block_map = new Map();
 ip_list = [];
@@ -78,13 +78,13 @@ function updateBlockchain(data) {
             block_div.id = `block_${block.hash}`
 
             block_div.innerHTML = `
-                <h2>Block #${shortHash(block.hash)}</h2>
+                <h2>Block <span class="hash_highlight">${shortHash(block.hash)}</span></h2>
                 <p class="block_info">
-                    <strong class="hash_label">Hash</strong> <span class="hash">${formatHash(block.hash)}</span> 
+                    <strong>Height</strong> ${block.index}
                 </p>
 
                 <p class="block_info">
-                    <strong>Height</strong> ${block.index}
+                    <strong class="hash_label">Hash</strong> <span class="hash">${formatHash(block.hash)}</span> 
                 </p>
 
                 <p class="block_info">
@@ -149,8 +149,6 @@ function updateBlockchain(data) {
                     branch_map[`branch${block.branch}`] = parent_branch;
                     console.log(`Block ${shortHash(block.hash)} to branch id: ${block.branch} (created) (parent branch: ${block.previous_hash})`);
                 }
-
-
             } else {
                 var origin_branch = graph.branch({
                     name: shortHash(block.hash),
@@ -169,7 +167,7 @@ function updateBlockchain(data) {
             }
 
             block_div_list[shortHash(block.hash)] = block_div;
-            block_map[block.hash] = block;
+            //block_map[block.hash] = block;
         }
     }
 
@@ -241,6 +239,9 @@ function initGitGraph() {
     graph = GitgraphJS.createGitgraph(container, {
         template: withoutBranchLabel,
     });
+    branch_map = new Map();
+    branch_block_map = new Map();
+    //block_map = new Map();
 
     return graph;
 }

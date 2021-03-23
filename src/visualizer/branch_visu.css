@@ -5,14 +5,12 @@
 body {
     background: #fff;
     display: flex;
+    justify-content: stretch;
+    height: 100vh;
     flex-wrap: wrap;
     padding: 0;
     margin: 0;
-    overflow-x: hidden;
-}
-
-body > div, body > section {
-    xwidth: 48%;
+    overflow: hidden;
 }
 
 section {
@@ -20,20 +18,32 @@ section {
 }
 
 #right_panel {
-    width: 56%;
+    width: auto;
+    flex-grow: 1;
+    height: 100%;
+    overflow-y: scroll;
 }
+
+h1 {
+    font-size: 2.5rem;
+    line-height: 1rem;
+}
+
+
 
 /* Blockchain section */
 
 #blockchain {
-    width: 40%;
-    min-width: 600px;
-    min-height: 700px;
+    width: auto;
+    flex-grow: 1;
+    min-width: 500px;
+    height: 100%;
+    overflow-y: scroll;
     background-color: #fff;
 }
 
 .mainbutton {
-    font-size: 1.5em;
+    font-size: 1.5rem;
     color: #999;
     transition: color 0.5s;
 }
@@ -62,6 +72,7 @@ section {
     padding: 0 15px;
     margin-bottom: 5px;
     height: 390px;
+    max-width: 600px;
     border-radius: 5px;
     color: #fffee1;
     transition: height 1000ms ease, margin-bottom 1000ms ease;/*, transform 1000ms linear;*/
@@ -85,13 +96,13 @@ section {
     line-height: 60%;
 }
 
-.hash, .hash_previous, .hash_highlight {
+.hash, .hash_previous, .hash_previous.hash_highlight {
     font-family: 'Courier New', Courier, monospace;
     font-size: 0.7rem;
 }
 
 .hash_highlight {
-    xcolor: #fe5849;
+    color: #fe5849;
     font-weight: bold;
 }
 
@@ -116,6 +127,12 @@ pre.block_data {
     font-size: 0.9rem;
 }
 
+/* Branches */
+
+svg p {
+    max-width: 500px;
+}
+
 /* Selected block section */
 
 #selected_block {
@@ -127,12 +144,13 @@ pre.block_data {
 
 #nodes {
     background: #ffd8d6;
+    height: 100%;
 }
 
 
 /* Branches backgrounds */
 
-.branch_0 {
+/*.branch_0 {
     background: #274f59;
     color: #fffee1;
 }
@@ -220,4 +238,4 @@ pre.block_data {
 
 .branch_9 .data_container {
     background: #411563;
-}
+}*/
