@@ -57,12 +57,12 @@ h1 {
 }
 
 #block_list {
-    display: none;
+    display: flex;
     flex-direction: column-reverse;
 }
 
 #branch_list {
-    display: block;
+    display: none;
     min-width: 500px;
     min-height: 500px;
 }

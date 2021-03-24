@@ -101,7 +101,7 @@ function updateBlockchain(data) {
                 </p>
 
                 <p class="block_info">
-                    <strong>Mined by</strong> ${block.miner}
+                    <strong>Mined by</strong> ${node_map[block.miner]} ${block.miner == "unknown" ? "" : "<"+block.miner+">"}
                 </p>
 
                 <p class="block_info">
