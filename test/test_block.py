@@ -1,6 +1,7 @@
-from unittest import TestCase
 from datetime import datetime
-from src.Block import *
+from unittest import TestCase
+
+from src.block import *
 
 
 class Test(TestCase):
@@ -10,3 +11,10 @@ class Test(TestCase):
 
         self.assertTrue(self.block1.is_previous(self.block2))
         self.assertFalse(self.block2.is_previous(self.block1))
+
+    def test_node_mining(self):
+        self.block1 = Block(1, "Hello!", 0, datetime.now())
+        self.block1.mine()
+
+        self.assertEqual(self.block1.hash[:2], "00")
+        self.assertEqual(self.block1.calculate_hash(), self.block1.hash)

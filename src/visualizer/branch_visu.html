@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Blockchain visualizer</title>
+        <link rel="stylesheet" href="branch_visu.css" />
+    </head>
+
+    <body>
+        <section id="blockchain">
+            <h1>Blockchain</h1>
+            <h2>
+                <span class="mainbutton selected" id="normal_visu_button">Blocks</span>
+                <span class="mainbutton" id="branch_visu_button">Branches</span>
+            </h2>
+            <div id="blockchain_body">
+                <div id="block_list"></div>
+                <div id="branch_list"></div>
+            </div>
+            
+
+            </div>
+        </section>
+
+        <div id="right_panel">
+            <section id="selected_block">
+
+            </section>
+            <section id="nodes">
+                <h1>Nodes</h1>
+            </section>
+
+        </div>
+
+        <script src="gitgraph.js"></script>
+        <script src="branch_visu.js"></script>
+    </body>
+</html>

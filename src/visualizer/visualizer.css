@@ -1,0 +1,204 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+body > div, body > section {
+    xwidth: 48%;
+}
+
+section {
+    padding: 20px;
+}
+
+#right_panel {
+    width: 40%;
+}
+
+/* Blockchain section */
+
+#blockchain {
+    width: 55%;
+    min-width: 600px;
+    min-height: 700px;
+    background-color: #fff;
+}
+
+#block_list {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.block {
+    background: #274f59;
+    padding: 0 15px;
+    margin-bottom: 5px;
+    height: 390px;
+    border-radius: 5px;
+    color: #fffee1;
+    transition: height 1000ms ease, margin-bottom 1000ms ease;/*, transform 1000ms linear;*/
+    overflow: hidden;
+}
+
+.block.appearing {
+    height: 0;
+    margin-bottom: 0;
+}
+
+.block h2 {
+    margin: 20px 0;
+}
+
+
+.block_info {
+    font-size: 0.9em;
+    display: flex;
+    justify-content: space-between;
+    line-height: 60%;
+}
+
+.hash, .hash_previous, .hash_highlight {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.7rem;
+}
+
+.hash_highlight {
+    xcolor: #fe5849;
+    font-weight: bold;
+}
+
+.hash .hash_highlight {
+    font-size: 1.1rem;
+}
+
+
+
+.data_container {
+    height: 120px;
+    overflow-y: scroll;
+    background: #3d707c;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+pre.block_data {
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Selected block section */
+
+#selected_block {
+    padding: 0;
+}
+
+
+/* Nodes section */
+
+#nodes {
+    background: #ffd8d6;
+    width: 100%;
+}
+
+
+/* Branches backgrounds */
+
+.branch_0 {
+    background: #274f59;
+    color: #fffee1;
+}
+
+.branch_0 .data_container {
+    background: #3d707c;
+}
+
+.branch_1 {
+    background: #106162;
+    color: #d7d6f3;
+}
+
+.branch_0 .data_container {
+    background: #3d707c;
+}
+
+.branch_2 {
+    background: #db7831;
+    color: #213067;
+}
+
+.branch_2 .data_container {
+    background: #9b5625;
+}
+
+.branch_3 {
+    background: #297215;
+    color: #a1d2bb;
+}
+
+.branch_3 .data_container {
+    background: #225215;
+}
+
+.branch_4 {
+    background: #38505c;
+    color: #f9fac5;
+}
+
+.branch_4 .data_container {
+    background: #25343b;
+}
+
+.branch_5 {
+    background: #f20837;
+    color: #dad8f2;
+}
+
+.branch_5 .data_container {
+    background: #c20e32;
+}
+
+.branch_6 {
+    background: #c18628;
+    color: #3b334e;
+}
+
+.branch_6 .data_container {
+    background: #976b23;
+}
+
+.branch_7 {
+    background: #f63126;
+    color: #fffee1;
+}
+
+.branch_7 .data_container {
+    background: #b9251d;
+}
+
+.branch_8 {
+    background: #0f2c58;
+    color: #fffee1;
+}
+
+.branch_8 .data_container {
+    background: #11233f;
+}
+
+.branch_9 {
+    background: #5b1591;
+    color: #e1f4ac;
+}
+
+.branch_9 .data_container {
+    background: #411563;
+}
