@@ -5,6 +5,9 @@ Plateforme de blockchain réalisée par des étudiants de deuxième année en fi
 - Matthias Roussel
 - Florian Théault
 
+Encadrés par:
+- Khoukhi Lyes
+
 Plateforme utilisée pour les TP de découverte de la blockchain. [Télécharger la dernière version du sujet de TP](https://www.ecole.ensicaen.fr/~roussel/blockchain/tpblockchain/tp.pdf)
 
 Utilisation:
