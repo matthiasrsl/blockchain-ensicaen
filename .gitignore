@@ -1,4 +1,8 @@
 __pycache__
 .vscode/
 *.db
-etc/
+
+etc/visudata/blockchain.json
+etc/visudata/nodes.json
+etc/visudata/messages.json
+etc/logs/visualizer.log
